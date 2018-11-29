@@ -1,0 +1,15 @@
+version: '3.5'
+services:
+  ms-order:
+    image: postgres:alpine
+    ports:
+    - '28183:5432'
+    container_name: LPDM-OrderDB
+    environment:
+      POSTGRES_DB: lpdm-order
+      POSTGRES_USER: lpdm
+      POSTGRES_PASSWORD: lpdm
+    volumes:
+    - './sql:/docker-entrypoint-initdb.d'
+    restart: always
+    network_mode: bridge
