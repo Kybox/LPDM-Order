@@ -28,8 +28,8 @@ public class Order {
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
-    @Column(name = "payment_id")
-    @Enumerated(EnumType.ORDINAL)
+    @OneToOne
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     @JsonIgnore

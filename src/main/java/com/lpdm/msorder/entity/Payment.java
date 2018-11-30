@@ -1,16 +1,32 @@
 package com.lpdm.msorder.entity;
 
-public enum Payment {
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-    BANKCARD(1), PAYPAL(2);
+@Entity
+@Table(name = "payment", schema = "public")
+public class Payment {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    Payment(int id){
-        this.id = id;
-    }
+    @NotNull
+    private String label;
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
