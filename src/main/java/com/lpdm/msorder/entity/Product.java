@@ -6,7 +6,7 @@ public class Product {
     private String name;
     private Category category;
     private String label;
-    private double price;
+    private Double price;
     private Stock stock;
     private User producer;
     private String picture;
@@ -46,11 +46,11 @@ public class Product {
         this.label = label;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

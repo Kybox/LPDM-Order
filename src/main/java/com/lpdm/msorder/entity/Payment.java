@@ -8,10 +8,11 @@ import javax.validation.constraints.NotNull;
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotNull
+    @Column(unique = true, length = 20)
     private String label;
 
     public int getId() {
