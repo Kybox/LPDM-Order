@@ -2,8 +2,9 @@ package com.lpdm.msorder.controller;
 
 import com.lpdm.msorder.dao.OrderRepository;
 import com.lpdm.msorder.dao.OrderedProductRepository;
-import com.lpdm.msorder.dao.PaymentDao;
+import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.entity.*;
+import com.lpdm.msorder.exception.PaymentPersistenceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,15 +30,15 @@ public class AdminController extends AbstractController{
 
     private final Logger log = LogManager.getLogger(this.getClass());
 
-    private final PaymentDao paymentDao;
     private final OrderRepository orderDao;
+    private final PaymentRepository paymentDao;
     private final OrderedProductRepository orderedProductDao;
 
     @Autowired
-    public AdminController(PaymentDao paymentDao, OrderRepository orderDao,
+    public AdminController(PaymentRepository paymentDao, OrderRepository orderDao,
                            OrderedProductRepository orderedProductDao) {
-        this.paymentDao = paymentDao;
         this.orderDao = orderDao;
+        this.paymentDao = paymentDao;
         this.orderedProductDao = orderedProductDao;
     }
 
@@ -47,9 +47,12 @@ public class AdminController extends AbstractController{
      * @param payment The new {@link Payment} object
      * @return The new {@link Payment} added
      */
-    @PostMapping(value = "/addPayment", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Payment addNewPayment(@Valid @RequestBody Payment payment){
-        return paymentDao.save(payment);
+    @PostMapping(value = "/add/payment", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Payment addNewPayment(@RequestBody Payment payment) {
+
+        try { paymentDao.save(payment); }
+        catch (Exception e) { throw new PaymentPersistenceException(); }
+        return payment;
     }
 
     @PostMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)

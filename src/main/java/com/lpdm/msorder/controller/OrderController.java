@@ -5,6 +5,7 @@ import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.entity.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.exception.OrderPersistenceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,9 @@ public class OrderController extends AbstractController {
     public Order saveOrder(@Valid @RequestBody Order order){
 
         order.getOrderedProducts().forEach(orderedProductDao::save);
-        return orderDao.save(order);
+        try { orderDao.save(order); }
+        catch (Exception e) { throw new OrderPersistenceException(); }
+        return order;
     }
 
     /**
