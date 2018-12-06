@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 @RestController
 @RefreshScope
 public class AbstractController {
@@ -45,9 +51,16 @@ public class AbstractController {
         this.productController = productController;
     }
 
+    /**
+     * Default constructor
+     */
     public AbstractController(){}
 
-
+    /**
+     * Format the {@link Order} with correct Json arrays
+     * @param order The {@link Order} object to format
+     * @return The {@link Order} object formated
+     */
     public Order formatOrder(Order order){
 
         Optional<Store> optionalStore = storeController.findStoreById(order.getStoreId());

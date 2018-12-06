@@ -41,6 +41,11 @@ public class OrderController extends AbstractController {
         return orderDao.save(order);
     }
 
+    /**
+     * Find {@link Order} by the user {@link Integer} id
+     * @param id The {@link User} {@link Integer} id
+     * @return The user ordered {@link List}
+     */
     @GetMapping(value = "/find/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByUserId(@PathVariable int id){
 
@@ -48,18 +53,6 @@ public class OrderController extends AbstractController {
 
         orderList.forEach(this::formatOrder);
 
-        return orderList;
-    }
-
-    @GetMapping(value = "/find/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Order> findAllByPaymentId(@PathVariable int id){
-
-        Optional<Payment> payment = paymentDao.findById(id);
-        List<Order> orderList = null;
-        if(payment.isPresent()) {
-            orderList = orderDao.findAllByPayment(payment.get());
-            orderList.stream().forEach(this::formatOrder);
-        }
         return orderList;
     }
 }
