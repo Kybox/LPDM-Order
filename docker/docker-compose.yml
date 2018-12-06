@@ -1,6 +1,8 @@
 version: '3.5'
 services:
-  ms-order:
+
+  # POSTGRESQL CONTAINER
+  order-db:
     image: postgres:alpine
     ports:
     - '28183:5432'
@@ -13,3 +15,15 @@ services:
     - './sql:/docker-entrypoint-initdb.d'
     restart: always
     network_mode: bridge
+
+  # MICROSERVICE CONTAINER
+  order-ms:
+    container_name: LPDM-OrderMS
+    build:
+      context: .
+      dockerfile: Dockerfile
+    external_links:
+      - LPDM-OrderDB
+    ports:
+      - '28083:28083'
+    restart: always
