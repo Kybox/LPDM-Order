@@ -16,7 +16,7 @@ FROM maven:3.6-jdk-8-alpine as builder
 # Set the working directory
 WORKDIR /app
 # Copy data from the cloned repository to the working directory
-COPY --from=clone /app /app
+COPY --from=clone /app/LPDM-Order /app
 # Build the project
 RUN mvn clean package
 

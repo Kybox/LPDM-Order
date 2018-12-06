@@ -1,0 +1,14 @@
+version: '3.5'
+services:
+
+  # MICROSERVICE CONTAINER
+  order-ms:
+    container_name: LPDM-OrderMS
+    build:
+      context: .
+      dockerfile: Dockerfile
+    external_links:
+    - LPDM-OrderDB
+    ports:
+    - '28083:28083'
+    restart: always
