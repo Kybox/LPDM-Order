@@ -1,8 +1,5 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.dao.OrderRepository;
-import com.lpdm.msorder.dao.OrderedProductRepository;
-import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,36 +22,24 @@ public class AbstractController {
     private final Logger log = LogManager.getLogger(this.getClass());
 
     /**
-     * Autowired - Data Access Object
-     */
-    OrderRepository orderDao;
-    PaymentRepository paymentDao;
-    OrderedProductRepository orderedProductDao;
-
-    /**
      * Autowired - Controller
      */
+    @Autowired
     private UserController userController;
-    private StoreController storeController;
-    private ProductController productController;
 
     @Autowired
-    public AbstractController(OrderRepository orderDao, PaymentRepository paymentDao,
-                              OrderedProductRepository orderedProductDao,
-                              UserController userController, StoreController storeController,
-                              ProductController productController) {
-        this.orderDao = orderDao;
-        this.paymentDao = paymentDao;
-        this.orderedProductDao = orderedProductDao;
-        this.userController = userController;
-        this.storeController = storeController;
-        this.productController = productController;
-    }
+    private StoreController storeController;
+
+    @Autowired
+    private ProductController productController;
 
     /**
      * Default constructor
      */
-    public AbstractController(){}
+
+    public AbstractController(){
+
+    }
 
     /**
      * Format the {@link Order} with correct Json arrays
@@ -63,6 +48,7 @@ public class AbstractController {
      */
     public Order formatOrder(Order order){
 
+        log.info("Storecontroller = " + storeController);
         Optional<Store> optionalStore = storeController.findStoreById(order.getStoreId());
         if(optionalStore.isPresent()) order.setStore(optionalStore.get());
         else {

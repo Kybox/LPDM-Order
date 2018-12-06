@@ -1,15 +1,25 @@
 package com.lpdm.msorder.controller;
 
+import com.lpdm.msorder.dao.OrderRepository;
+import com.lpdm.msorder.dao.OrderedProductRepository;
+import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.entity.*;
+import com.lpdm.msorder.exception.OrderNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
 
 @RefreshScope
 @RestController
@@ -18,12 +28,23 @@ public class OrderController extends AbstractController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
 
+    private final OrderRepository orderDao;
+    private final PaymentRepository paymentDao;
+    private final OrderedProductRepository orderedProductDao;
+
+    @Autowired
+    public OrderController(OrderRepository orderDao, OrderedProductRepository orderedProductDao, PaymentRepository paymentDao) {
+        this.orderDao = orderDao;
+        this.orderedProductDao = orderedProductDao;
+        this.paymentDao = paymentDao;
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order getOrderById(@PathVariable int id){
 
-        Optional<Order> optionalOrder = orderDao.findById(id);
-
-        return optionalOrder.map(this::formatOrder).orElse(null);
+        return orderDao.findById(id)
+                .map(this::formatOrder)
+                .orElseThrow(OrderNotFoundException::new);
     }
 
     /**
@@ -37,7 +58,6 @@ public class OrderController extends AbstractController {
     public Order saveOrder(@Valid @RequestBody Order order){
 
         order.getOrderedProducts().forEach(orderedProductDao::save);
-
         return orderDao.save(order);
     }
 
@@ -46,13 +66,21 @@ public class OrderController extends AbstractController {
      * @param id The {@link User} {@link Integer} id
      * @return The user ordered {@link List}
      */
-    @GetMapping(value = "/find/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/by/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByUserId(@PathVariable int id){
 
         List<Order> orderList = orderDao.findAllByCustomerId(id);
-
+        if (orderList.isEmpty()) throw new OrderNotFoundException();
         orderList.forEach(this::formatOrder);
-
         return orderList;
+    }
+
+    /**
+     * Get all {@link Payment} recorded
+     * @return The {@link List<Payment>}
+     */
+    @GetMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Payment> getPaymentList(){
+        return paymentDao.findAll();
     }
 }

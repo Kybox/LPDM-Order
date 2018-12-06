@@ -1,5 +1,7 @@
 package com.lpdm.msorder.controller;
 
+import com.lpdm.msorder.dao.OrderRepository;
+import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentDao;
 import com.lpdm.msorder.entity.*;
 import org.apache.logging.log4j.LogManager;
@@ -29,10 +31,15 @@ public class AdminController extends AbstractController{
     private final Logger log = LogManager.getLogger(this.getClass());
 
     private final PaymentDao paymentDao;
+    private final OrderRepository orderDao;
+    private final OrderedProductRepository orderedProductDao;
 
     @Autowired
-    public AdminController(PaymentDao paymentDao) {
+    public AdminController(PaymentDao paymentDao, OrderRepository orderDao,
+                           OrderedProductRepository orderedProductDao) {
         this.paymentDao = paymentDao;
+        this.orderDao = orderDao;
+        this.orderedProductDao = orderedProductDao;
     }
 
     /**
@@ -40,12 +47,12 @@ public class AdminController extends AbstractController{
      * @param payment The new {@link Payment} object
      * @return The new {@link Payment} added
      */
-    @PostMapping(value = "/addNewPayment", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/addPayment", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Payment addNewPayment(@Valid @RequestBody Payment payment){
         return paymentDao.save(payment);
     }
 
-    @PostMapping(value = "/delete/order/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deleteOrder(@RequestBody Order order){
         int id = order.getId();
         orderDao.delete(order);
@@ -58,7 +65,7 @@ public class AdminController extends AbstractController{
      * @param id The product id
      * @return The order {@link List}
      */
-    @GetMapping(value = "/find/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/by/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
 
         List<OrderedProduct> orderedProductList = orderedProductDao
@@ -82,7 +89,7 @@ public class AdminController extends AbstractController{
      * @param id Payment id
      * @return The order {@link List}
      */
-    @GetMapping(value = "/find/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/by/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByPaymentId(@PathVariable int id){
 
         Optional<Payment> payment = paymentDao.findById(id);
