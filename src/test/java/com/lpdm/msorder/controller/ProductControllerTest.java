@@ -45,11 +45,11 @@ public class ProductControllerTest {
 
         Mockito.when(productController.findProductById(1)).thenReturn(optionalProduct);
 
-        mockMvc.perform(get("/orders/1"))
+        mockMvc.perform(get("/products/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("id", is(1)))
-                .andExpect(jsonPath("total", is(22.87)));
+                .andExpect(jsonPath("name", is("A product")))
+                .andExpect(jsonPath("id", is(randomId)));
 
         Mockito.verify(productController, Mockito.times(1)).findProductById(1);
         Mockito.verifyNoMoreInteractions(productController);
