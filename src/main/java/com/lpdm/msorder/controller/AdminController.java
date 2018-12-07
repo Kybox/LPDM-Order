@@ -4,6 +4,7 @@ import com.lpdm.msorder.dao.OrderRepository;
 import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.entity.*;
+import com.lpdm.msorder.exception.OrderPersistenceException;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,12 +56,14 @@ public class AdminController extends AbstractController{
         return payment;
     }
 
-    @PostMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public boolean deleteOrder(@RequestBody Order order){
-        int id = order.getId();
-        orderDao.delete(order);
-        Optional<Order> optOrder = orderDao.findById(id);
-        return !optOrder.isPresent();
+    @PostMapping(value = "order/delete/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public boolean deleteOrder(@RequestBody Order order, @PathVariable int id){
+        if(id == order.getId()){
+            orderDao.delete(order);
+            Optional<Order> optOrder = orderDao.findById(id);
+            return !optOrder.isPresent();
+        }
+        else throw new OrderPersistenceException();
     }
 
     /**
@@ -68,7 +71,7 @@ public class AdminController extends AbstractController{
      * @param id The product id
      * @return The order {@link List}
      */
-    @GetMapping(value = "/by/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "orders/by/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
 
         List<OrderedProduct> orderedProductList = orderedProductDao
@@ -92,7 +95,7 @@ public class AdminController extends AbstractController{
      * @param id Payment id
      * @return The order {@link List}
      */
-    @GetMapping(value = "/by/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "orders/by/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByPaymentId(@PathVariable int id){
 
         Optional<Payment> payment = paymentDao.findById(id);
