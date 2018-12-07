@@ -24,8 +24,6 @@ pipeline {
         }
         stage('Deploy'){
             steps {
-                //sh 'docker-compose -f docker/dc-lpdm-order-ms.yml build'
-                //sh 'docker-compose -f docker/dc-lpdm-order-ms.yml up'
                 step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/dc-lpdm-order-ms.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
             }
         }
