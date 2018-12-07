@@ -5,7 +5,9 @@ pipeline {
     }
     stages{
         stage('Checkout') {
-            git 'https://github.com/vyjorg/LPDM-Order'
+            steps {
+                git 'https://github.com/vyjorg/LPDM-Order'
+            }
         }
         stage('Tests') {
             steps {
