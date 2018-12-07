@@ -4,6 +4,7 @@
     <data-source source="LOCAL" name="LPDM-OrderDB" uuid="50d29ba7-b683-453d-a9af-de4b80ce7aa7">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
+      <rewrite-bounds>false</rewrite-bounds>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://5.196.95.68:28183/lpdm-order</jdbc-url>
     </data-source>

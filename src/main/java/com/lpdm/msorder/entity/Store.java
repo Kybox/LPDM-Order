@@ -9,6 +9,10 @@ public class Store {
     public Store() {
     }
 
+    public Store(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

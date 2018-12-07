@@ -73,8 +73,11 @@ public class OrderController extends AbstractController {
     public List<Order> findAllByUserId(@PathVariable int id){
 
         List<Order> orderList = orderDao.findAllByCustomerId(id);
+
         if (orderList.isEmpty()) throw new OrderNotFoundException();
+
         orderList.forEach(this::formatOrder);
+
         return orderList;
     }
 
