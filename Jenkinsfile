@@ -7,7 +7,9 @@ pipeline {
     }
     stages {
         stage('Checkout') {
-            git credentialsId: '3efc89a8-b810-476d-b958-0ca2e68d1b49', url: 'https://github.com/vyjorg/LPDM-Order.git'
+            steps {
+                git credentialsId: '3efc89a8-b810-476d-b958-0ca2e68d1b49', url: 'https://github.com/vyjorg/LPDM-Order.git'
+            }
         }
         stage('Build') {
             steps {
