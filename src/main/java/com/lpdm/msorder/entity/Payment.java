@@ -9,7 +9,7 @@ public class Payment {
 
     @Id
     @Column(updatable = false, nullable = false)
-    @SequenceGenerator(name = "pay_gen", sequenceName = "pay_id_seq")
+    @SequenceGenerator(name = "pay_gen", sequenceName = "pay_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pay_gen")
     private int id;
 
