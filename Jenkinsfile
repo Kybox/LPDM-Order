@@ -1,19 +1,15 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+    agent any
+    tools {
+        maven 'Apache Maven 3.5.2'
     }
-    stages {
+    stages{
         stage('Checkout') {
-            steps {
-                git credentialsId: '3efc89a8-b810-476d-b958-0ca2e68d1b49', url: 'https://github.com/vyjorg/LPDM-Order.git'
-            }
+            git credentialsId: '3efc89a8-b810-476d-b958-0ca2e68d1b49', url: 'https://github.com/vyjorg/LPDM-Order.git'
         }
-        stage('Build') {
+        stage('Tests') {
             steps {
-                sh 'mvn -Dmaven.test.failure.ignore=true install'
+                sh 'mvn test'
             }
             post {
                 always {
