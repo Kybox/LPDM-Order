@@ -1,7 +1,9 @@
 ## La place du marché - Microservice Order
 Projet 12 - DA JAVA - Openclassrooms
 
-##### Liste des urls disponibles retournant un fichier Json :
+Domaine : http://lpdm.order.kybox.fr
+
+##### Liste des urls disponibles :
 |              URL              | Methode |  Retour |                                                               Description                                                              |
 |:-----------------------------:|:-------:|:-------:|:--------------------------------------------------------------------------------------------------------------------------------------:|
 | /orders                       |   GET   |   Json  | Retourne la liste toutes les commandes disponibles en base de données                                                                  |
