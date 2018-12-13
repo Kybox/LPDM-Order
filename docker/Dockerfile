@@ -21,9 +21,9 @@ COPY --from=clone /app/LPDM-Order /app
 RUN mvn clean package
 
 #--------------------------.
-# JRE-ALPINE (8)           |
+# OPENJDK-JRE-8-SLIM       |
 #--------------------------'
-FROM jre-alpine
+FROM openjdk:8-jre-slim
 WORKDIR /app
 COPY --from=builder /app /app
 CMD ["java", "-jar", "target/ms-order-0.0.1-SNAPSHOT.jar"]
