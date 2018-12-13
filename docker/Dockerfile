@@ -20,4 +20,10 @@ COPY --from=clone /app/LPDM-Order /app
 # Build the project
 RUN mvn clean package
 
+#--------------------------.
+# JRE-ALPINE (8)           |
+#--------------------------'
+FROM jre-alpine
+WORKDIR /app
+COPY --from=builder /app /app
 CMD ["java", "-jar", "target/ms-order-0.0.1-SNAPSHOT.jar"]
