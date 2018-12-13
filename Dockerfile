@@ -3,5 +3,5 @@
 #--------------------------'
 FROM openjdk:8-jre-alpine
 WORKDIR /app
-ADD target/ms-order-0.0.1-SNAPSHOT.jar /app
-CMD ["java", "-jar", "app/ms-order-0.0.1-SNAPSHOT.jar"]
+COPY target/ms-order-0.0.1-SNAPSHOT.jar /order.jar
+CMD ["java", "-jar", "order.jar"]
