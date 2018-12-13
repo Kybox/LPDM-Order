@@ -22,6 +22,11 @@ pipeline {
                 }
             }
         }
+        stage('Package') {
+            steps {
+                sh 'mvn package -Dmaven.test.skip=true'
+            }
+        }
         stage('Deploy'){
             steps {
                 sh 'docker stop LPDM-OrderMS || true && docker rm LPDM-OrderMS || true'
