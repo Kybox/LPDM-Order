@@ -18,12 +18,12 @@ WORKDIR /app
 # Copy data from the cloned repository to the working directory
 COPY --from=clone /app/LPDM-Order /app
 # Build the project
-RUN mvn clean package
+RUN mvn clean package -Dmaven.test.skip=true
 
 #--------------------------.
 # OPENJDK-JRE-8-ALPINE     |
 #--------------------------'
-FROM openjdk:8-jre-alpine
-WORKDIR /app
-COPY --from=builder /app /app
+#FROM openjdk:8-jre-alpine
+#WORKDIR /app
+#COPY --from=builder /app /app
 CMD ["java", "-jar", "target/ms-order-0.0.1-SNAPSHOT.jar"]
