@@ -26,7 +26,7 @@
 FROM openjdk:8-jre-alpine
 #WORKDIR /app
 #COPY --from=builder /app /app
-#WORKDIR /app
-#COPY /var/lib/jenkins/workspace/Vyjorg_LPDM-Order_master/target/ms-order-0.0.1-SNAPSHOT.jar /app
-CMD ["java", "-jar", "../target/ms-order-0.0.1-SNAPSHOT.jar"]
+WORKDIR /app
+COPY ../target/ms-order-0.0.1-SNAPSHOT.jar /app
+CMD ["java", "-jar", "app/ms-order-0.0.1-SNAPSHOT.jar"]
 #CMD ["java", "-jar", "target/ms-order-0.0.1-SNAPSHOT.jar"]
