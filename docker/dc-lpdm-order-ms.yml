@@ -5,7 +5,7 @@ services:
   order-ms:
     container_name: LPDM-OrderMS
     build:
-      context: .
+      context: ../
       dockerfile: Dockerfile
     external_links:
     - LPDM-OrderDB
