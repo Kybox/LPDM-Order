@@ -24,6 +24,8 @@ pipeline {
         }
         stage('Deploy'){
             steps {
+                sh 'docker stop LPDM-OrderMS || true && docker rm LPDM-OrderMS || true'
+                sh 'docker-compose -f /var/lib/jenkins/workspace/LPDM_LPDM-Order_master/docker/dc-lpdm-order-ms.yml build --no-cache'
                 step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/dc-lpdm-order-ms.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
             }
         }
