@@ -66,7 +66,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- [ TESTS ] -->
@@ -153,10 +152,18 @@
 				<version>0.10.1</version>
 				<configuration>
 					<to>
-						<image>registry.hub.docker.com/kybox/lpdm-order:latest</image>
+						<image>registry.hub.docker.com/vyjorg/lpdm-order:latest</image>
 					</to>
 					<container>
 						<useCurrentTimestamp>true</useCurrentTimestamp>
+						<jvmFlags>
+							<jvmFlag>-Xms512m</jvmFlag>
+							<jvmFlag>-Xdebug</jvmFlag>
+							<jvmFlag>-Xmy:flag=jib-rules</jvmFlag>
+						</jvmFlags>
+						<ports>
+							<port>28083</port>
+						</ports>
 					</container>
 				</configuration>
 				<executions>
