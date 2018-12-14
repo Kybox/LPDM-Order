@@ -95,7 +95,7 @@ public class AdminController extends FormatController {
     public List<Order> findAllOrderByDateAsc(@PathVariable(required = false) OptionalInt size,
                                              @PathVariable(required = false) OptionalInt page){
         List<Order> orderList = orderDao
-                .findAllByOrderDateAsc(PageRequest.of(page.orElse(1), size.orElse(10)));
+                .findAllByOrderByDateTimeAsc(PageRequest.of(page.orElse(1), size.orElse(10)));
         orderList.forEach(this::formatOrder);
         return orderList;
     }
@@ -111,7 +111,7 @@ public class AdminController extends FormatController {
     public List<Order> findAllOrderByDateDesc(@PathVariable(required = false) OptionalInt size,
                                              @PathVariable(required = false) OptionalInt page){
         List<Order> orderList = orderDao
-                .findAllByOrderDateDesc(PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE)));
+                .findAllByOrderByDateTimeDesc(PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE)));
         orderList.forEach(this::formatOrder);
         return orderList;
     }

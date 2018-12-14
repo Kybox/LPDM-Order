@@ -12,7 +12,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     List<Order> findAllByCustomerId(int id);
     List<Order> findAllByPayment(Payment payment);
-    List<Order> findAllByOrderDateAsc(Pageable pageable);
-    List<Order> findAllByOrderDateDesc(Pageable pageable);
+    List<Order> findAllByOrderByDateTimeAsc(Pageable pageable);
+    List<Order> findAllByOrderByDateTimeDesc(Pageable pageable);
     List<Order> findAllByStatus(Status status, Pageable pageable);
 }

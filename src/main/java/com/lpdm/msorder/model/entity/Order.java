@@ -22,7 +22,7 @@ public class Order {
     private double total;
 
     @Column(name = "order_date")
-    private LocalDateTime  orderDate;
+    private LocalDateTime dateTime;
 
     @Column(name = "status_id")
     @Enumerated(EnumType.ORDINAL)
@@ -67,12 +67,12 @@ public class Order {
         this.total = total;
     }
 
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Status getStatus() {
