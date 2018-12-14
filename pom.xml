@@ -147,6 +147,30 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>0.10.1</version>
+				<configuration>
+					<from>
+						<image>openjdk:11-jre-slim</image>
+					</from>
+					<to>
+						<image>registry.hub.docker.com/kybox/lpdm-order:latest</image>
+					</to>
+					<container>
+						<useCurrentTimestamp>true</useCurrentTimestamp>
+					</container>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
