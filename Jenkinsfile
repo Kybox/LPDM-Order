@@ -22,16 +22,9 @@ pipeline {
                 }
             }
         }
-        stage('Package') {
+        stage('Push to DockerHub'){
             steps {
-                sh 'mvn package -Dmaven.test.skip=true'
-            }
-        }
-        stage('Deploy'){
-            steps {
-                sh 'docker stop LPDM-OrderMS || true && docker rm LPDM-OrderMS || true'
-                sh 'docker-compose -f /var/lib/jenkins/workspace/Vyjorg_LPDM-Order_master/docker/dc-lpdm-order-ms.yml build --no-cache'
-                sh 'mvn jib:build'
+                sh 'mvn compile jib:build'
             }
         }
     }

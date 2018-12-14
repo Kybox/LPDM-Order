@@ -152,9 +152,6 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>0.10.1</version>
 				<configuration>
-					<from>
-						<image>openjdk:11-jre-slim</image>
-					</from>
 					<to>
 						<image>registry.hub.docker.com/kybox/lpdm-order:latest</image>
 					</to>
