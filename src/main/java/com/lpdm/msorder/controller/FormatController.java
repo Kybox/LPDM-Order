@@ -1,6 +1,6 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.entity.*;
+import com.lpdm.msorder.model.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 
 @Controller
-public class AbstractController {
+public class FormatController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
 
@@ -34,7 +34,7 @@ public class AbstractController {
     /**
      * Default constructor
      */
-    public AbstractController(){
+    public FormatController(){
 
     }
 

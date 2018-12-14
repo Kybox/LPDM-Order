@@ -3,7 +3,7 @@ package com.lpdm.msorder.controller;
 import com.lpdm.msorder.dao.OrderRepository;
 import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
-import com.lpdm.msorder.entity.*;
+import com.lpdm.msorder.model.entity.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.exception.OrderPersistenceException;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +25,7 @@ import java.util.List;
 @RefreshScope
 @RestController
 @RequestMapping("/orders")
-public class OrderController extends AbstractController {
+public class OrderController extends FormatController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
 

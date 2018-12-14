@@ -1,4 +1,4 @@
-package com.lpdm.msorder.entity;
+package com.lpdm.msorder.model.entity;
 
 import java.time.LocalDate;
 

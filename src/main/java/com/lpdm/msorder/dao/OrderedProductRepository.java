@@ -1,9 +1,7 @@
 package com.lpdm.msorder.dao;
 
-import com.lpdm.msorder.entity.OrderedProduct;
-import com.lpdm.msorder.entity.OrderedProductPK;
-import com.lpdm.msorder.entity.Product;
-import org.aspectj.weaver.ast.Or;
+import com.lpdm.msorder.model.entity.OrderedProduct;
+import com.lpdm.msorder.model.entity.OrderedProductPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

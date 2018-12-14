@@ -1,4 +1,4 @@
-package com.lpdm.msorder.entity;
+package com.lpdm.msorder.model.entity;
 
 public class Location {
 
