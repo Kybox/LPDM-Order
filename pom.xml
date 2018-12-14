@@ -156,11 +156,6 @@
 					</to>
 					<container>
 						<useCurrentTimestamp>true</useCurrentTimestamp>
-						<jvmFlags>
-							<jvmFlag>-Xms512m</jvmFlag>
-							<jvmFlag>-Xdebug</jvmFlag>
-							<jvmFlag>-Xmy:flag=jib-rules</jvmFlag>
-						</jvmFlags>
 						<ports>
 							<port>28083</port>
 						</ports>
