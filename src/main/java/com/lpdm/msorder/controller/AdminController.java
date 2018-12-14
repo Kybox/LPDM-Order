@@ -165,8 +165,10 @@ public class AdminController extends FormatController {
 
         Optional<Status> status = Stream.of(Status.values()).filter(s -> s.getId() == id).findFirst();
         if(status.isPresent()){
-            return orderDao.findAllByStatus(status.get(),
+            List<Order> orderList = orderDao.findAllByStatus(status.get(),
                     PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE)));
+            orderList.forEach(this::formatOrder);
+            return orderList;
         }
         else throw new OrderNotFoundException();
     }
