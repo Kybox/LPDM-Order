@@ -3,6 +3,7 @@ services:
 
   # MICROSERVICE CONTAINER
   order-ms:
+    image: LPDM-OrderMS
     container_name: LPDM-OrderMS
     build:
       context: ../
