@@ -31,7 +31,7 @@ pipeline {
             steps {
                 sh 'docker stop LPDM-OrderMS || true && docker rm LPDM-OrderMS || true'
                 sh 'docker pull vyjorg/lpdm-order:latest'
-                sh 'docker run -d --name LPDM-OrderMS -p 28083:28083 --link LPDM-OrderDB --restart always vyjorg/lpdm-order:latest'
+                sh 'docker run -d --name LPDM-OrderMS -p 28083:28083 --link LPDM-OrderDB --restart always --memory-swappiness=0  vyjorg/lpdm-order:latest'
             }
         }
     }

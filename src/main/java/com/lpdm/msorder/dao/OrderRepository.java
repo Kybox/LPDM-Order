@@ -15,4 +15,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByOrderByDateTimeAsc(Pageable pageable);
     List<Order> findAllByOrderByDateTimeDesc(Pageable pageable);
     List<Order> findAllByStatus(Status status, Pageable pageable);
+    List<Order> findAllByDateTime(Pageable pageable);
 }

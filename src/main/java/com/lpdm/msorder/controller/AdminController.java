@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -160,15 +161,19 @@ public class AdminController extends FormatController {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @GetMapping(value = "/orders/all/status/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByStatus(@PathVariable int id,
-                                       @PathVariable(required = false) OptionalInt page,
-                                       @PathVariable(required = false) OptionalInt size){
+                                       @PathVariable(required = false) Optional<Integer> page,
+                                       @PathVariable(required = false) Optional<Integer> size){
 
         Optional<Status> status = Stream.of(Status.values()).filter(s -> s.getId() == id).findFirst();
         if(status.isPresent()){
-            List<Order> orderList = orderDao.findAllByStatus(status.get(),
-                    PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE)));
-            orderList.forEach(this::formatOrder);
-            return orderList;
+            PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE));
+            List<Order> orderList = orderDao.findAllByStatus(status.get(), pageRequest);
+
+            if(!orderList.isEmpty()){
+                orderList.forEach(this::formatOrder);
+                return orderList;
+            }
+            else throw new OrderNotFoundException();
         }
         else throw new OrderNotFoundException();
     }
