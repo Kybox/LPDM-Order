@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface OrderedProductRepository extends JpaRepository<OrderedProduct, OrderedProductPK> {
 
-    //List<OrderedProduct> findAllByProductId(int id);
     List<OrderedProduct> findAllByOrderedProductPK_ProductId(int id);
-    //List<OrderedProduct> findAllByOrderedProductPK_ProductId(int id);
+    List<OrderedProduct> findAllByOrderedProductPK_ProductIdAndOrderedProductPK_OrderId(int productId, int orderId);
 }

@@ -3,6 +3,7 @@ package com.lpdm.msorder.controller;
 import com.lpdm.msorder.dao.OrderRepository;
 import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
+import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.model.entity.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.exception.OrderPersistenceException;
@@ -10,11 +11,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author Kybox
@@ -67,17 +75,103 @@ public class OrderController extends FormatController {
     /**
      * Find {@link Order} by the user {@link Integer} id
      * @param id The {@link User} {@link Integer} id
-     * @return The user ordered {@link List}
+     * @return The user ordered {@link List<Order>}
      */
-    @GetMapping(value = "/by/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/all/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByUserId(@PathVariable int id){
 
         List<Order> orderList = orderDao.findAllByCustomerId(id);
-
         if (orderList.isEmpty()) throw new OrderNotFoundException();
-
         orderList.forEach(this::formatOrder);
+        return orderList;
+    }
 
+    /**
+     * Find all {@link Order} objects by the {@link User} id and the {@link Status} id
+     * @param userId The {@link User} id
+     * @param statusId Ths {@link Status} id
+     * @return The {@link List<Order>} found otherwise throw an {@link OrderNotFoundException}
+     */
+    @GetMapping(value = "/all/customer/{userId}/status/{statusId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Order> findAllUserAndStatus(@PathVariable("userId") int userId,
+                                            @PathVariable("statusId") int statusId){
+
+        if(userId == 0 || statusId == 0)
+            throw new BadRequestException();
+
+        Optional<Status> status = Stream.of(Status.values())
+                .filter(s -> s.getId() == statusId).findFirst();
+
+        if(!status.isPresent())
+            throw new BadRequestException();
+
+        List<Order> orderList = orderDao.findAllByCustomerIdAndStatus(userId, status.get());
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+        orderList.forEach(this::formatOrder);
+        return orderList;
+    }
+
+    /**
+     * Find all {@link Order} objects by {@link User} id ordered by ASC or DESC
+     * @param id The {@link User} id
+     * @param ordered Specify ASC or DESC
+     * @param page Sets the number of pages
+     * @param size Limit the number of {@link Order} objects returned for each pages
+     * @return The {@link List<Order>} found otherwise throw an {@link OrderNotFoundException}
+     */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @GetMapping(value = "/all/customer/{id}/date/{ordered}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Order> findAllByUserOrderByDate(@PathVariable("id") int id,
+                                             @PathVariable("ordered") String ordered,
+                                             @PathVariable(required = false) Optional<Integer> page,
+                                             @PathVariable(required = false) Optional<Integer> size){
+
+        if(id == 0) throw new BadRequestException();
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE));
+
+        List<Order> orderList = null;
+        switch (ordered.toLowerCase()) {
+            case "asc": orderList = orderDao.findAllByCustomerIdOrderByDateTimeAsc(id, pageRequest);
+                break;
+            case "desc": orderList = orderDao.findAllByCustomerIdOrderByDateTimeDesc(id, pageRequest);
+                break;
+            default:
+                throw new BadRequestException();
+        }
+
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+        orderList.forEach(this::formatOrder);
+        return orderList;
+    }
+
+    /**
+     * Find all {@link Order} objects by {@link User} id that contains the {@link Product} id
+     * @param userId The {@link User} id
+     * @param productId The {@link Product} id
+     * @return The {@link List<Order>} found otherwise throw an {@link OrderNotFoundException}
+     */
+    @GetMapping(value = "/all/customer/{userId}/product/{productId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Order> findByUserAndProduct(@PathVariable("userId") int userId,
+                                            @PathVariable("productId") int productId){
+
+        if (userId == 0 || productId == 0)
+            throw new BadRequestException();
+
+        List<Order> mainOrderList = orderDao.findAllByCustomerId(userId);
+        if(mainOrderList.isEmpty()) throw new OrderNotFoundException();
+
+        List<Order> orderList = new ArrayList<>();
+        for(Order order : mainOrderList){
+
+            List<OrderedProduct> orderedProductList = orderedProductDao
+                    .findAllByOrderedProductPK_ProductIdAndOrderedProductPK_OrderId(order.getId(), productId);
+
+            if(!orderedProductList.isEmpty()) orderList.add(order);
+        }
+
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+        orderList.forEach(this::formatOrder);
         return orderList;
     }
 
