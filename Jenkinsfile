@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Push to DockerHub') {
             steps {
-                sh 'mvn compile jib:build'
+                sh 'mvn clean package'
             }
         }
         stage('Deploy') {
