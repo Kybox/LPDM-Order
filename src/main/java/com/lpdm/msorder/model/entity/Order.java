@@ -13,9 +13,7 @@ import java.util.List;
 public class Order {
 
     @Id
-    @Column(updatable = false, nullable = false)
-    @SequenceGenerator(name = "order_gen", sequenceName = "order_id_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
