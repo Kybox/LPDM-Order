@@ -3,7 +3,7 @@ Projet 12 - DA JAVA - Openclassrooms
 
 **Domaine** : https://order.lpdm.kybox.fr
 
-**Image Docker** : docker push vyjorg/lpdm-order:latest
+**Docker** : [https://hub.docker.com/r/vyjorg/lpdm-order](https://hub.docker.com/r/vyjorg/lpdm-order)
 
 ##### Liste des urls disponibles 
 | URL                                             | METHODE | DESCRIPTION                                                                                                                                                                   |
@@ -15,7 +15,7 @@ Projet 12 - DA JAVA - Openclassrooms
 | /orders/all/customer/{id}/date/{ordered}        | GET     | retourne toutes les commandes effectuées par l'utilisateur ayant pour identifiant le paramètre {id} classées par en ordre ("asc" / "desc") définit par le paramètre {ordered} |
 | /orders/all/customer/{userId}/status/{statusId} | GET     |  retourne toutes les commande effectuées par l'utilisateur ayant pour identifiant le paramètre {userId} et le statut de commande définit par le paramètre {statusId}          |
 | /orders/save                                    | POST    | persiste la commande présente dans la requête                                                                                                                                 |
-| ----------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                                                 |         |                                                                                                                                                                               |
 | /admin/payment/add                              | POST    | persiste le moyen de paiement présent dans le requête                                                                                                                         |
 | /admin/payment/delete                           | POST    | supprime le moyen de paiement présent dans la requête                                                                                                                         |
 | /admin/order/delete                             | POST    | supprime la commande présente dans la requête                                                                                                                                 |
