@@ -21,11 +21,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 		<spring-cloud.version>Greenwich.M3</spring-cloud.version>
 		<log4j2.version>2.11.1</log4j2.version>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
 	<dependencies>
