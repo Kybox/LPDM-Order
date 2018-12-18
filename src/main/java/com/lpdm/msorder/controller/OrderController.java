@@ -6,7 +6,6 @@ import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
-import com.lpdm.msorder.exception.OrderPersistenceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -64,22 +62,28 @@ public class OrderController extends FormatController {
     public Order saveOrder(@Valid @RequestBody Order order){
 
 
-        log.info("status = " + order.getStatus());
-        log.info("payment = " + order.getPayment().getLabel());
+        if(order.getStore() != null && order.getStore().getId() > 0)
+            order.setStoreId(order.getStore().getId());
 
+        if(order.getCustomer() != null && order.getCustomer().getId() > 0)
+            order.setCustomerId(order.getCustomer().getId());
+        else throw new BadRequestException();
+
+        order = orderDao.save(order);
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
-            log.info(orderedProduct);
+            orderedProduct.setOrder(order);
+
+            if(orderedProduct.getProduct() != null && orderedProduct.getProduct().getId() > 0){
+                orderedProduct.setProductId(orderedProduct.getProduct().getId());
+                orderedProduct.setPrice(orderedProduct.getProduct().getPrice());
+                orderedProductDao.save(orderedProduct);
+            }
+            else throw new BadRequestException();
         }
 
-        /*
-        order.getOrderedProducts().forEach(orderedProductDao::save);
-        try { orderDao.save(order); }
-        catch (Exception e) { throw new OrderPersistenceException(); }
-        return order;
-
-        */
+        order = formatOrder(order);
 
         return order;
     }
@@ -144,9 +148,9 @@ public class OrderController extends FormatController {
 
         List<Order> orderList = null;
         switch (ordered.toLowerCase()) {
-            case "asc": orderList = orderDao.findAllByCustomerIdOrderByDateTimeAsc(id, pageRequest);
+            case "asc": orderList = orderDao.findAllByCustomerIdOrderByOrderDateAsc(id, pageRequest);
                 break;
-            case "desc": orderList = orderDao.findAllByCustomerIdOrderByDateTimeDesc(id, pageRequest);
+            case "desc": orderList = orderDao.findAllByCustomerIdOrderByOrderDateDesc(id, pageRequest);
                 break;
             default:
                 throw new BadRequestException();
@@ -167,6 +171,7 @@ public class OrderController extends FormatController {
     public List<Order> findByUserAndProduct(@PathVariable("userId") int userId,
                                             @PathVariable("productId") int productId){
 
+        /*
         if (userId == 0 || productId == 0)
             throw new BadRequestException();
 
@@ -185,6 +190,8 @@ public class OrderController extends FormatController {
         if(orderList.isEmpty()) throw new OrderNotFoundException();
         orderList.forEach(this::formatOrder);
         return orderList;
+        */
+        return null;
     }
 
     /**

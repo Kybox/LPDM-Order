@@ -1,28 +1,52 @@
 package com.lpdm.msorder.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "ordered_product", schema = "public")
 public class OrderedProduct {
 
-    @EmbeddedId
+    @Id
     @JsonIgnore
-    private OrderedProductPK orderedProductPK = new OrderedProductPK();
+    @GeneratedValue
+    private int id;
 
+    @NotNull
     @ManyToOne
-    @MapsId("orderId")
-    @JsonBackReference
+    @JsonIgnore
+    @JoinColumn(name = "order_id")
     private Order order;
 
+    @JsonIgnore
+    @Column(name = "product_id")
+    private int productId;
+
+    @NotNull
     @Transient
     private Product product;
 
     @Column
+    @NotNull
     private int quantity;
+
+    @Column
+    @NotNull
+    @JsonIgnore
+    private double price;
+
+    public OrderedProduct() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Order getOrder() {
         return order;
@@ -32,12 +56,12 @@ public class OrderedProduct {
         this.order = order;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public Product getProduct() {
@@ -48,11 +72,19 @@ public class OrderedProduct {
         this.product = product;
     }
 
-    public OrderedProductPK getOrderedProductPK() {
-        return orderedProductPK;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setOrderedProductPK(OrderedProductPK orderedProductPK) {
-        this.orderedProductPK = orderedProductPK;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

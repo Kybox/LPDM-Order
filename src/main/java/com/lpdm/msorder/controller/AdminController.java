@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -95,7 +94,7 @@ public class AdminController extends FormatController {
     public List<Order> findAllOrderByDateAsc(@PathVariable(required = false) OptionalInt size,
                                              @PathVariable(required = false) OptionalInt page){
         List<Order> orderList = orderDao
-                .findAllByOrderByDateTimeAsc(PageRequest.of(page.orElse(1), size.orElse(10)));
+                .findAllByOrderByOrderDateAsc(PageRequest.of(page.orElse(1), size.orElse(10)));
         orderList.forEach(this::formatOrder);
         return orderList;
     }
@@ -111,7 +110,7 @@ public class AdminController extends FormatController {
     public List<Order> findAllOrderByDateDesc(@PathVariable(required = false) OptionalInt size,
                                              @PathVariable(required = false) OptionalInt page){
         List<Order> orderList = orderDao
-                .findAllByOrderByDateTimeDesc(PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE)));
+                .findAllByOrderByOrderDateDesc(PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE)));
         orderList.forEach(this::formatOrder);
         return orderList;
     }
@@ -124,6 +123,7 @@ public class AdminController extends FormatController {
     @GetMapping(value = "orders/all/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
 
+        /*
         List<OrderedProduct> orderedProductList = orderedProductDao
                 .findAllByOrderedProductPK_ProductId(id);
 
@@ -138,6 +138,8 @@ public class AdminController extends FormatController {
 
         orderList.forEach(this::formatOrder);
         return orderList;
+        */
+        return null;
     }
 
     /**

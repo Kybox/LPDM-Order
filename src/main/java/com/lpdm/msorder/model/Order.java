@@ -1,5 +1,6 @@
 package com.lpdm.msorder.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -20,7 +21,7 @@ public class Order {
     private double total;
 
     @Column(name = "order_date")
-    private LocalDateTime dateTime;
+    private LocalDateTime orderDate;
 
     @Column(name = "status_id")
     @Enumerated(EnumType.ORDINAL)
@@ -45,8 +46,7 @@ public class Order {
     @Transient
     private User customer;
 
-    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "order")
     private List<OrderedProduct> orderedProducts;
 
     public int getId() {
@@ -65,12 +65,12 @@ public class Order {
         this.total = total;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getOrderDate() {
+        return orderDate;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
     }
 
     public Status getStatus() {

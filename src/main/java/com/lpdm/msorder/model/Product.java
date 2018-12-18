@@ -1,11 +1,16 @@
 package com.lpdm.msorder.model;
 
+import javax.validation.constraints.NotNull;
+
 public class Product {
 
+    @NotNull
     private int id;
     private String name;
     private Category category;
     private String label;
+
+    @NotNull
     private Double price;
     private Stock stock;
     private User producer;
