@@ -1,8 +1,8 @@
 package com.lpdm.msorder.dao;
 
-import com.lpdm.msorder.model.entity.Order;
-import com.lpdm.msorder.model.entity.Payment;
-import com.lpdm.msorder.model.entity.Status;
+import com.lpdm.msorder.model.Order;
+import com.lpdm.msorder.model.Payment;
+import com.lpdm.msorder.model.Status;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 

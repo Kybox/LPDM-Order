@@ -4,7 +4,7 @@ import com.lpdm.msorder.dao.OrderRepository;
 import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.exception.BadRequestException;
-import com.lpdm.msorder.model.entity.*;
+import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.exception.OrderPersistenceException;
 import org.apache.logging.log4j.LogManager;
@@ -13,11 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +63,24 @@ public class OrderController extends FormatController {
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order saveOrder(@Valid @RequestBody Order order){
 
+
+        log.info("status = " + order.getStatus());
+        log.info("payment = " + order.getPayment().getLabel());
+
+
+        for(OrderedProduct orderedProduct : order.getOrderedProducts()){
+
+            log.info(orderedProduct);
+        }
+
+        /*
         order.getOrderedProducts().forEach(orderedProductDao::save);
         try { orderDao.save(order); }
         catch (Exception e) { throw new OrderPersistenceException(); }
+        return order;
+
+        */
+
         return order;
     }
 

@@ -1,4 +1,4 @@
-package com.lpdm.msorder.model.entity;
+package com.lpdm.msorder.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

@@ -1,4 +1,4 @@
-package com.lpdm.msorder.model.entity;
+package com.lpdm.msorder.model;
 
 public class Category {
 

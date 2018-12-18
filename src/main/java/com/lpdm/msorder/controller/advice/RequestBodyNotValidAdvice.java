@@ -1,6 +1,6 @@
 package com.lpdm.msorder.controller.advice;
 
-import com.lpdm.msorder.model.entity.EntityErrorDetails;
+import com.lpdm.msorder.model.EntityErrorDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

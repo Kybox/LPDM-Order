@@ -1,6 +1,6 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.model.entity.Store;
+import com.lpdm.msorder.model.Store;
 import com.lpdm.msorder.proxy.StoreProxy;
 import feign.FeignException;
 import org.apache.logging.log4j.LogManager;

@@ -1,4 +1,4 @@
-package com.lpdm.msorder.model.entity;
+package com.lpdm.msorder.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

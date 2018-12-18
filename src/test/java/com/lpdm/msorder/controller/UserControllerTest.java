@@ -1,6 +1,6 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.model.entity.User;
+import com.lpdm.msorder.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

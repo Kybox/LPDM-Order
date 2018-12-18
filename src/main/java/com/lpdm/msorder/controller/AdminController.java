@@ -5,14 +5,13 @@ import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.exception.DeleteEntityException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
-import com.lpdm.msorder.model.entity.*;
+import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

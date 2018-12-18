@@ -1,6 +1,6 @@
 package com.lpdm.msorder.proxy;
 
-import com.lpdm.msorder.model.entity.Store;
+import com.lpdm.msorder.model.Store;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
