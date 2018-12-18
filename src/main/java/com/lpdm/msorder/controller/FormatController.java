@@ -51,14 +51,13 @@ public class FormatController {
         Optional<User> optionalUser = userController.findUserById(order.getCustomerId());
         order.setCustomer(optionalUser.orElse(new User(order.getCustomerId())));
 
-        /*
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
-            int productId = orderedProduct.getOrderedProductPK().getProductId();
+            int productId = orderedProduct.getProductId();
             Optional<Product> optionalProduct = productController.findProductById(productId);
-            orderedProduct.setProduct(optionalProduct.orElse(new Product(productId)));
+            orderedProduct.setProduct(optionalProduct.orElse(new Product(productId, orderedProduct.getPrice())));
         }
-        */
+
 
         return order;
     }

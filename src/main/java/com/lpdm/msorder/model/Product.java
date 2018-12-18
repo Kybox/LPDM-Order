@@ -23,6 +23,11 @@ public class Product {
         this.id = id;
     }
 
+    public Product(int id, double price){
+        this.id = id;
+        this.price = price;
+    }
+
     public int getId() {
         return id;
     }

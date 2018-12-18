@@ -3,6 +3,7 @@ package com.lpdm.msorder.controller;
 import com.lpdm.msorder.dao.OrderRepository;
 import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
+import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.DeleteEntityException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.*;
@@ -11,12 +12,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -75,7 +79,7 @@ public class AdminController extends FormatController {
      * @param order The valid {@link Order} object to delete
      * @return If it succeeded or not otherwise throw an exception
      */
-    @PostMapping(value = "order/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/order/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deleteOrder(@Valid @RequestBody Order order){
 
         try { orderDao.delete(order); }
@@ -84,33 +88,32 @@ public class AdminController extends FormatController {
     }
 
     /**
-     * Get all {@link Order} objects ordered by asc date
-     * @param size Limit the number of {@link Order} objects returned by pages
-     * @param page Sets the number of pages
-     * @return The {@link List<Order>} ordered
+     * Get all {@link Order} objects sorted by ASC or DESC
+     * @param sort The sort direction
+     * @param size The maximum {@link Order} by pages
+     * @param page The page number
+     * @return The {@link List<Order>} sorted
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @GetMapping(value = "orders/all/date/asc", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Order> findAllOrderByDateAsc(@PathVariable(required = false) OptionalInt size,
-                                             @PathVariable(required = false) OptionalInt page){
-        List<Order> orderList = orderDao
-                .findAllByOrderByOrderDateAsc(PageRequest.of(page.orElse(1), size.orElse(10)));
-        orderList.forEach(this::formatOrder);
-        return orderList;
-    }
+    @GetMapping(value = "/orders/all/date/{sort}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Order> findAllSortedByDate(@PathVariable String sort,
+                                           @RequestParam Optional<Integer> size,
+                                           @RequestParam Optional<Integer> page){
+        Sort sortDate;
+        switch (sort.toLowerCase()){
+            case "asc":
+                sortDate = new Sort(Sort.Direction.ASC, "orderDate");
+                break;
+            case "desc":
+                sortDate = new Sort(Sort.Direction.DESC, "orderDate");
+                break;
+            default:
+                throw new BadRequestException();
+        }
 
-    /**
-     * Get all {@link Order} objects ordered by desc date
-     * @param size Limit the number of {@link Order} objects returned by pages
-     * @param page Sets the number of pages
-     * @return The {@link List<Order>} ordered
-     */
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @GetMapping(value = "orders/all/date/desc", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Order> findAllOrderByDateDesc(@PathVariable(required = false) OptionalInt size,
-                                             @PathVariable(required = false) OptionalInt page){
-        List<Order> orderList = orderDao
-                .findAllByOrderByOrderDateDesc(PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE)));
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE), sortDate);
+        Page<Order> orderPage = orderDao.findAll(pageRequest);
+        List<Order> orderList = orderPage.getContent();
         orderList.forEach(this::formatOrder);
         return orderList;
     }
@@ -123,23 +126,14 @@ public class AdminController extends FormatController {
     @GetMapping(value = "orders/all/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
 
-        /*
-        List<OrderedProduct> orderedProductList = orderedProductDao
-                .findAllByOrderedProductPK_ProductId(id);
-
+        List<OrderedProduct> orderedProductList = orderedProductDao.findAllByProductId(id);
         List<Optional<Order>> optionalList = new ArrayList<>();
-
-        orderedProductList.stream().filter(s -> s.getOrder().getId() == id)
-                .forEach(o -> optionalList.add(orderDao.findById(o.getOrder().getId())));
-
+        orderedProductList.forEach(o -> optionalList.add(orderDao.findById(o.getOrder().getId())));
         List<Order> orderList = optionalList.stream().filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-
         orderList.forEach(this::formatOrder);
         return orderList;
-        */
-        return null;
     }
 
     /**
@@ -162,8 +156,8 @@ public class AdminController extends FormatController {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @GetMapping(value = "/orders/all/status/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByStatus(@PathVariable int id,
-                                       @PathVariable(required = false) Optional<Integer> page,
-                                       @PathVariable(required = false) Optional<Integer> size){
+                                       @RequestParam(required = false) Optional<Integer> page,
+                                       @RequestParam(required = false) Optional<Integer> size){
 
         Optional<Status> status = Stream.of(Status.values()).filter(s -> s.getId() == id).findFirst();
         if(status.isPresent()){
