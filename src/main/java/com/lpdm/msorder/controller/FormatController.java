@@ -22,8 +22,6 @@ public class FormatController {
     /**
      * Autowired - Controller
      */
-    @Autowired
-    private UserController userController;
 
     @Autowired
     private StoreController storeController;
@@ -48,17 +46,13 @@ public class FormatController {
         Optional<Store> optionalStore = storeController.findStoreById(order.getStoreId());
         order.setStore(optionalStore.orElse(new Store(order.getStoreId())));
 
-        Optional<User> optionalUser = userController.findUserById(order.getCustomerId());
-        order.setCustomer(optionalUser.orElse(new User(order.getCustomerId())));
+        order.setCustomer(new User(order.getCustomerId()));
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
-
             int productId = orderedProduct.getProductId();
             Optional<Product> optionalProduct = productController.findProductById(productId);
             orderedProduct.setProduct(optionalProduct.orElse(new Product(productId, orderedProduct.getPrice())));
         }
-
-
         return order;
     }
 }

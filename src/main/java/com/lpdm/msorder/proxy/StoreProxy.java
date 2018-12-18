@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.Optional;
 
 @Component
-@FeignClient(name = "${microservice.store.name}",
-        url = "${microservice.domain}"+":"+"${microservice.store.port}")
+@FeignClient(name = "${microservice.store.name}", url = "${microservice.store.domain:https://store.lpdm.kybox.fr}")
 public interface StoreProxy {
 
     @RequestMapping(value = "/stores/{id}",
