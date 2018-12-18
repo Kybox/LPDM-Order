@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -171,7 +172,6 @@ public class OrderController extends FormatController {
     public List<Order> findByUserAndProduct(@PathVariable("userId") int userId,
                                             @PathVariable("productId") int productId){
 
-        /*
         if (userId == 0 || productId == 0)
             throw new BadRequestException();
 
@@ -181,17 +181,18 @@ public class OrderController extends FormatController {
         List<Order> orderList = new ArrayList<>();
         for(Order order : mainOrderList){
 
-            List<OrderedProduct> orderedProductList = orderedProductDao
-                    .findAllByOrderedProductPK_ProductIdAndOrderedProductPK_OrderId(order.getId(), productId);
-
-            if(!orderedProductList.isEmpty()) orderList.add(order);
+            List<OrderedProduct> productList = orderedProductDao.findAllByOrder(order);
+            for(OrderedProduct orderedProduct : productList){
+                if(orderedProduct.getProductId() == productId){
+                    orderList.add(order);
+                    break;
+                }
+            }
         }
 
         if(orderList.isEmpty()) throw new OrderNotFoundException();
         orderList.forEach(this::formatOrder);
         return orderList;
-        */
-        return null;
     }
 
     /**
