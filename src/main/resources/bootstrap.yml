@@ -1,0 +1,13 @@
+#----------------------------------------------------
+# THIS FILE IS LOADED BEFORE APPLICATION.PROPERTIES #
+#----------------------------------------------------
+spring:
+  application:
+    name: ms-order
+  cloud:
+    config:
+      allow-override: true
+      uri: https://config.lpdm.kybox.fr
+  jpa:
+    hibernate:
+      ddl-auto: validate
