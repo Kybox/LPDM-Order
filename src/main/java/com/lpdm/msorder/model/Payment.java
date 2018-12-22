@@ -15,6 +15,13 @@ public class Payment {
     @Column(unique = true, length = 20)
     private String label;
 
+    public Payment() {
+    }
+
+    public Payment(@NotNull String label) {
+        this.label = label;
+    }
+
     public int getId() {
         return id;
     }

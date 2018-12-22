@@ -11,7 +11,6 @@ import com.lpdm.msorder.exception.PaymentPersistenceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +28,6 @@ import java.util.stream.Stream;
  * @since 01/12/2018
  */
 
-@RefreshScope
 @RestController
 @RequestMapping("/admin")
 public class AdminController extends FormatController {
@@ -53,10 +51,10 @@ public class AdminController extends FormatController {
      * @param payment The new {@link Payment} object
      * @return The new {@link Payment} added
      */
-    @PostMapping(value = "payment/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Payment addNewPayment(@RequestBody Payment payment) {
+    @PostMapping(value = "/payment/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Payment addNewPayment(@Valid @RequestBody Payment payment) {
 
-        try { paymentDao.save(payment); }
+        try { payment = paymentDao.save(payment); }
         catch (Exception e) { throw new PaymentPersistenceException(); }
         return payment;
     }
@@ -123,7 +121,7 @@ public class AdminController extends FormatController {
      * @param id The product id
      * @return The order {@link List}
      */
-    @GetMapping(value = "orders/all/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/orders/all/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
 
         List<OrderedProduct> orderedProductList = orderedProductDao.findAllByProductId(id);
@@ -141,7 +139,7 @@ public class AdminController extends FormatController {
      * @param id Payment id
      * @return The order {@link List}
      */
-    @GetMapping(value = "orders/all/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/orders/all/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByPaymentId(@PathVariable int id){
 
         Optional<Payment> payment = paymentDao.findById(id);
