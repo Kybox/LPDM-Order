@@ -69,6 +69,8 @@ public class OrderController extends FormatController {
         }
         else log.info("Order : Store = null");
 
+        log.info("Customer id = " + order.getCustomerId());
+
         if(order.getCustomerId() > 0) {
             order.setCustomerId(order.getCustomerId());
             log.info("Customer ID = " + order.getCustomerId());

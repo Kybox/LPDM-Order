@@ -39,7 +39,6 @@ public class Order {
     private Store store;
 
     @NotNull
-    @JsonIgnore
     @Column(name = "customer_id")
     private int customerId;
 
