@@ -128,4 +128,20 @@ public class Order {
     public void setOrderedProducts(List<OrderedProduct> orderedProducts) {
         this.orderedProducts = orderedProducts;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", total=" + total +
+                ", orderDate=" + orderDate +
+                ", status=" + status +
+                ", payment=" + payment +
+                ", storeId=" + storeId +
+                ", store=" + store +
+                ", customerId=" + customerId +
+                ", customer=" + customer +
+                ", orderedProducts=" + orderedProducts +
+                '}';
+    }
 }

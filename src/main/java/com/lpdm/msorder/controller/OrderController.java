@@ -62,21 +62,29 @@ public class OrderController extends FormatController {
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order saveOrder(@Valid @RequestBody Order order){
 
+        log.info(order.toString());
 
-        if(order.getStore() != null && order.getStore().getId() > 0)
+        if(order.getStore() != null && order.getStore().getId() > 0) {
             order.setStoreId(order.getStore().getId());
+        }
+        else log.info("Order : Store = null");
 
         if(order.getCustomer() != null && order.getCustomer().getId() > 0)
             order.setCustomerId(order.getCustomer().getId());
-        else throw new BadRequestException();
+        else {
+            log.warn("No customer id !");
+            throw new BadRequestException();
+        }
 
-        order = orderDao.save(order);
+        orderDao.save(order);
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
             orderedProduct.setOrder(order);
 
             if(orderedProduct.getProduct() != null && orderedProduct.getProduct().getId() > 0){
+
+                log.info("Addind product : " + orderedProduct.getProduct().getId());
                 orderedProduct.setProductId(orderedProduct.getProduct().getId());
                 orderedProduct.setPrice(orderedProduct.getProduct().getPrice());
                 orderedProductDao.save(orderedProduct);
@@ -85,6 +93,8 @@ public class OrderController extends FormatController {
         }
 
         order = formatOrder(order);
+
+        log.info(order.toString());
 
         return order;
     }
