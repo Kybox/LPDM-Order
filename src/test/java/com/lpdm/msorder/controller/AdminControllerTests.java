@@ -92,7 +92,7 @@ public class AdminControllerTests {
         Mockito.when(paymentDao.save(Mockito.any(Payment.class))).thenReturn(payment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/admin/payment/add")
+                .put("/admin/payment/add")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .content(ObjToJson.get(payment));
@@ -111,7 +111,7 @@ public class AdminControllerTests {
         Mockito.when(paymentDao.findById(Mockito.anyInt())).thenReturn(optionalPayment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/admin/payment/delete")
+                .delete("/admin/payment/delete")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .content(ObjToJson.get(payment));
@@ -129,7 +129,7 @@ public class AdminControllerTests {
         Mockito.when(orderDao.findById(Mockito.anyInt())).thenReturn(optionalOrder);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/admin/order/delete")
+                .delete("/admin/order/delete")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(ObjToJson.get(order));
