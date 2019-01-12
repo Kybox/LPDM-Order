@@ -9,6 +9,7 @@ import com.lpdm.msorder.model.OrderedProduct;
 import com.lpdm.msorder.model.User;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.PdfService;
+import javafx.scene.layout.Border;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +62,7 @@ public class PdfServiceImpl implements PdfService {
         content.beginText();
 
         addReference("20190110172610", content);
+        addOrderDate(LocalDateTime.now(), content);
 
         User user = new User();
         user.setFirstName("Marcel");
@@ -84,6 +89,14 @@ public class PdfServiceImpl implements PdfService {
                 reference, 515, 670, 0);
     }
 
+    private void addOrderDate(LocalDateTime dateTime, PdfContentByte content){
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd / MM / yyyy");
+        content.setFontAndSize(baseFont, 9);
+        content.showTextAligned(PdfContentByte.ALIGN_CENTER,
+                "Le " + formatter.format(dateTime), 540, 620, 0);
+    }
+
     private void addCustomer(User user, PdfContentByte content){
 
         content.setFontAndSize(baseFont, 10);
@@ -107,7 +120,7 @@ public class PdfServiceImpl implements PdfService {
 
         PdfPTable table = new PdfPTable(4);
         table.setTotalWidth(new float[]{252.1f, 80.9f, 100.1f, 88.5f});
-        table.getDefaultCell().setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.BOTTOM);
+        table.getDefaultCell().setBorder(Rectangle.BOX);
         table.getDefaultCell().setBorderWidth(0.1f);
 
         table.addCell(getCell("Tomate x10", Element.ALIGN_LEFT,0));
@@ -120,6 +133,21 @@ public class PdfServiceImpl implements PdfService {
         table.addCell(getCell("5.60", Element.ALIGN_RIGHT,10));
 
         table.writeSelectedRows(0, -1, 45.8f, 441f, content);
+
+        PdfPTable tableTotal = new PdfPTable(2);
+        tableTotal.setTotalWidth(new float[]{79, 88.5f});
+        tableTotal.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        tableTotal.getDefaultCell().setBorderWidth(Rectangle.NO_BORDER);
+        tableTotal.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+
+        tableTotal.addCell(getCell("Total HT", Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell("10.20", Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell("T.V.A. 5.5%", Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell("0.56", Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell("Total TTC", Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell("10.76", Element.ALIGN_RIGHT, 10));
+
+        tableTotal.writeSelectedRows(0, -1, 400, 400, content);
     }
 
     private PdfPCell getCell(String value, int align, float padding){

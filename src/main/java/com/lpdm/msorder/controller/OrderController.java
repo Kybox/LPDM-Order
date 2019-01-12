@@ -224,7 +224,15 @@ public class OrderController extends FormatController {
         return paymentDao.findAll();
     }
 
-    @GetMapping(value = "/orders/{id}/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
+    /**
+     *
+     * @param id
+     * @param response
+     * @return
+     * @throws IOException
+     * @throws DocumentException
+     */
+    @GetMapping(value = "/{id}/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
     public PdfDocument getInvoiceByOrderId(@PathVariable(name = "id") int id,
                                            HttpServletResponse response)
             throws IOException, DocumentException {
