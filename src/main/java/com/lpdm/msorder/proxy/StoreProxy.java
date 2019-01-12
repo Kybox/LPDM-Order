@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.Optional;
 
 @Component
-@FeignClient(name = "${lpdm.zuul.name}", url = "${lpdm.zuul.uri}")
-@RibbonClient(name = "${lpdm.store.name}")
+@FeignClient(name = "zuul-server", url = "https://zuul.lpdm.kybox.fr")
+@RibbonClient(name = "ms-store")
 public interface StoreProxy {
 
     @RequestMapping(value = "/stores/{id}",
