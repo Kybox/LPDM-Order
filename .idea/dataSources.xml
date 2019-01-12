@@ -7,5 +7,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://91.121.110.162:28183/lpdm-order</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="product tesst" uuid="1eacd8f9-39be-4fe3-96d9-f19d91610e69">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://91.121.110.162:28185/db_product</jdbc-url>
+    </data-source>
   </component>
 </project>

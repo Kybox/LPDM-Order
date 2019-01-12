@@ -51,7 +51,7 @@ public class AdminController extends FormatController {
      * @param payment The new {@link Payment} object
      * @return The new {@link Payment} added
      */
-    @PostMapping(value = "/payment/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/payment/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Payment addNewPayment(@Valid @RequestBody Payment payment) {
 
         try { payment = paymentDao.save(payment); }
@@ -64,7 +64,7 @@ public class AdminController extends FormatController {
      * @param payment The valid {@link Payment} object to delete
      * @return If it succeeded or not otherwise throw an exception
      */
-    @PostMapping(value = "/payment/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = "/payment/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deletePayment(@Valid @RequestBody Payment payment) {
 
         try { paymentDao.delete(payment); }
@@ -77,7 +77,7 @@ public class AdminController extends FormatController {
      * @param order The valid {@link Order} object to delete
      * @return If it succeeded or not otherwise throw an exception
      */
-    @PostMapping(value = "/order/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = "/order/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deleteOrder(@Valid @RequestBody Order order){
 
         try { orderDao.delete(order); }

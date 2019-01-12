@@ -1,11 +1,17 @@
 package com.lpdm.msorder.controller;
 
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.lpdm.msorder.dao.OrderRepository;
 import com.lpdm.msorder.dao.OrderedProductRepository;
 import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.service.InvoiceService;
+import com.lpdm.msorder.service.OrderService;
+import com.lpdm.msorder.service.PdfService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +20,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,12 +44,20 @@ public class OrderController extends FormatController {
     private final OrderRepository orderDao;
     private final PaymentRepository paymentDao;
     private final OrderedProductRepository orderedProductDao;
+    private final PdfService pdfService;
+    private final InvoiceService invoiceService;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderRepository orderDao, OrderedProductRepository orderedProductDao, PaymentRepository paymentDao) {
+    public OrderController(OrderRepository orderDao, OrderedProductRepository orderedProductDao,
+                           PaymentRepository paymentDao, PdfService pdfService,
+                           InvoiceService invoiceService, OrderService orderService) {
         this.orderDao = orderDao;
         this.orderedProductDao = orderedProductDao;
         this.paymentDao = paymentDao;
+        this.pdfService = pdfService;
+        this.invoiceService = invoiceService;
+        this.orderService = orderService;
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -62,23 +78,12 @@ public class OrderController extends FormatController {
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order saveOrder(@Valid @RequestBody Order order){
 
-        log.info(order.toString());
-
-        if(order.getStore() != null && order.getStore().getId() > 0) {
+        if(order.getStore() != null && order.getStore().getId() > 0)
             order.setStoreId(order.getStore().getId());
-        }
-        else log.info("Order : Store = null");
 
-        log.info("Customer id = " + order.getCustomerId());
-
-        if(order.getCustomerId() > 0) {
+        if(order.getCustomerId() > 0)
             order.setCustomerId(order.getCustomerId());
-            log.info("Customer ID = " + order.getCustomerId());
-        }
-        else {
-            log.warn("No customer id !");
-            throw new BadRequestException();
-        }
+        else throw new BadRequestException();
 
         orderDao.save(order);
 
@@ -88,13 +93,14 @@ public class OrderController extends FormatController {
 
             if(orderedProduct.getProduct() != null && orderedProduct.getProduct().getId() > 0){
 
-                log.info("Addind product : " + orderedProduct.getProduct().getId());
                 orderedProduct.setProductId(orderedProduct.getProduct().getId());
                 orderedProduct.setPrice(orderedProduct.getProduct().getPrice());
                 orderedProductDao.save(orderedProduct);
             }
             else throw new BadRequestException();
         }
+
+        if(order.getStatus().equals(Status.PAID)) invoiceService.generateNew(order);
 
         order = formatOrder(order);
 
@@ -216,5 +222,19 @@ public class OrderController extends FormatController {
     @GetMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Payment> getPaymentList(){
         return paymentDao.findAll();
+    }
+
+    @GetMapping(value = "/orders/{id}/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
+    public PdfDocument getInvoiceByOrderId(@PathVariable(name = "id") int id,
+                                           HttpServletResponse response)
+            throws IOException, DocumentException {
+
+        Optional<Order> optOrder = orderService.getById(id);
+        if(!optOrder.isPresent()) throw new BadRequestException();
+
+        Optional<Invoice> optInvoice = invoiceService.getByOrderId(optOrder.get().getId());
+        if(!optInvoice.isPresent()) throw new BadRequestException();
+
+        return pdfService.generatePdf(optInvoice.get(), response);
     }
 }

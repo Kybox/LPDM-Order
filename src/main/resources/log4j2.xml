@@ -2,6 +2,13 @@
 <Configuration status="ALL">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT"/>
+        <SMTP name="SMTPAppender"
+                    smtpPort="25"
+                    subject="LPDM - Order error log"
+                    to="nslr@riseup.net"
+                    from="lpdm@kybox.fr"
+                    smtpHost="kybox.fr"
+                    bufferSize="50"/>
     </Appenders>
     <Loggers>
         <Root level="ALL">
