@@ -6,6 +6,7 @@ import feign.FeignException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class StoreController {
         this.storeProxy = storeProxy;
     }
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public Optional<Store> findStoreById(@PathVariable int id){
 
         Optional<Store> optionalStore = Optional.empty();

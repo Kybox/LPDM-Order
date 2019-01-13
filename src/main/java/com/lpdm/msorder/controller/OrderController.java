@@ -100,7 +100,8 @@ public class OrderController extends FormatController {
             else throw new BadRequestException();
         }
 
-        if(order.getStatus().equals(Status.PAID)) invoiceService.generateNew(order);
+        if(order.getStatus().equals(Status.PAID) && !invoiceService.isThereAnInvoice(order.getId()))
+            invoiceService.generateNew(order);
 
         order = formatOrder(order);
 
@@ -225,12 +226,10 @@ public class OrderController extends FormatController {
     }
 
     /**
-     *
-     * @param id
-     * @param response
-     * @return
-     * @throws IOException
-     * @throws DocumentException
+     *  Generate an invoice for a paid order
+     * @param id The {@link Order} id
+     * @param response The {@link HttpServletResponse} object
+     * @return The PDF Document
      */
     @GetMapping(value = "/{id}/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
     public PdfDocument getInvoiceByOrderId(@PathVariable(name = "id") int id,

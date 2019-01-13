@@ -37,4 +37,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     public Optional<Invoice> getByOrderId(int orderId) {
         return invoiceRepository.findByOrderId(orderId);
     }
+
+    @Override
+    public boolean isThereAnInvoice(int orderId) {
+
+        return invoiceRepository.findByOrderId(orderId).isPresent();
+    }
 }
