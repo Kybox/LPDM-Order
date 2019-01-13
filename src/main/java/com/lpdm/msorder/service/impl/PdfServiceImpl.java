@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +31,7 @@ public class PdfServiceImpl implements PdfService {
     private final DecimalFormat PRICE_FORMAT = new DecimalFormat("####0.00");
     private final String UBUNTU_FONT = new ClassPathResource("/fonts/Ubuntu-M.ttf").getPath();
     private final String PDF_TEMPLATE = new ClassPathResource("/pdf/InvoiceTemplate.pdf").getPath();
+    private final String PAID_IMG = "https://files.lpdm.kybox.fr/b0023b0b-7c88-457f-b9f1-bq9c4cf45d5c/paid.png";
 
     private Font fntUbuntu;
     private BaseFont baseFont;
@@ -83,11 +85,12 @@ public class PdfServiceImpl implements PdfService {
 
         addAmountDetails(totalAmount, productList.size(), content);
 
+        addPaidImage(content);
+
         pdfStamper.close();
         pdfReader.close();
 
         return content.getPdfDocument();
-
     }
 
     private void addReference(String reference, PdfContentByte content){
@@ -194,5 +197,13 @@ public class PdfServiceImpl implements PdfService {
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setFixedHeight(CELL_HEIGHT);
         return cell;
+    }
+
+    private void addPaidImage(PdfContentByte content) throws IOException, DocumentException {
+
+        Image image = Image.getInstance(new URL(PAID_IMG));
+        image.setAbsolutePosition(400, 500);
+        image.scaleToFit(100, 74);
+        content.addImage(image);
     }
 }
