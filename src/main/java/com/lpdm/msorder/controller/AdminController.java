@@ -1,8 +1,8 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.dao.OrderRepository;
-import com.lpdm.msorder.dao.OrderedProductRepository;
-import com.lpdm.msorder.dao.PaymentRepository;
+import com.lpdm.msorder.repository.OrderRepository;
+import com.lpdm.msorder.repository.OrderedProductRepository;
+import com.lpdm.msorder.repository.PaymentRepository;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.DeleteEntityException;
 import com.lpdm.msorder.exception.OrderNotFoundException;

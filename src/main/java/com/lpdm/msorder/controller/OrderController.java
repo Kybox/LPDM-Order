@@ -7,7 +7,6 @@ import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
-import com.lpdm.msorder.service.PdfService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +36,11 @@ public class OrderController extends FormatController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
 
-    private final PdfService pdfService;
     private final InvoiceService invoiceService;
     private final OrderService orderService;
 
     @Autowired
-    public OrderController(PdfService pdfService,
-                           InvoiceService invoiceService,
-                           OrderService orderService) {
-        this.pdfService = pdfService;
+    public OrderController(InvoiceService invoiceService, OrderService orderService) {
         this.invoiceService = invoiceService;
         this.orderService = orderService;
     }
@@ -64,11 +59,10 @@ public class OrderController extends FormatController {
     }
 
     /**
-     * This method is called to add a new command.
-     * The method records the Order object in the database
+     * This method is called to persist an {@link Order}
      * as well as the list of orderedProduct objects contained in the Order object
-     * @param order Order class
-     * @return Order class
+     * @param order The {@link Order} object to persist
+     * @return An {@link Order} object persisted
      */
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order saveOrder(@Valid @RequestBody Order order){
@@ -216,7 +210,7 @@ public class OrderController extends FormatController {
     }
 
     /**
-     * Get all {@link Payment} recorded
+     * Get all {@link Payment} recorded in the database
      * @return The {@link List<Payment>}
      */
     @GetMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -242,11 +236,11 @@ public class OrderController extends FormatController {
         if(!optInvoice.isPresent()) {
             if(optOrder.get().getStatus().getId() >= Status.PAID.getId()) {
                 Invoice invoice = invoiceService.generateNew(optOrder.get());
-                return pdfService.generatePdf(invoice, response);
+                return invoiceService.generatePdf(invoice, response);
             }
             else throw new BadRequestException();
         }
 
-        return pdfService.generatePdf(optInvoice.get(), response);
+        return invoiceService.generatePdf(optInvoice.get(), response);
     }
 }

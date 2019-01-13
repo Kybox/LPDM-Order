@@ -1,4 +1,4 @@
-package com.lpdm.msorder.dao;
+package com.lpdm.msorder.repository;
 
 import com.lpdm.msorder.model.Order;
 import com.lpdm.msorder.model.OrderedProduct;

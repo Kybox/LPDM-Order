@@ -1,4 +1,4 @@
-package com.lpdm.msorder.dao;
+package com.lpdm.msorder.repository;
 
 import com.lpdm.msorder.model.Invoice;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,11 +1,9 @@
 package com.lpdm.msorder.service.impl;
 
-import com.lpdm.msorder.dao.OrderRepository;
-import com.lpdm.msorder.dao.OrderedProductRepository;
-import com.lpdm.msorder.dao.PaymentRepository;
+import com.lpdm.msorder.repository.OrderRepository;
+import com.lpdm.msorder.repository.OrderedProductRepository;
+import com.lpdm.msorder.repository.PaymentRepository;
 import com.lpdm.msorder.model.*;
-import com.lpdm.msorder.proxy.AuthProxy;
-import com.lpdm.msorder.proxy.ProductProxy;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.ProxyService;
 import org.springframework.beans.factory.annotation.Autowired;
