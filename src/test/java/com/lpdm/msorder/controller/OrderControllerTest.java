@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,7 +40,7 @@ public class OrderControllerTest {
         order.setId(1);
         order.setTotal(22.87);
 
-        Mockito.when(orderController.getOrderById(1)).thenReturn(order);
+        Mockito.when(orderController.getOrderById(1)).thenReturn(Optional.ofNullable(order));
 
         mockMvc.perform(get("/orders/1"))
                 .andExpect(status().isOk())

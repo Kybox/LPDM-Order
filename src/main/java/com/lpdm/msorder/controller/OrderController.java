@@ -2,10 +2,6 @@ package com.lpdm.msorder.controller;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfDocument;
-import com.itextpdf.text.pdf.PdfStamper;
-import com.lpdm.msorder.dao.OrderRepository;
-import com.lpdm.msorder.dao.OrderedProductRepository;
-import com.lpdm.msorder.dao.PaymentRepository;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
@@ -41,31 +37,30 @@ public class OrderController extends FormatController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
 
-    private final OrderRepository orderDao;
-    private final PaymentRepository paymentDao;
-    private final OrderedProductRepository orderedProductDao;
     private final PdfService pdfService;
     private final InvoiceService invoiceService;
     private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderRepository orderDao, OrderedProductRepository orderedProductDao,
-                           PaymentRepository paymentDao, PdfService pdfService,
-                           InvoiceService invoiceService, OrderService orderService) {
-        this.orderDao = orderDao;
-        this.orderedProductDao = orderedProductDao;
-        this.paymentDao = paymentDao;
+    public OrderController(PdfService pdfService,
+                           InvoiceService invoiceService,
+                           OrderService orderService) {
         this.pdfService = pdfService;
         this.invoiceService = invoiceService;
         this.orderService = orderService;
     }
 
+    /**
+     * Call this method to get an {@link Optional<Order>} by its id
+     * @param id The {@link Order} id
+     * @return An {@link Optional<Order>} json object
+     */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Order getOrderById(@PathVariable int id){
+    public Optional<Order> getOrderById(@PathVariable int id){
 
-        return orderDao.findById(id)
+        return Optional.of(orderService.findOrderById(id)
                 .map(this::formatOrder)
-                .orElseThrow(OrderNotFoundException::new);
+                .orElseThrow(OrderNotFoundException::new));
     }
 
     /**
@@ -85,7 +80,7 @@ public class OrderController extends FormatController {
             order.setCustomerId(order.getCustomerId());
         else throw new BadRequestException();
 
-        orderDao.save(order);
+        orderService.saveOrder(order);
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
@@ -95,7 +90,7 @@ public class OrderController extends FormatController {
 
                 orderedProduct.setProductId(orderedProduct.getProduct().getId());
                 orderedProduct.setPrice(orderedProduct.getProduct().getPrice());
-                orderedProductDao.save(orderedProduct);
+                orderService.saveOrderedProduct(orderedProduct);
             }
             else throw new BadRequestException();
         }
@@ -118,7 +113,7 @@ public class OrderController extends FormatController {
     @GetMapping(value = "/all/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByUserId(@PathVariable int id){
 
-        List<Order> orderList = orderDao.findAllByCustomerId(id);
+        List<Order> orderList = orderService.findAllOrdersByCustomerId(id);
         if (orderList.isEmpty()) throw new OrderNotFoundException();
         orderList.forEach(this::formatOrder);
         return orderList;
@@ -144,7 +139,7 @@ public class OrderController extends FormatController {
         if(!status.isPresent())
             throw new BadRequestException();
 
-        List<Order> orderList = orderDao.findAllByCustomerIdAndStatus(userId, status.get());
+        List<Order> orderList = orderService.findAllOrdersByCustomerIdAndStatus(userId, status.get());
         if(orderList.isEmpty()) throw new OrderNotFoundException();
         orderList.forEach(this::formatOrder);
         return orderList;
@@ -170,10 +165,14 @@ public class OrderController extends FormatController {
 
         List<Order> orderList = null;
         switch (ordered.toLowerCase()) {
-            case "asc": orderList = orderDao.findAllByCustomerIdOrderByOrderDateAsc(id, pageRequest);
+            case "asc": orderList = orderService
+                    .findAllOrdersByCustomerIdOrderByOrderDateAsc(id, pageRequest);
                 break;
-            case "desc": orderList = orderDao.findAllByCustomerIdOrderByOrderDateDesc(id, pageRequest);
+
+            case "desc": orderList = orderService
+                    .findAllOrdersByCustomerIdOrderByOrderDateDesc(id, pageRequest);
                 break;
+
             default:
                 throw new BadRequestException();
         }
@@ -196,13 +195,13 @@ public class OrderController extends FormatController {
         if (userId == 0 || productId == 0)
             throw new BadRequestException();
 
-        List<Order> mainOrderList = orderDao.findAllByCustomerId(userId);
+        List<Order> mainOrderList = orderService.findAllOrdersByCustomerId(userId);
         if(mainOrderList.isEmpty()) throw new OrderNotFoundException();
 
         List<Order> orderList = new ArrayList<>();
         for(Order order : mainOrderList){
 
-            List<OrderedProduct> productList = orderedProductDao.findAllByOrder(order);
+            List<OrderedProduct> productList = orderService.findAllOrderedProductsByOrder(order);
             for(OrderedProduct orderedProduct : productList){
                 if(orderedProduct.getProductId() == productId){
                     orderList.add(order);
@@ -222,7 +221,7 @@ public class OrderController extends FormatController {
      */
     @GetMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Payment> getPaymentList(){
-        return paymentDao.findAll();
+        return orderService.findAllPayments();
     }
 
     /**
@@ -236,13 +235,15 @@ public class OrderController extends FormatController {
                                            HttpServletResponse response)
             throws IOException, DocumentException {
 
-        Optional<Order> optOrder = orderService.getById(id);
+        Optional<Order> optOrder = orderService.findOrderById(id);
         if(!optOrder.isPresent()) throw new BadRequestException();
 
         Optional<Invoice> optInvoice = invoiceService.getByOrderId(optOrder.get().getId());
         if(!optInvoice.isPresent()) {
-            if(optOrder.get().getStatus().getId() >= Status.PAID.getId())
-                optInvoice = Optional.ofNullable(invoiceService.generateNew(optOrder.get()));
+            if(optOrder.get().getStatus().getId() >= Status.PAID.getId()) {
+                Invoice invoice = invoiceService.generateNew(optOrder.get());
+                return pdfService.generatePdf(invoice, response);
+            }
             else throw new BadRequestException();
         }
 

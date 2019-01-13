@@ -51,7 +51,7 @@ public class PdfServiceImpl implements PdfService {
             throws DocumentException, IOException {
 
 
-        Optional<Order> optOrder = orderService.getById(invoice.getOrderId());
+        Optional<Order> optOrder = orderService.findOrderById(invoice.getOrderId());
         if(!optOrder.isPresent()) throw new OrderNotFoundException();
         Order order = optOrder.get();
 

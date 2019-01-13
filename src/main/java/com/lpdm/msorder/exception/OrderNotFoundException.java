@@ -3,6 +3,6 @@ package com.lpdm.msorder.exception;
 public class OrderNotFoundException extends RuntimeException {
 
     public OrderNotFoundException(){
-        super("No orders found");
+        super("No order was found");
     }
 }
