@@ -1,5 +1,7 @@
 package com.lpdm.msorder.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.NotNull;
 
 public class Product {
@@ -11,10 +13,13 @@ public class Product {
     private String label;
 
     @NotNull
-    private Double price;
+    private double price;
     private Stock stock;
     private User producer;
     private String picture;
+    private double tva;
+
+    private int productorID;
 
     public Product() {
     }
@@ -60,11 +65,11 @@ public class Product {
         this.label = label;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -90,5 +95,37 @@ public class Product {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public double getTva() {
+        return tva;
+    }
+
+    public void setTva(double tva) {
+        this.tva = tva;
+    }
+
+    public int getProductorID() {
+        return productorID;
+    }
+
+    public void setProductorID(int productorID) {
+        this.productorID = productorID;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", label='" + label + '\'' +
+                ", price=" + price +
+                ", stock=" + stock +
+                ", producer=" + producer +
+                ", picture='" + picture + '\'' +
+                ", tva=" + tva +
+                ", productorID=" + productorID +
+                '}';
     }
 }

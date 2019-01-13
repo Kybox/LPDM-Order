@@ -1,6 +1,7 @@
 package com.lpdm.msorder.controller;
 
 import com.lpdm.msorder.model.*;
+import com.lpdm.msorder.proxy.AuthProxy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class FormatController {
     @Autowired
     private ProductController productController;
 
+    @Autowired
+    private AuthProxy authProxy;
+
     /**
      * Default constructor
      */
@@ -46,7 +50,8 @@ public class FormatController {
         Optional<Store> optionalStore = storeController.findStoreById(order.getStoreId());
         order.setStore(optionalStore.orElse(new Store(order.getStoreId())));
 
-        order.setCustomer(new User(order.getCustomerId()));
+        Optional<User> optionalUser = authProxy.findById(order.getCustomerId());
+        order.setCustomer(optionalUser.orElse(new User(order.getCustomerId())));
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
             int productId = orderedProduct.getProductId();

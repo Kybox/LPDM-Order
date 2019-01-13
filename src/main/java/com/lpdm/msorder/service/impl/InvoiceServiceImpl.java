@@ -28,7 +28,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setOrderId(order.getId());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        invoice.setReference(formatter.format(LocalDateTime.now()));
+        invoice.setReference(formatter.format(order.getOrderDate()));
 
         return invoiceRepository.save(invoice);
     }
@@ -36,5 +36,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Optional<Invoice> getByOrderId(int orderId) {
         return invoiceRepository.findByOrderId(orderId);
+    }
+
+    @Override
+    public boolean isThereAnInvoice(int orderId) {
+
+        return invoiceRepository.findByOrderId(orderId).isPresent();
     }
 }

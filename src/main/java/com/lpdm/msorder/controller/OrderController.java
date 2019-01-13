@@ -100,7 +100,8 @@ public class OrderController extends FormatController {
             else throw new BadRequestException();
         }
 
-        if(order.getStatus().equals(Status.PAID)) invoiceService.generateNew(order);
+        if(order.getStatus().equals(Status.PAID) && !invoiceService.isThereAnInvoice(order.getId()))
+            invoiceService.generateNew(order);
 
         order = formatOrder(order);
 
@@ -225,12 +226,10 @@ public class OrderController extends FormatController {
     }
 
     /**
-     *
-     * @param id
-     * @param response
-     * @return
-     * @throws IOException
-     * @throws DocumentException
+     *  Generate an invoice for a paid order
+     * @param id The {@link Order} id
+     * @param response The {@link HttpServletResponse} object
+     * @return The PDF Document
      */
     @GetMapping(value = "/{id}/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
     public PdfDocument getInvoiceByOrderId(@PathVariable(name = "id") int id,
@@ -241,7 +240,11 @@ public class OrderController extends FormatController {
         if(!optOrder.isPresent()) throw new BadRequestException();
 
         Optional<Invoice> optInvoice = invoiceService.getByOrderId(optOrder.get().getId());
-        if(!optInvoice.isPresent()) throw new BadRequestException();
+        if(!optInvoice.isPresent()) {
+            if(optOrder.get().getStatus().getId() >= Status.PAID.getId())
+                optInvoice = Optional.ofNullable(invoiceService.generateNew(optOrder.get()));
+            else throw new BadRequestException();
+        }
 
         return pdfService.generatePdf(optInvoice.get(), response);
     }

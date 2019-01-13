@@ -17,7 +17,7 @@ import java.util.Optional;
 @RibbonClient(name = "ms-product")
 public interface ProductProxy {
 
-    @RequestMapping(path = "/products/{id}",
+    @RequestMapping(path = "${lpdm.product.name}/products/{id}",
             method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     Optional<Product> findById(@PathVariable(value = "id") int id);
 
