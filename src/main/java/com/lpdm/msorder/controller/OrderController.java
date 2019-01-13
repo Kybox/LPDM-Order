@@ -240,7 +240,11 @@ public class OrderController extends FormatController {
         if(!optOrder.isPresent()) throw new BadRequestException();
 
         Optional<Invoice> optInvoice = invoiceService.getByOrderId(optOrder.get().getId());
-        if(!optInvoice.isPresent()) throw new BadRequestException();
+        if(!optInvoice.isPresent()) {
+            if(optOrder.get().getStatus().getId() >= Status.PAID.getId())
+                optInvoice = Optional.ofNullable(invoiceService.generateNew(optOrder.get()));
+            else throw new BadRequestException();
+        }
 
         return pdfService.generatePdf(optInvoice.get(), response);
     }

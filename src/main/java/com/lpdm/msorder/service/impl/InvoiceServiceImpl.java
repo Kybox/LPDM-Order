@@ -28,7 +28,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setOrderId(order.getId());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        invoice.setReference(formatter.format(LocalDateTime.now()));
+        invoice.setReference(formatter.format(order.getOrderDate()));
 
         return invoiceRepository.save(invoice);
     }

@@ -13,7 +13,7 @@ public class Product {
     private String label;
 
     @NotNull
-    private Double price;
+    private double price;
     private Stock stock;
     private User producer;
     private String picture;
@@ -65,11 +65,11 @@ public class Product {
         this.label = label;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -111,5 +111,21 @@ public class Product {
 
     public void setProductorID(int productorID) {
         this.productorID = productorID;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", label='" + label + '\'' +
+                ", price=" + price +
+                ", stock=" + stock +
+                ", producer=" + producer +
+                ", picture='" + picture + '\'' +
+                ", tva=" + tva +
+                ", productorID=" + productorID +
+                '}';
     }
 }
