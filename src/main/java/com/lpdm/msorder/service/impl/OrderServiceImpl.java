@@ -1,5 +1,6 @@
 package com.lpdm.msorder.service.impl;
 
+import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
 import com.lpdm.msorder.repository.PaymentRepository;
@@ -11,12 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private final ProxyService proxyService;
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final OrderedProductRepository orderedProductRepository;
@@ -24,11 +27,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
                             PaymentRepository paymentRepository,
-                            OrderedProductRepository orderedProductRepository) {
+                            OrderedProductRepository orderedProductRepository, ProxyService proxyService) {
 
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
         this.orderedProductRepository = orderedProductRepository;
+        this.proxyService = proxyService;
     }
 
     @Override
@@ -53,7 +57,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllOrdersByCustomerEmail(String email) {
-        return orderRepository.findAllByCustomer_Email(email);
+
+        Optional<User> optUser = proxyService.findUserByEmail(email);
+        if(!optUser.isPresent()) throw new OrderNotFoundException();
+        return orderRepository.findAllByCustomerId(optUser.get().getId());
     }
 
     @Override
@@ -68,7 +75,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllOrdersByCustomerLastName(String lastName) {
-        return orderRepository.findAllByCustomer_LastName(lastName);
+
+        Optional<User> optUser = proxyService.findUserByLastName(lastName);
+        if(!optUser.isPresent()) throw new OrderNotFoundException();
+        return orderRepository.findAllByCustomerId(optUser.get().getId());
     }
 
     @Override

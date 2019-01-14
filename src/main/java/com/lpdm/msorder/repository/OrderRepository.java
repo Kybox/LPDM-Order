@@ -12,8 +12,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     List<Order> findAllByCustomerId(int id);
     List<Order> findAllByPayment(Payment payment);
-    List<Order> findAllByCustomer_Email(String email);
-    List<Order> findAllByCustomer_LastName(String lastName);
     List<Order> findAllByStatus(Status status, Pageable pageable);
     List<Order> findAllByCustomerIdAndStatus(int userId, Status status);
     List<Order> findAllByCustomerIdOrderByOrderDateAsc(int userId, Pageable pageable);

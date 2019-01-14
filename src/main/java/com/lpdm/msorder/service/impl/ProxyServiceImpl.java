@@ -37,6 +37,11 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     @Override
+    public Optional<User> findUserByLastName(String lastName) {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Store> findStoreById(int id) {
         return storeProxy.findById(id);
     }
