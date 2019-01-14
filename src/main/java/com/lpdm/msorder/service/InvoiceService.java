@@ -17,6 +17,7 @@ public interface InvoiceService {
     Invoice generateNew(Order order);
     Optional<Invoice> getByOrderId(int orderId);
     boolean isThereAnInvoice(int orderId);
+    Optional<Invoice> findInvoiceByReference(String reference);
 
     /**
      * IText PDF Document

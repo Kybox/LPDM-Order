@@ -72,6 +72,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public Optional<Invoice> findInvoiceByReference(String reference) {
+        return invoiceRepository.findByReference(reference);
+    }
+
+    @Override
     public PdfDocument generatePdf(Invoice invoice, HttpServletResponse servletResponse) throws IOException, DocumentException {
         Optional<Order> optOrder = orderService.findOrderById(invoice.getOrderId());
         if(!optOrder.isPresent()) throw new OrderNotFoundException();

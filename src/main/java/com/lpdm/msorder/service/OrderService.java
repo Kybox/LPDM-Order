@@ -17,7 +17,9 @@ public interface OrderService {
     Optional<Order> findOrderById(int id);
     List<Order> findAllOrdersByCustomerId(int id);
     List<Order> findAllOrdersByPayment(Payment payment);
+    List<Order> findAllOrdersByCustomerEmail(String email);
     Page<Order> findAllOrdersPageable(PageRequest pageRequest);
+    List<Order> findAllOrdersByCustomerLastName(String lastName);
     List<Order> findAllOrdersByCustomerIdAndStatus(int id, Status status);
     List<Order> findAllOrdersByStatusPageable(Status status, PageRequest pageRequest);
     List<Order> findAllOrdersByCustomerIdOrderByOrderDateAsc(int id, PageRequest pageRequest);

@@ -52,6 +52,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findAllOrdersByCustomerEmail(String email) {
+        return orderRepository.findAllByCustomer_Email(email);
+    }
+
+    @Override
     public List<Order> findAllOrdersByPayment(Payment payment) {
         return orderRepository.findAllByPayment(payment);
     }
@@ -59,6 +64,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> findAllOrdersPageable(PageRequest pageRequest) {
         return orderRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public List<Order> findAllOrdersByCustomerLastName(String lastName) {
+        return orderRepository.findAllByCustomer_LastName(lastName);
     }
 
     @Override

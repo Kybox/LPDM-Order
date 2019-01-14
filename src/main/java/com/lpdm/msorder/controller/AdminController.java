@@ -9,8 +9,10 @@ import com.lpdm.msorder.exception.DeleteEntityException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
+import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
 import com.netflix.discovery.converters.Auto;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +39,18 @@ public class AdminController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
 
+    private final InvoiceService invoiceService;
     private final OrderService orderService;
     private final FormatJson formatJson;
 
     @Autowired
-    public AdminController(FormatJson formatJson, OrderService orderService) {
+    public AdminController(FormatJson formatJson,
+                           OrderService orderService,
+                           InvoiceService invoiceService) {
+
         this.formatJson = formatJson;
         this.orderService = orderService;
+        this.invoiceService = invoiceService;
     }
 
     /**
@@ -169,5 +176,33 @@ public class AdminController {
             else throw new OrderNotFoundException();
         }
         else throw new OrderNotFoundException();
+    }
+
+    @GetMapping(value = "orders/invoice/{ref}")
+    public Order findByInvoiceRef(@PathVariable String ref){
+
+        Optional<Invoice> optInvoice = invoiceService.findInvoiceByReference(ref);
+        if(!optInvoice.isPresent()) throw new OrderNotFoundException();
+
+        Optional<Order> optOrder = orderService.findOrderById(optInvoice.get().getOrderId());
+        if(!optOrder.isPresent()) throw new OrderNotFoundException();
+
+        return optOrder.get();
+    }
+
+    @GetMapping(value = "orders/all/customer/email/{email}")
+    public List<Order> findAllByEmail(@PathVariable String email){
+
+        List<Order> orderList = orderService.findAllOrdersByCustomerEmail(email);
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+        return orderList;
+    }
+
+    @GetMapping(value = "orders/all/customer/name/{name}")
+    public List<Order> findAllByName(@PathVariable String name){
+
+        List<Order> orderList = orderService.findAllOrdersByCustomerLastName(name);
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+        return orderList;
     }
 }
