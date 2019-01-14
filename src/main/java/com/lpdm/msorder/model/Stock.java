@@ -1,12 +1,12 @@
 package com.lpdm.msorder.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Stock {
 
     private int id;
-    private Category category;
-    private LocalDate expireDate;
+    private int quantity;
+    private LocalDateTime expireDate;
     private String packaging;
     private int unitByPackage;
 
@@ -21,19 +21,19 @@ public class Stock {
         this.id = id;
     }
 
-    public Category getCategory() {
-        return category;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public LocalDate getExpireDate() {
+    public LocalDateTime getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(LocalDate expireDate) {
+    public void setExpireDate(LocalDateTime expireDate) {
         this.expireDate = expireDate;
     }
 

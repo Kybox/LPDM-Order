@@ -3,6 +3,7 @@ package com.lpdm.msorder.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class Product {
 
@@ -19,7 +20,10 @@ public class Product {
     private String picture;
     private double tva;
 
+    @JsonIgnore
     private int productorID;
+
+    private List<Stock> listStock;
 
     public Product() {
     }
@@ -113,19 +117,11 @@ public class Product {
         this.productorID = productorID;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", category=" + category +
-                ", label='" + label + '\'' +
-                ", price=" + price +
-                ", stock=" + stock +
-                ", producer=" + producer +
-                ", picture='" + picture + '\'' +
-                ", tva=" + tva +
-                ", productorID=" + productorID +
-                '}';
+    public List<Stock> getListStock() {
+        return listStock;
+    }
+
+    public void setListStock(List<Stock> listStock) {
+        this.listStock = listStock;
     }
 }
