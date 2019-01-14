@@ -4,11 +4,8 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.*;
-import com.lpdm.msorder.proxy.AuthProxy;
 import com.lpdm.msorder.repository.InvoiceRepository;
-import com.lpdm.msorder.service.InvoiceService;
-import com.lpdm.msorder.service.OrderService;
-import com.lpdm.msorder.service.UserService;
+import com.lpdm.msorder.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,23 +30,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final DecimalFormat PRICE_FORMAT = new DecimalFormat("####0.00");
     private final String UBUNTU_FONT = new ClassPathResource("/fonts/Ubuntu-M.ttf").getPath();
     private final String PDF_TEMPLATE = new ClassPathResource("/pdf/InvoiceTemplate.pdf").getPath();
-    private final String PAID_IMG = "https://files.lpdm.kybox.fr/b0023b0b-7c88-457f-b9f1-bq9c4cf45d5c/paid.png";
 
     private Font fntUbuntu;
     private BaseFont baseFont;
 
-    private final UserService userService;
     private final OrderService orderService;
     private final InvoiceRepository invoiceRepository;
+    private final ProxyService proxyService;
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                               OrderService orderService,
-                              UserService userService) {
+                              ProxyService proxyService) {
 
         this.invoiceRepository = invoiceRepository;
         this.orderService = orderService;
-        this.userService = userService;
+        this.proxyService = proxyService;
     }
 
     @Override
@@ -94,7 +90,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         addReference(invoice.getReference(), content);
         addOrderDate(order.getOrderDate(), content);
 
-        Optional<User> optUser = userService.findUserById(order.getCustomerId());
+        Optional<User> optUser = proxyService.findUserById(order.getCustomerId());
         if(optUser.isPresent()){
             User user = optUser.get();
             if(user.getFirstName() == null) user.setFirstName("FIRSTNAME NULL");
@@ -168,7 +164,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             int quantity = orderedProduct.getQuantity();
 
-            Optional<Product> optProduct = orderService.getProductById(orderedProduct.getProductId());
+            Optional<Product> optProduct = proxyService.findProductById(orderedProduct.getProductId());
             if(!optProduct.isPresent()) continue;
 
             Product product = optProduct.get();
@@ -227,7 +223,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private void addPaidImage(PdfContentByte content) throws IOException, DocumentException {
 
-        Image image = Image.getInstance(new URL(PAID_IMG));
+        String imgUrl = "https://files.lpdm.kybox.fr/b0023b0b-7c88-457f-b9f1-bq9c4cf45d5c/paid.png";
+        Image image = Image.getInstance(new URL(imgUrl));
         image.setAbsolutePosition(400, 500);
         image.scaleToFit(100, 74);
         content.addImage(image);

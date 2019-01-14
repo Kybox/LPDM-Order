@@ -1,39 +1,20 @@
-package com.lpdm.msorder.controller;
+package com.lpdm.msorder.controller.json;
 
 import com.lpdm.msorder.model.*;
-import com.lpdm.msorder.proxy.AuthProxy;
 import com.lpdm.msorder.service.ProxyService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/**
- * @author Kybox
- * @version 1.0
- * @since 01/12/2018
- */
+@Component
+public class FormatJson {
 
-@Controller
-public class FormatController {
+    private final ProxyService proxyService;
 
-    private final Logger log = LogManager.getLogger(this.getClass());
-
-    /**
-     * Autowired - Controller
-     */
-
-    @Autowired private StoreController storeController;
-    @Autowired private ProductController productController;
-    @Autowired private ProxyService proxyService;
-
-    /**
-     * Default constructor
-     */
-    public FormatController(){
-
+    @Autowired
+    public FormatJson(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     /**
@@ -43,7 +24,7 @@ public class FormatController {
      */
     public Order formatOrder(Order order){
 
-        Optional<Store> optionalStore = storeController.findStoreById(order.getStoreId());
+        Optional<Store> optionalStore = proxyService.findStoreById(order.getStoreId());
         order.setStore(optionalStore.orElse(new Store(order.getStoreId())));
 
         Optional<User> optionalUser = proxyService.findUserById(order.getCustomerId());
@@ -51,7 +32,7 @@ public class FormatController {
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
             int productId = orderedProduct.getProductId();
-            Optional<Product> optionalProduct = productController.findProductById(productId);
+            Optional<Product> optionalProduct = proxyService.findProductById(productId);
             orderedProduct.setProduct(optionalProduct.orElse(new Product(productId, orderedProduct.getPrice())));
         }
         return order;

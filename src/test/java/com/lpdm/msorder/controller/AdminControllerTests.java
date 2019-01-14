@@ -1,10 +1,10 @@
 package com.lpdm.msorder.controller;
 
+import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
 import com.lpdm.msorder.repository.PaymentRepository;
 import com.lpdm.msorder.model.*;
-import com.lpdm.msorder.proxy.AuthProxy;
 import com.lpdm.msorder.service.ProxyService;
 import com.lpdm.msorder.utils.ObjToJson;
 import org.junit.Before;
@@ -47,16 +47,10 @@ public class AdminControllerTests {
     private OrderedProductRepository orderedProductDao;
 
     @MockBean
-    private StoreController storeController;
-
-    @MockBean
-    private ProductController productController;
-
-    @Autowired
-    private FormatController formatController;
-
-    @MockBean
     private ProxyService proxyService;
+
+    @MockBean
+    private FormatJson formatJson;
 
     private int randomId;
     private Order order;

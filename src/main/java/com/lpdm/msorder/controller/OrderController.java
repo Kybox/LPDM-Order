@@ -2,6 +2,7 @@ package com.lpdm.msorder.controller;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfDocument;
+import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
@@ -32,17 +33,21 @@ import java.util.stream.Stream;
 @RefreshScope
 @RestController
 @RequestMapping("/orders")
-public class OrderController extends FormatController {
+public class OrderController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
 
     private final InvoiceService invoiceService;
     private final OrderService orderService;
+    private final FormatJson formatJson;
 
     @Autowired
-    public OrderController(InvoiceService invoiceService, OrderService orderService) {
+    public OrderController(InvoiceService invoiceService,
+                           OrderService orderService, FormatJson formatJson) {
+
         this.invoiceService = invoiceService;
         this.orderService = orderService;
+        this.formatJson = formatJson;
     }
 
     /**
@@ -54,7 +59,7 @@ public class OrderController extends FormatController {
     public Optional<Order> getOrderById(@PathVariable int id){
 
         return Optional.of(orderService.findOrderById(id)
-                .map(this::formatOrder)
+                .map(formatJson::formatOrder)
                 .orElseThrow(OrderNotFoundException::new));
     }
 
@@ -92,7 +97,7 @@ public class OrderController extends FormatController {
         if(order.getStatus().equals(Status.PAID) && !invoiceService.isThereAnInvoice(order.getId()))
             invoiceService.generateNew(order);
 
-        order = formatOrder(order);
+        order = formatJson.formatOrder(order);
 
         log.info(order.toString());
 
@@ -109,7 +114,7 @@ public class OrderController extends FormatController {
 
         List<Order> orderList = orderService.findAllOrdersByCustomerId(id);
         if (orderList.isEmpty()) throw new OrderNotFoundException();
-        orderList.forEach(this::formatOrder);
+        orderList.forEach(formatJson::formatOrder);
         return orderList;
     }
 
@@ -135,7 +140,7 @@ public class OrderController extends FormatController {
 
         List<Order> orderList = orderService.findAllOrdersByCustomerIdAndStatus(userId, status.get());
         if(orderList.isEmpty()) throw new OrderNotFoundException();
-        orderList.forEach(this::formatOrder);
+        orderList.forEach(formatJson::formatOrder);
         return orderList;
     }
 
@@ -172,7 +177,7 @@ public class OrderController extends FormatController {
         }
 
         if(orderList.isEmpty()) throw new OrderNotFoundException();
-        orderList.forEach(this::formatOrder);
+        orderList.forEach(formatJson::formatOrder);
         return orderList;
     }
 
@@ -205,7 +210,7 @@ public class OrderController extends FormatController {
         }
 
         if(orderList.isEmpty()) throw new OrderNotFoundException();
-        orderList.forEach(this::formatOrder);
+        orderList.forEach(formatJson::formatOrder);
         return orderList;
     }
 
