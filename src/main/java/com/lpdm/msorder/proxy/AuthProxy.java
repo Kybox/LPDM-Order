@@ -23,4 +23,8 @@ public interface AuthProxy {
     @RequestMapping(path = "${lpdm.auth.name}/users/name/{name}",
             method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     Optional<User> findByLastName(@PathVariable(value = "name") String name);
+
+    @RequestMapping(path = "${lpdm.auth.name}/users/email/{email}",
+            method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    Optional<User> findByEmail(@PathVariable(value = "email") String name);
 }
