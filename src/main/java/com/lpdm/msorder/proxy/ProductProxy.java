@@ -1,6 +1,7 @@
 package com.lpdm.msorder.proxy;
 
 import com.lpdm.msorder.model.Product;
+import feign.FeignException;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.PropertySource;
@@ -19,6 +20,6 @@ public interface ProductProxy {
 
     @RequestMapping(path = "${lpdm.product.name}/products/{id}",
             method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    Optional<Product> findById(@PathVariable(value = "id") int id);
+    Optional<Product> findById(@PathVariable(value = "id") int id) throws FeignException;
 
 }

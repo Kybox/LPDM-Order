@@ -7,6 +7,7 @@ import com.lpdm.msorder.proxy.AuthProxy;
 import com.lpdm.msorder.proxy.ProductProxy;
 import com.lpdm.msorder.proxy.StoreProxy;
 import com.lpdm.msorder.service.ProxyService;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     @Override
-    public Optional<Product> findProductById(int id) {
+    public Optional<Product> findProductById(int id) throws FeignException {
         return productProxy.findById(id);
     }
 

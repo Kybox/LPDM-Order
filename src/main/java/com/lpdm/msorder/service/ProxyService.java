@@ -3,6 +3,7 @@ package com.lpdm.msorder.service;
 import com.lpdm.msorder.model.Product;
 import com.lpdm.msorder.model.Store;
 import com.lpdm.msorder.model.User;
+import feign.FeignException;
 
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public interface ProxyService {
      * @param id The {@link Product} id
      * @return An {@link Optional<Product>} object
      */
-    Optional<Product> findProductById(int id);
+    Optional<Product> findProductById(int id) throws FeignException;
 
     /**
      * Call the auth microservice to find a {@link User} by its id

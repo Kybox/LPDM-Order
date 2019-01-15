@@ -2,6 +2,9 @@ package com.lpdm.msorder.controller.json;
 
 import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.service.ProxyService;
+import feign.FeignException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +13,7 @@ import java.util.Optional;
 @Component
 public class FormatJson {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final ProxyService proxyService;
 
     @Autowired
@@ -32,8 +36,13 @@ public class FormatJson {
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
             int productId = orderedProduct.getProductId();
-            Optional<Product> optionalProduct = proxyService.findProductById(productId);
-            orderedProduct.setProduct(optionalProduct.orElse(new Product(productId, orderedProduct.getPrice())));
+            try{
+                Optional<Product> optionalProduct = proxyService.findProductById(productId);
+                orderedProduct.setProduct(optionalProduct.orElse(new Product(productId, orderedProduct.getPrice())));
+            }
+            catch (FeignException e) {
+                log.warn(e.getMessage());
+            }
         }
         return order;
     }
