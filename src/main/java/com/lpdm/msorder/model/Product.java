@@ -15,7 +15,6 @@ public class Product {
 
     @NotNull
     private double price;
-    private Stock stock;
     private User producer;
     private String picture;
     private double tva;
@@ -75,14 +74,6 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public Stock getStock() {
-        return stock;
-    }
-
-    public void setStock(Stock stock) {
-        this.stock = stock;
     }
 
     public User getProducer() {
