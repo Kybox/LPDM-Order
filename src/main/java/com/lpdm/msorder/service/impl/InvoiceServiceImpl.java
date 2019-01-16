@@ -169,10 +169,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             int quantity = orderedProduct.getQuantity();
 
-            Optional<Product> optProduct = proxyService.findProductById(orderedProduct.getProductId());
-            if(!optProduct.isPresent()) continue;
-
-            Product product = optProduct.get();
+            Product product = proxyService.findProductById(orderedProduct.getProductId());
+            if(product == null) continue;
 
             log.info("Product = " + product);
 

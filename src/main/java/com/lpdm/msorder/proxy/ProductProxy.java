@@ -20,6 +20,6 @@ public interface ProductProxy {
 
     @RequestMapping(path = "${lpdm.product.name}/products/{id}",
             method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    Optional<Product> findById(@PathVariable(value = "id") int id) throws FeignException;
+    Product findById(@PathVariable(value = "id") int id) throws FeignException;
 
 }

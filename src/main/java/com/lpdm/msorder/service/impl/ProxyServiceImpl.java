@@ -28,7 +28,7 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     @Override
-    public Optional<Product> findProductById(int id) throws FeignException {
+    public Product findProductById(int id) throws FeignException {
         return productProxy.findById(id);
     }
 

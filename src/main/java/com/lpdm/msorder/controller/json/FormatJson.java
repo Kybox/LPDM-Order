@@ -37,8 +37,9 @@ public class FormatJson {
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
             int productId = orderedProduct.getProductId();
             try{
-                Optional<Product> optionalProduct = proxyService.findProductById(productId);
-                orderedProduct.setProduct(optionalProduct.orElse(new Product(productId, orderedProduct.getPrice())));
+                Product product = proxyService.findProductById(productId);
+                if(product != null) orderedProduct.setProduct(product);
+                else orderedProduct.setProduct(new Product(productId, orderedProduct.getPrice()));
             }
             catch (FeignException e) {
                 log.warn(e.getMessage());
