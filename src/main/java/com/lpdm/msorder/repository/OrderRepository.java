@@ -18,4 +18,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByCustomerIdOrderByOrderDateAsc(int userId, Pageable pageable);
     List<Order> findAllByCustomerIdOrderByOrderDateDesc(int userId, Pageable pageable);
     long countAllByOrderDateBetween(LocalDateTime start, LocalDateTime end);
+    List<Order> findAllByOrderDateBetween(LocalDateTime start, LocalDateTime end);
 }

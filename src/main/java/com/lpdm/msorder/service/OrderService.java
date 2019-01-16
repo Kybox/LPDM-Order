@@ -44,6 +44,7 @@ public interface OrderService {
     /**
      * Stats
      */
-    OrderStats getStatsByYear(int year);
-    OrderStats getStatsByYearAndMonth(int year, int month);
+    OrderStats getOrderStatsByYear(int year);
+    OrderStats getOrderStatsByYearAndMonth(int year, int month);
+    OrderStats getOrderedProductsStatsByYear(int year);
 }

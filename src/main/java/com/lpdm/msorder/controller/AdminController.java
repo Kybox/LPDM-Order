@@ -205,7 +205,7 @@ public class AdminController {
     public OrderStats getOrderStatsByYear(@PathVariable Integer year){
 
         if(year == null) throw new BadRequestException();
-        OrderStats orderStats = orderService.getStatsByYear(year);
+        OrderStats orderStats = orderService.getOrderStatsByYear(year);
         if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
         return orderStats;
     }
@@ -215,8 +215,17 @@ public class AdminController {
                                                   @PathVariable Integer month){
 
         if(year == null || month == null) throw new BadRequestException();
-        OrderStats orderStats = orderService.getStatsByYearAndMonth(year, month);
+        OrderStats orderStats = orderService.getOrderStatsByYearAndMonth(year, month);
         if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
+        return orderStats;
+    }
+
+    @GetMapping(value = "/orderedproducts/stats/year/{year}")
+    public OrderStats getOrderedProductsByYear(@PathVariable Integer year){
+
+        if(year == null) throw new BadRequestException();
+        OrderStats orderStats = orderService.getOrderedProductsStatsByYear(year);
+        if(orderStats.getDataStats().isEmpty()) throw new OrderNotFoundException();
         return orderStats;
     }
 }
