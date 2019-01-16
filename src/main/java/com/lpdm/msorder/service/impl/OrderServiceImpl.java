@@ -160,8 +160,12 @@ public class OrderServiceImpl implements OrderService {
             LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
             LocalDateTime end = null;
             LocalDate tempDate = LocalDate.ofYearDay(year, 1);
-            if(tempDate.isLeapYear()) end = LocalDateTime.of(year, month, date.getMonth().maxLength(), 23, 59);
-            else end = LocalDateTime.of(year, month, date.getMonth().maxLength() - 1, 23, 59);
+
+            // Check leap year for february month
+            if(!tempDate.isLeapYear() && date.getMonthValue() == 2)
+                end = LocalDateTime.of(year, month, date.getMonth().maxLength() - 1, 23, 59);
+            else end = LocalDateTime.of(year, month, date.getMonth().maxLength(), 23, 59);
+
             long totalOrders = orderRepository.countAllByOrderDateBetween(start, end);
 
             log.info("Stats " + year + " : Month " + month + " : " + totalOrders + " order(s)");
