@@ -15,9 +15,10 @@ public class Product {
 
     @NotNull
     private double price;
+    private double tva;
+    private boolean desactivate;
     private User producer;
     private String picture;
-    private double tva;
 
     @JsonIgnore
     private int productorID;

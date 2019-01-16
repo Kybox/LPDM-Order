@@ -7,17 +7,23 @@ import com.lpdm.msorder.repository.PaymentRepository;
 import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.ProxyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final ProxyService proxyService;
     private final OrderRepository orderRepository;
@@ -139,5 +145,53 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deletePayment(Payment payment) {
         paymentRepository.delete(payment);
+    }
+
+    @Override
+    public OrderStats getStatsByYear(int year) {
+
+        OrderStats orderStats = new OrderStats();
+        LocalDateTime startStatsDate = LocalDateTime.of(year, 1, 1,0,0);
+        LocalDateTime endStatsDate = LocalDateTime.of(year, 12, startStatsDate.getMonth().maxLength(), 23,59);
+        for(LocalDateTime date = startStatsDate; date.isBefore(endStatsDate); date = date.plusMonths(1)){
+
+            int month = date.getMonthValue();
+
+            LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+            LocalDateTime end = null;
+            LocalDate tempDate = LocalDate.ofYearDay(year, 1);
+            if(tempDate.isLeapYear()) end = LocalDateTime.of(year, month, date.getMonth().maxLength(), 23, 59);
+            else end = LocalDateTime.of(year, month, date.getMonth().maxLength() - 1, 23, 59);
+            long totalOrders = orderRepository.countAllByOrderDateBetween(start, end);
+
+            log.info("Stats " + year + " : Month " + month + " : " + totalOrders + " order(s)");
+            log.info("Between " + start + " and " + end);
+            orderStats.getDataStats().put(month, totalOrders);
+        }
+
+        return orderStats;
+    }
+
+    @Override
+    public OrderStats getStatsByYearAndMonth(int year, int month) {
+
+
+        OrderStats orderStats = new OrderStats();
+        LocalDateTime startStatsDate = LocalDateTime.of(year, month, 1,0,0);
+        LocalDateTime endStatsDate = LocalDateTime.of(year, month, startStatsDate.getMonth().maxLength(), 23,59);
+
+        for(LocalDateTime date = startStatsDate; date.isBefore(endStatsDate); date = date.plusDays(1)){
+
+            LocalDateTime start = LocalDateTime.of(year, month, date.getDayOfMonth(), 0, 0);
+            LocalDateTime end = LocalDateTime.of(year, month, date.getDayOfMonth(), 23, 59);
+
+            long totalOrders = orderRepository.countAllByOrderDateBetween(start, end);
+
+            log.info("Stats " + year + " Month " + month + " day " + date.getDayOfMonth() + " : " + totalOrders + " order(s)");
+            log.info("Between " + start + " and " + end);
+            orderStats.getDataStats().put(date.getDayOfMonth(), totalOrders);
+        }
+
+        return orderStats;
     }
 }

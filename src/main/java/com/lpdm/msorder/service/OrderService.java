@@ -40,4 +40,10 @@ public interface OrderService {
     Optional<Payment> findPaymentById(int id);
     Payment savePayment(Payment payment);
     void deletePayment(Payment payment);
+
+    /**
+     * Stats
+     */
+    OrderStats getStatsByYear(int year);
+    OrderStats getStatsByYearAndMonth(int year, int month);
 }

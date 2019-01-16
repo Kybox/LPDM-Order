@@ -1,9 +1,6 @@
 package com.lpdm.msorder.controller;
 
 import com.lpdm.msorder.controller.json.FormatJson;
-import com.lpdm.msorder.repository.OrderRepository;
-import com.lpdm.msorder.repository.OrderedProductRepository;
-import com.lpdm.msorder.repository.PaymentRepository;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.DeleteEntityException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
@@ -11,8 +8,6 @@ import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
-import com.netflix.discovery.converters.Auto;
-import jdk.nashorn.internal.runtime.options.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,5 +199,24 @@ public class AdminController {
         List<Order> orderList = orderService.findAllOrdersByCustomerLastName(name);
         if(orderList.isEmpty()) throw new OrderNotFoundException();
         return orderList;
+    }
+
+    @GetMapping(value = "/orders/stats/year/{year}")
+    public OrderStats getOrderStatsByYear(@PathVariable Integer year){
+
+        if(year == null) throw new BadRequestException();
+        OrderStats orderStats = orderService.getStatsByYear(year);
+        if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
+        return orderStats;
+    }
+
+    @GetMapping(value = "/orders/stats/year/{year}/month/{month}")
+    public OrderStats getOrderStatsByYearAndMonth(@PathVariable Integer year,
+                                                  @PathVariable Integer month){
+
+        if(year == null || month == null) throw new BadRequestException();
+        OrderStats orderStats = orderService.getStatsByYearAndMonth(year, month);
+        if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
+        return orderStats;
     }
 }
