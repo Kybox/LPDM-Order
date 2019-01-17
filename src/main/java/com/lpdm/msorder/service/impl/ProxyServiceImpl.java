@@ -1,5 +1,6 @@
 package com.lpdm.msorder.service.impl;
 
+import com.lpdm.msorder.model.Category;
 import com.lpdm.msorder.model.Product;
 import com.lpdm.msorder.model.Store;
 import com.lpdm.msorder.model.User;
@@ -11,6 +12,7 @@ import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +32,11 @@ public class ProxyServiceImpl implements ProxyService {
     @Override
     public Product findProductById(int id) throws FeignException {
         return productProxy.findById(id);
+    }
+
+    @Override
+    public List<Category> findAllProductCategories() throws FeignException {
+        return productProxy.findAllCategories();
     }
 
     @Override

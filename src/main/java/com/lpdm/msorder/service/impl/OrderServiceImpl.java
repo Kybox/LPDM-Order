@@ -239,25 +239,34 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderStats getOrderedProductsStatsByYearAnCategory(int year, int category) {
+    public OrderStats getOrderedProductsStatsByYearAndCategory(int year) {
 
         OrderStats orderStats = new OrderStats();
+        Map<Object, Object> data = orderStats.getDataStats();
+
+        List<Category> categoryList = proxyService.findAllProductCategories();
+        for(Category category : categoryList) data.put(category.getName(), 0);
 
         LocalDateTime start = LocalDateTime.of(year, 1, 1,0,0);
         LocalDateTime end = LocalDateTime.of(year, 12, 31, 23,59);
 
-        int totalOrderedProducts = 0;
         List<Order> orderList = orderRepository.findAllByOrderDateBetween(start, end);
         for(Order order : orderList){
 
             for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
                 Product product = proxyService.findProductById(orderedProduct.getProductId());
-                if(product.getCategory().getId() == category) totalOrderedProducts++;
+
+                for(Category category : categoryList){
+
+                    if(product.getCategory().getId() == category.getId()){
+
+                        int total = ((int) data.get(category.getName())) + 1;
+                        data.put(category.getName(), total);
+                    }
+                }
             }
         }
-
-        orderStats.getDataStats().put(category, totalOrderedProducts);
 
         return orderStats;
     }

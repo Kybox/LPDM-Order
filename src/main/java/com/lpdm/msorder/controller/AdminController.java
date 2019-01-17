@@ -229,12 +229,11 @@ public class AdminController {
         return orderStats;
     }
 
-    @GetMapping(value = "/orderedproducts/stats/year/{year}/category/{category}")
-    public OrderStats getOrderedProductsByYear(@PathVariable Integer year,
-                                               @PathVariable Integer category){
+    @GetMapping(value = "/orderedproducts/stats/year/{year}/category")
+    public OrderStats getOrderedProductsByYearAndCategories(@PathVariable Integer year){
 
-        if(year == null || category == null) throw new BadRequestException();
-        OrderStats orderStats = orderService.getOrderedProductsStatsByYearAnCategory(year, category);
+        if(year == null) throw new BadRequestException();
+        OrderStats orderStats = orderService.getOrderedProductsStatsByYearAndCategory(year);
         if(orderStats.getDataStats().isEmpty()) throw new OrderNotFoundException();
         return orderStats;
     }

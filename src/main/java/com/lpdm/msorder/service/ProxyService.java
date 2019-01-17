@@ -17,6 +17,7 @@ public interface ProxyService {
      * @return An {@link Optional<Product>} object
      */
     Product findProductById(int id) throws FeignException;
+    List<Category> findAllProductCategories();
 
     /**
      * Call the auth microservice to find a {@link User} by its id

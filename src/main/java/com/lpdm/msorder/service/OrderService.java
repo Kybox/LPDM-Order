@@ -47,5 +47,5 @@ public interface OrderService {
     OrderStats getOrderStatsByYear(int year);
     OrderStats getOrderStatsByYearAndMonth(int year, int month);
     OrderStats getOrderedProductsStatsByYear(int year);
-    OrderStats getOrderedProductsStatsByYearAnCategory(int year, int category);
+    OrderStats getOrderedProductsStatsByYearAndCategory(int year);
 }
