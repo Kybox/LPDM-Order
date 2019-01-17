@@ -243,38 +243,21 @@ public class OrderServiceImpl implements OrderService {
 
         OrderStats orderStats = new OrderStats();
 
-        LocalDateTime startStatsDate = LocalDateTime.of(year, 1, 1,0,0);
-        LocalDateTime endStatsDate = LocalDateTime.of(year, 12,
-                startStatsDate.getMonth().maxLength(), 23,59);
+        LocalDateTime start = LocalDateTime.of(year, 1, 1,0,0);
+        LocalDateTime end = LocalDateTime.of(year, 12, 31, 23,59);
 
-        for(LocalDateTime date = startStatsDate; date.isBefore(endStatsDate); date = date.plusMonths(1)){
+        int totalOrderedProducts = 0;
+        List<Order> orderList = orderRepository.findAllByOrderDateBetween(start, end);
+        for(Order order : orderList){
 
-            int month = date.getMonthValue();
+            for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
-            LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
-            LocalDate tempDate = LocalDate.ofYearDay(year, 1);
-            LocalDateTime end = null;
-
-            // Check leap year for february month
-            if(!tempDate.isLeapYear() && date.getMonthValue() == 2)
-                end = LocalDateTime.of(year, month, date.getMonth().maxLength() - 1, 23, 59);
-            else end = LocalDateTime.of(year, month, date.getMonth().maxLength(), 23, 59);
-
-            int totalOrderedProducts = 0;
-            List<Order> orderList = orderRepository.findAllByOrderDateBetween(start, end);
-            for(Order order : orderList){
-
-                for(OrderedProduct orderedProduct : order.getOrderedProducts()){
-
-                    Product product = proxyService.findProductById(orderedProduct.getProductId());
-                    if(product.getCategory().getId() == category) totalOrderedProducts++;
-                }
+                Product product = proxyService.findProductById(orderedProduct.getProductId());
+                if(product.getCategory().getId() == category) totalOrderedProducts++;
             }
-
-            log.info("Stats " + year + " : Month " + month + " : " + totalOrderedProducts + " product(s)");
-            log.info("Between " + start + " and " + end);
-            orderStats.getDataStats().put(month, totalOrderedProducts);
         }
+
+        orderStats.getDataStats().put(category, totalOrderedProducts);
 
         return orderStats;
     }
