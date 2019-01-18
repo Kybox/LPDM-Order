@@ -182,7 +182,10 @@ public class AdminController {
         Optional<Order> optOrder = orderService.findOrderById(optInvoice.get().getOrderId());
         if(!optOrder.isPresent()) throw new OrderNotFoundException();
 
-        return optOrder.get();
+        Order order = optOrder.get();
+        order = formatJson.formatOrder(order);
+
+        return order;
     }
 
     @GetMapping(value = "orders/all/customer/email/{email}")
