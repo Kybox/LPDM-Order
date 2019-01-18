@@ -65,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findAllOrdersByCustomerEmail(String email) {
 
         Optional<User> optUser = proxyService.findUserByEmail(email);
+        log.info("USER = " + optUser.get());
         if(!optUser.isPresent()) throw new OrderNotFoundException();
         return orderRepository.findAllByCustomerId(optUser.get().getId());
     }

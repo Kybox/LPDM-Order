@@ -189,7 +189,8 @@ public class AdminController {
     public List<Order> findAllByEmail(@PathVariable String email){
 
         List<Order> orderList = orderService.findAllOrdersByCustomerEmail(email);
-        if(orderList.isEmpty()) throw new OrderNotFoundException();
+        if(!orderList.isEmpty()) orderList.forEach(formatJson::formatOrder);
+        else throw new OrderNotFoundException();
         return orderList;
     }
 
