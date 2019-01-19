@@ -16,7 +16,7 @@ public class Product {
     @NotNull
     private double price;
     private double tva;
-    private boolean desactivate;
+    private boolean deactivate;
     private User producer;
     private String picture;
 
@@ -77,6 +77,22 @@ public class Product {
         this.price = price;
     }
 
+    public double getTva() {
+        return tva;
+    }
+
+    public void setTva(double tva) {
+        this.tva = tva;
+    }
+
+    public boolean isDeactivate() {
+        return deactivate;
+    }
+
+    public void setDeactivate(boolean deactivate) {
+        this.deactivate = deactivate;
+    }
+
     public User getProducer() {
         return producer;
     }
@@ -93,14 +109,6 @@ public class Product {
         this.picture = picture;
     }
 
-    public double getTva() {
-        return tva;
-    }
-
-    public void setTva(double tva) {
-        this.tva = tva;
-    }
-
     public int getProductorID() {
         return productorID;
     }
@@ -115,5 +123,22 @@ public class Product {
 
     public void setListStock(List<Stock> listStock) {
         this.listStock = listStock;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", label='" + label + '\'' +
+                ", price=" + price +
+                ", tva=" + tva +
+                ", deactivate=" + deactivate +
+                ", producer=" + producer +
+                ", picture='" + picture + '\'' +
+                ", productorID=" + productorID +
+                ", listStock=" + listStock +
+                '}';
     }
 }

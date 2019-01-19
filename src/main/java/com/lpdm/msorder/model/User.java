@@ -1,5 +1,8 @@
 package com.lpdm.msorder.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class User {
 
     private Integer id;
@@ -8,12 +11,11 @@ public class User {
     private String address;
     private String email;
     private String tel;
+    private LocalDate birthday;
+    private LocalDateTime registrationDate;
+    private boolean active;
 
     public User() {
-    }
-
-    public User(Integer id) {
-        this.id = id;
     }
 
     public Integer getId() {
@@ -64,6 +66,30 @@ public class User {
         this.tel = tel;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -73,6 +99,9 @@ public class User {
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 ", tel='" + tel + '\'' +
+                ", birthday=" + birthday +
+                ", registrationDate=" + registrationDate +
+                ", active=" + active +
                 '}';
     }
 }
