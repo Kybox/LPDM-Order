@@ -75,11 +75,14 @@ public class OrderController {
         if(order.getStore() != null && order.getStore().getId() > 0)
             order.setStoreId(order.getStore().getId());
 
-        if(order.getCustomerId() > 0)
-            order.setCustomerId(order.getCustomerId());
+        if(order.getCustomerId() > 0) order.setCustomerId(order.getCustomerId());
         else throw new BadRequestException();
 
+        log.info("Try to save order : " + order.toString());
+
         orderService.saveOrder(order);
+
+        log.info("Order saved : " + order.toString());
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
