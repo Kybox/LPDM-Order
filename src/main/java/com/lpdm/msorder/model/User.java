@@ -18,6 +18,10 @@ public class User {
     public User() {
     }
 
+    public User(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }
