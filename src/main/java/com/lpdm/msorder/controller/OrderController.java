@@ -75,8 +75,16 @@ public class OrderController {
         if(order.getStore() != null && order.getStore().getId() > 0)
             order.setStoreId(order.getStore().getId());
 
-        if(order.getCustomerId() > 0) order.setCustomerId(order.getCustomerId());
-        else throw new BadRequestException();
+       if(order.getCustomer() == null) {
+           log.warn("Customer object is null");
+           throw new BadRequestException();
+       }
+       if(order.getCustomer().getId() == null || order.getCustomer().getId() == 0){
+           log.warn("Customer id is null or zero");
+           throw new BadRequestException();
+       }
+
+       order.setCustomerId(order.getCustomer().getId());
 
         log.info("Try to save order : " + order.toString());
 
