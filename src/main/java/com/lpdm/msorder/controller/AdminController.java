@@ -216,6 +216,7 @@ public class AdminController {
     public List<Order> findAllByDateBetween(@Valid @RequestBody SearchDates searchDates){
 
         List<Order> orderList = orderService.findAllOrdersBetweenTwoDates(searchDates);
+        for(Order order : orderList) log.info("Order : " + order);
         orderList.forEach(formatJson::formatOrder);
         return orderList;
     }

@@ -41,6 +41,7 @@ public class ProxyServiceImpl implements ProxyService {
 
     @Override
     public Optional<User> findUserById(int id) {
+        if(id == 0) return Optional.empty();
         return authProxy.findById(id);
     }
 
@@ -56,6 +57,7 @@ public class ProxyServiceImpl implements ProxyService {
 
     @Override
     public Optional<Store> findStoreById(int id) {
+        if(id == 0) return Optional.empty();
         return storeProxy.findById(id);
     }
 }
