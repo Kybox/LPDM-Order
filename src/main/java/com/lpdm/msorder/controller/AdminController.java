@@ -123,7 +123,8 @@ public class AdminController {
      * @param id The product id
      * @return The order {@link List}
      */
-    @GetMapping(value = "/orders/all/product/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/orders/all/product/{id}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
 
         List<OrderedProduct> orderedProductList = orderService.findAllOrderedProductsByProductId(id);
@@ -141,7 +142,8 @@ public class AdminController {
      * @param id Payment id
      * @return The order {@link List}
      */
-    @GetMapping(value = "/orders/all/payment/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/orders/all/payment/{id}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByPaymentId(@PathVariable int id){
 
         Optional<Payment> payment = orderService.findPaymentById(id);
@@ -154,7 +156,8 @@ public class AdminController {
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @GetMapping(value = "/orders/all/status/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/orders/all/status/{id}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByStatus(@PathVariable int id,
                                        @RequestParam(required = false) Optional<Integer> page,
                                        @RequestParam(required = false) Optional<Integer> size){
@@ -173,7 +176,8 @@ public class AdminController {
         else throw new OrderNotFoundException();
     }
 
-    @GetMapping(value = "orders/invoice/{ref}")
+    @GetMapping(value = "orders/invoice/{ref}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order findByInvoiceRef(@PathVariable String ref){
 
         Optional<Invoice> optInvoice = invoiceService.findInvoiceByReference(ref);
@@ -188,7 +192,8 @@ public class AdminController {
         return order;
     }
 
-    @GetMapping(value = "orders/all/customer/email/{email}")
+    @GetMapping(value = "orders/all/customer/email/{email}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByEmail(@PathVariable String email){
 
         List<Order> orderList = orderService.findAllOrdersByCustomerEmail(email);
@@ -197,7 +202,8 @@ public class AdminController {
         return orderList;
     }
 
-    @GetMapping(value = "orders/all/customer/name/{name}")
+    @GetMapping(value = "orders/all/customer/name/{name}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByName(@PathVariable String name){
 
         List<Order> orderList = orderService.findAllOrdersByCustomerLastName(name);
@@ -205,7 +211,17 @@ public class AdminController {
         return orderList;
     }
 
-    @GetMapping(value = "/orders/stats/year/{year}")
+    @PostMapping(value = "/orders/dates/between",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Order> findAllByDateBetween(@Valid @RequestBody SearchDates searchDates){
+
+        List<Order> orderList = orderService.findAllOrdersBetweenTwoDates(searchDates);
+        orderList.forEach(formatJson::formatOrder);
+        return orderList;
+    }
+
+    @GetMapping(value = "/orders/stats/year/{year}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public OrderStats getOrderStatsByYear(@PathVariable Integer year){
 
         if(year == null) throw new BadRequestException();
@@ -214,7 +230,8 @@ public class AdminController {
         return orderStats;
     }
 
-    @GetMapping(value = "/orders/stats/year/{year}/month/{month}")
+    @GetMapping(value = "/orders/stats/year/{year}/month/{month}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public OrderStats getOrderStatsByYearAndMonth(@PathVariable Integer year,
                                                   @PathVariable Integer month){
 
@@ -224,7 +241,8 @@ public class AdminController {
         return orderStats;
     }
 
-    @GetMapping(value = "/orderedproducts/stats/year/{year}")
+    @GetMapping(value = "/orderedproducts/stats/year/{year}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public OrderStats getOrderedProductsByYear(@PathVariable Integer year){
 
         if(year == null) throw new BadRequestException();
@@ -233,7 +251,8 @@ public class AdminController {
         return orderStats;
     }
 
-    @GetMapping(value = "/orderedproducts/stats/year/{year}/category")
+    @GetMapping(value = "/orderedproducts/stats/year/{year}/category",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public OrderStats getOrderedProductsByYearAndCategories(@PathVariable Integer year){
 
         if(year == null) throw new BadRequestException();

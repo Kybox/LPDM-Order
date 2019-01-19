@@ -21,6 +21,7 @@ public interface OrderService {
     Page<Order> findAllOrdersPageable(PageRequest pageRequest);
     List<Order> findAllOrdersByCustomerLastName(String lastName);
     List<Order> findAllOrdersByCustomerIdAndStatus(int id, Status status);
+    List<Order> findAllOrdersBetweenTwoDates(SearchDates searchDates);
     List<Order> findAllOrdersByStatusPageable(Status status, PageRequest pageRequest);
     List<Order> findAllOrdersByCustomerIdOrderByOrderDateAsc(int id, PageRequest pageRequest);
     List<Order> findAllOrdersByCustomerIdOrderByOrderDateDesc(int id, PageRequest pageRequest);

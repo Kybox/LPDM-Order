@@ -94,6 +94,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findAllOrdersBetweenTwoDates(SearchDates searchDates) {
+        LocalDateTime dateTime1 = searchDates.getDate1().atStartOfDay();
+        LocalDateTime dateTime2 = searchDates.getDate2().atStartOfDay();
+        return orderRepository.findAllByOrderDateBetween(dateTime1, dateTime2);
+    }
+
+    @Override
     public List<Order> findAllOrdersByStatusPageable(Status status, PageRequest pageRequest) {
         return orderRepository.findAllByStatus(status, pageRequest);
     }
