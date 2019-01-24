@@ -44,8 +44,15 @@ public class Order {
     @Transient
     private User customer;
 
+    @NotNull
+    @Column
+    private double coupon;
+
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "order")
     private List<OrderedProduct> orderedProducts;
+
+    public Order() {
+    }
 
     public int getId() {
         return id;
@@ -87,20 +94,20 @@ public class Order {
         this.payment = payment;
     }
 
-    public Store getStore() {
-        return store;
-    }
-
-    public void setStore(Store store) {
-        this.store = store;
-    }
-
     public int getStoreId() {
         return storeId;
     }
 
     public void setStoreId(int storeId) {
         this.storeId = storeId;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public int getCustomerId() {
@@ -117,6 +124,14 @@ public class Order {
 
     public void setCustomer(User customer) {
         this.customer = customer;
+    }
+
+    public double getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(double coupon) {
+        this.coupon = coupon;
     }
 
     public List<OrderedProduct> getOrderedProducts() {
@@ -139,6 +154,7 @@ public class Order {
                 ", store=" + store +
                 ", customerId=" + customerId +
                 ", customer=" + customer +
+                ", coupon=" + coupon +
                 ", orderedProducts=" + orderedProducts +
                 '}';
     }
