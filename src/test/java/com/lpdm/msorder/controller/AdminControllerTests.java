@@ -73,6 +73,7 @@ public class AdminControllerTests {
         order.setOrderedProducts(orderedProductList);
         order.setPayment(payment);
         order.setCustomerId(2);
+        order.setStatus(Status.CART);
 
         orderList = new ArrayList<>();
         orderList.add(order);
