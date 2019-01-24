@@ -34,8 +34,11 @@ public class OrderedProduct {
 
     @Column
     @NotNull
-    @JsonIgnore
     private double price;
+
+    @Column
+    @NotNull
+    private double tax;
 
     public OrderedProduct() {
     }
@@ -88,6 +91,14 @@ public class OrderedProduct {
         this.price = price;
     }
 
+    public double getTax() {
+        return tax;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+
     @Override
     public String toString() {
         return "OrderedProduct{" +
@@ -96,6 +107,7 @@ public class OrderedProduct {
                 ", product=" + product +
                 ", quantity=" + quantity +
                 ", price=" + price +
+                ", tax=" + tax +
                 '}';
     }
 }

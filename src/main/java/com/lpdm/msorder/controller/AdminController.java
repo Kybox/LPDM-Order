@@ -10,13 +10,9 @@ import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -149,6 +145,10 @@ public class AdminController {
      * @param id The product id
      * @return The order {@link List}
      */
+    @ApiOperation(
+            value = "Find all orders based on the product ID",
+            notes = "The result of the query can be consequent, " +
+                    "it would be necessary to add a pagination option on the result.")
     @GetMapping(value = "/orders/all/product/{id}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
@@ -156,7 +156,9 @@ public class AdminController {
         List<OrderedProduct> orderedProductList = orderService.findAllOrderedProductsByProductId(id);
         List<Optional<Order>> optionalList = new ArrayList<>();
         orderedProductList.forEach(o -> optionalList.add(orderService.findOrderById(o.getOrder().getId())));
-        List<Order> orderList = optionalList.stream().filter(Optional::isPresent)
+        List<Order> orderList = optionalList
+                .stream()
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
         orderList.forEach(formatJson::formatOrder);
