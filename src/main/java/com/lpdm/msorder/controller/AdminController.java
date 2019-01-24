@@ -8,9 +8,15 @@ import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,8 +34,10 @@ import java.util.stream.Stream;
  * @since 01/12/2018
  */
 
+
 @RestController
 @RequestMapping("/admin")
+@Api(tags = {"Admin API"})
 public class AdminController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
@@ -53,6 +61,10 @@ public class AdminController {
      * @param payment The new {@link Payment} object
      * @return The new {@link Payment} added
      */
+    @ApiOperation(
+            value = "Add a new payment method",
+            notes = "Please note that the addition of a new payment method " +
+                    "must also include a new payment API.")
     @PutMapping(value = "/payment/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Payment addNewPayment(@Valid @RequestBody Payment payment) {
 
@@ -66,6 +78,11 @@ public class AdminController {
      * @param payment The valid {@link Payment} object to delete
      * @return If it succeeded or not otherwise throw an exception
      */
+    @ApiOperation(
+            value = "Delete a payment",
+            notes = "Please note that the removal of payment method " +
+                    "does not involve the suppression of the payment API."
+    )
     @DeleteMapping(value = "/payment/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deletePayment(@Valid @RequestBody Payment payment) {
 
@@ -79,8 +96,14 @@ public class AdminController {
      * @param order The valid {@link Order} object to delete
      * @return If it succeeded or not otherwise throw an exception
      */
+    @ApiOperation(
+            value = "Delete an order",
+            notes = "Deleting an order should not be allowed except possibly if it is not paid.")
     @DeleteMapping(value = "/order/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deleteOrder(@Valid @RequestBody Order order){
+
+        if(order.getStatus().getId() >= Status.PAID.getId())
+            throw new BadRequestException();
 
         try { orderService.deleteOrder(order); }
         catch (Exception e) { throw new DeleteEntityException(); }
@@ -94,6 +117,9 @@ public class AdminController {
      * @param page The page number
      * @return The {@link List<Order>} sorted
      */
+    @ApiOperation(
+            value = "Finds all orders sorted by date",
+            notes = "The result of the query can be paginated by populating the size and page attributes.")
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @GetMapping(value = "/orders/all/date/{sort}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllSortedByDate(@PathVariable String sort,
