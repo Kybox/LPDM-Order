@@ -44,9 +44,9 @@ public class Order {
     @Transient
     private User customer;
 
-    @NotNull
-    @Column
-    private double coupon;
+    @ManyToOne
+    @JoinColumn(name = "coupon")
+    private Coupon coupon;
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "order")
     private List<OrderedProduct> orderedProducts;
@@ -126,11 +126,11 @@ public class Order {
         this.customer = customer;
     }
 
-    public double getCoupon() {
+    public Coupon getCoupon() {
         return coupon;
     }
 
-    public void setCoupon(double coupon) {
+    public void setCoupon(Coupon coupon) {
         this.coupon = coupon;
     }
 
