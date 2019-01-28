@@ -2,8 +2,8 @@ package com.lpdm.msorder.service;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfDocument;
-import com.lpdm.msorder.model.Invoice;
-import com.lpdm.msorder.model.Order;
+import com.lpdm.msorder.model.order.Invoice;
+import com.lpdm.msorder.model.order.Order;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

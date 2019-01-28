@@ -1,9 +1,9 @@
 package com.lpdm.msorder.service.impl;
 
-import com.lpdm.msorder.model.Category;
-import com.lpdm.msorder.model.Product;
-import com.lpdm.msorder.model.Store;
-import com.lpdm.msorder.model.User;
+import com.lpdm.msorder.model.product.Category;
+import com.lpdm.msorder.model.product.Product;
+import com.lpdm.msorder.model.store.Store;
+import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.proxy.AuthProxy;
 import com.lpdm.msorder.proxy.ProductProxy;
 import com.lpdm.msorder.proxy.StoreProxy;

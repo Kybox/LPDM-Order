@@ -1,10 +1,18 @@
 package com.lpdm.msorder.service.impl;
 
 import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.model.order.Order;
+import com.lpdm.msorder.model.order.OrderedProduct;
+import com.lpdm.msorder.model.order.Payment;
+import com.lpdm.msorder.model.order.Status;
+import com.lpdm.msorder.model.product.Category;
+import com.lpdm.msorder.model.product.Product;
+import com.lpdm.msorder.model.user.OrderStats;
+import com.lpdm.msorder.model.user.SearchDates;
+import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
 import com.lpdm.msorder.repository.PaymentRepository;
-import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.ProxyService;
 import org.slf4j.Logger;
@@ -14,10 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 @Service

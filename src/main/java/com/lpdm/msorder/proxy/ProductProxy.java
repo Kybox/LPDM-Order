@@ -1,11 +1,10 @@
 package com.lpdm.msorder.proxy;
 
-import com.lpdm.msorder.model.Category;
-import com.lpdm.msorder.model.Product;
+import com.lpdm.msorder.model.product.Category;
+import com.lpdm.msorder.model.product.Product;
 import feign.FeignException;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @FeignClient(name = "${lpdm.zuul.name}", url = "${lpdm.zuul.uri}")

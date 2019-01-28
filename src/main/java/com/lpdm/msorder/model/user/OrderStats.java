@@ -1,4 +1,4 @@
-package com.lpdm.msorder.model;
+package com.lpdm.msorder.model.user;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

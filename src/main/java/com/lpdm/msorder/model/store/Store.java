@@ -1,10 +1,12 @@
-package com.lpdm.msorder.model;
+package com.lpdm.msorder.model.store;
+
+import com.lpdm.msorder.model.location.Address;
 
 public class Store {
 
     private int id;
     private String name;
-    private Location location;
+    private Address location;
 
     public Store() {
     }
@@ -29,11 +31,11 @@ public class Store {
         this.name = name;
     }
 
-    public Location getLocation() {
+    public Address getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(Address location) {
         this.location = location;
     }
 }

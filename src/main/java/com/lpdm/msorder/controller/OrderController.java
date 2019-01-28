@@ -4,8 +4,10 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.BadRequestException;
-import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.model.order.*;
+import com.lpdm.msorder.model.product.Product;
+import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +53,7 @@ public class OrderController {
     }
 
     /**
-     * Call this method to get an {@link Optional<Order>} by its id
+     * Call this method to get an {@link Optional< Order >} by its id
      * @param id The {@link Order} id
      * @return An {@link Optional<Order>} json object
      */
@@ -85,7 +87,7 @@ public class OrderController {
            throw new BadRequestException();
         }
 
-        if(order.getCustomer().getId() == null || order.getCustomer().getId() == 0){
+        if(order.getCustomer().getId() == 0){
            log.warn("Customer id is null or zero");
            throw new BadRequestException();
         }

@@ -1,6 +1,10 @@
 package com.lpdm.msorder.controller.json;
 
-import com.lpdm.msorder.model.*;
+import com.lpdm.msorder.model.order.Order;
+import com.lpdm.msorder.model.order.OrderedProduct;
+import com.lpdm.msorder.model.product.Product;
+import com.lpdm.msorder.model.store.Store;
+import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.service.ProxyService;
 import feign.FeignException;
 import org.slf4j.Logger;

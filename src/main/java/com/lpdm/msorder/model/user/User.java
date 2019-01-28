@@ -1,14 +1,17 @@
-package com.lpdm.msorder.model;
+package com.lpdm.msorder.model.user;
+
+import com.lpdm.msorder.model.location.Address;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class User {
 
-    private Integer id;
+    private int id;
     private String firstName;
-    private String lastName;
-    private String address;
+    private String name;
+    private Address address;
+    private int addressId;
     private String email;
     private String tel;
     private LocalDate birthday;
@@ -18,15 +21,15 @@ public class User {
     public User() {
     }
 
-    public User(Integer id) {
+    public User(int id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -38,20 +41,28 @@ public class User {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getName() {
+        return name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public int getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
     public String getEmail() {
@@ -99,8 +110,9 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", address='" + address + '\'' +
+                ", name='" + name + '\'' +
+                ", address=" + address +
+                ", addressId=" + addressId +
                 ", email='" + email + '\'' +
                 ", tel='" + tel + '\'' +
                 ", birthday=" + birthday +

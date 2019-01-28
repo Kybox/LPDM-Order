@@ -1,6 +1,7 @@
-package com.lpdm.msorder.model;
+package com.lpdm.msorder.model.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lpdm.msorder.model.user.User;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

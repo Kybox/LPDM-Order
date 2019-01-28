@@ -13,3 +13,8 @@ spring:
       ddl-auto: validate
   main:
     allow-bean-definition-overriding: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

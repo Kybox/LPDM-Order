@@ -3,7 +3,11 @@ package com.lpdm.msorder.service.impl;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.lpdm.msorder.exception.OrderNotFoundException;
-import com.lpdm.msorder.model.*;
+import com.lpdm.msorder.model.order.Invoice;
+import com.lpdm.msorder.model.order.Order;
+import com.lpdm.msorder.model.order.OrderedProduct;
+import com.lpdm.msorder.model.product.Product;
+import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.InvoiceRepository;
 import com.lpdm.msorder.service.*;
 import org.apache.logging.log4j.LogManager;
@@ -99,8 +103,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         if(optUser.isPresent()){
             User user = optUser.get();
             if(user.getFirstName() == null) user.setFirstName("FIRSTNAME NULL");
-            if(user.getLastName() == null) user.setLastName("LASTNAME NULL");
-            if(user.getAddress() == null) user.setAddress("ADDRESS NULL");
+            if(user.getName() == null) user.setName("LASTNAME NULL");
+            //if(user.getAddress() == null) user.setAddress("ADDRESS NULL");
             if(user.getTel() == null) user.setTel("TEL NULL");
             if(user.getEmail() == null) user.setEmail("EMAIL NULL");
             addCustomer(user, content);
@@ -139,12 +143,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         content.setFontAndSize(baseFont, 10);
         content.showTextAligned(PdfContentByte.ALIGN_LEFT,
-                user.getFirstName() + " " + user.getLastName(), 50, 546, 0);
+                user.getFirstName() + " " + user.getName(), 50, 546, 0);
 
         content.setFontAndSize(baseFont, 9);
 
         content.showTextAligned(PdfContentByte.ALIGN_LEFT,
-                user.getAddress(), 50, 533,0);
+                user.getAddress().getStreetName(), 50, 533,0);
 
         content.showTextAligned(PdfContentByte.ALIGN_LEFT,
                 "Tel : " + user.getTel(), 50, 520,0);

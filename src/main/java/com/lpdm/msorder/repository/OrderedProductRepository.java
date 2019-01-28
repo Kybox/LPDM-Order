@@ -1,7 +1,7 @@
 package com.lpdm.msorder.repository;
 
-import com.lpdm.msorder.model.Order;
-import com.lpdm.msorder.model.OrderedProduct;
+import com.lpdm.msorder.model.order.Order;
+import com.lpdm.msorder.model.order.OrderedProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

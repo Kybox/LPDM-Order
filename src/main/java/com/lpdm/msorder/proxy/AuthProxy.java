@@ -1,6 +1,6 @@
 package com.lpdm.msorder.proxy;
 
-import com.lpdm.msorder.model.User;
+import com.lpdm.msorder.model.user.User;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

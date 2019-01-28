@@ -4,8 +4,11 @@ import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.DeleteEntityException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
-import com.lpdm.msorder.model.*;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
+import com.lpdm.msorder.model.order.*;
+import com.lpdm.msorder.model.product.Product;
+import com.lpdm.msorder.model.user.OrderStats;
+import com.lpdm.msorder.model.user.SearchDates;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
 import io.swagger.annotations.Api;
@@ -146,7 +149,7 @@ public class AdminController {
      * @return The order {@link List}
      */
     @ApiOperation(
-            value = "Find all orders based on the product ID",
+            value = "Find all orders based on the product id",
             notes = "The result of the query can be consequent, " +
                     "it would be necessary to add a pagination option on the result.")
     @GetMapping(value = "/orders/all/product/{id}",
@@ -170,6 +173,10 @@ public class AdminController {
      * @param id Payment id
      * @return The order {@link List}
      */
+    @ApiOperation(
+            value = "Find all orders based on the payment id",
+            notes = "The result of the query can be consequent, " +
+                    "it would be necessary to add a pagination option on the result.")
     @GetMapping(value = "/orders/all/payment/{id}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByPaymentId(@PathVariable int id){
@@ -183,6 +190,16 @@ public class AdminController {
         return orderList;
     }
 
+    /**
+     * Finds all {@link Order} with the {@link Status} defined in the id parameter
+     * @param id The status id
+     * @param page The optional page number
+     * @param size The optional page size
+     * @return A {@link List<Order>} object containing orders found
+     */
+    @ApiOperation(
+            value = "Find all orders "
+    )
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @GetMapping(value = "/orders/all/status/{id}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

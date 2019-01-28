@@ -1,22 +1,14 @@
-package com.lpdm.msorder.model;
+package com.lpdm.msorder.model.location;
 
-public class Location {
+public class Address {
 
     private int id;
     private String streetName;
     private String streetNumber;
     private String complement;
-    private int cityId;
+    private City city;
 
-    public Location() {
-    }
-
-    public Location(int id, String streetName, String streetNumber, String complement, int cityId) {
-        this.id = id;
-        this.streetName = streetName;
-        this.streetNumber = streetNumber;
-        this.complement = complement;
-        this.cityId = cityId;
+    public Address() {
     }
 
     public int getId() {
@@ -51,11 +43,22 @@ public class Location {
         this.complement = complement;
     }
 
-    public int getCityId() {
-        return cityId;
+    public City getCity() {
+        return city;
     }
 
-    public void setCityId(int cityId) {
-        this.cityId = cityId;
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", streetName='" + streetName + '\'' +
+                ", streetNumber='" + streetNumber + '\'' +
+                ", complement='" + complement + '\'' +
+                ", city=" + city +
+                '}';
     }
 }
