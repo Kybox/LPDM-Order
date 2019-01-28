@@ -45,8 +45,8 @@ public class PaypalServiceImpl implements PaypalService {
         payer.setPaymentMethod("paypal");
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:28083/paypal/cancel");
-        redirectUrls.setReturnUrl("http://localhost:28083/paypal/return");
+        redirectUrls.setCancelUrl("https://order.lpdm.kybox.fr/paypal/cancel");
+        redirectUrls.setReturnUrl("https://order.lpdm.kybox.fr/paypal/return");
 
         Item item1 = new Item();
         item1.setCurrency("EUR");
