@@ -50,7 +50,7 @@ public class PaymentController {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PaypalPayUrl payOrder(@PathVariable int id,
-                                 @Valid @RequestBody RedirectUrls redirectUrls) throws IOException {
+                                 @Valid @RequestBody RedirectUrls redirectUrls) throws Exception {
 
         log.info("Paypal payment process for order id " + id);
         log.info("|_ Redirection URLs transmitted by the request");

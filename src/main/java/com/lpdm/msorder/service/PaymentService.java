@@ -13,7 +13,7 @@ public interface PaymentService {
 
     PaypalPayUrl paypalPaymentProcess(int OrderId,
                                       RedirectUrls redirectUrls,
-                                      String id, String secret) throws IOException;
+                                      String id, String secret) throws Exception;
 
     List<Payment> findAllPayments();
     Payment findPaymentById(int id);

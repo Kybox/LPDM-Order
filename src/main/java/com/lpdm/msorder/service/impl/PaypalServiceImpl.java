@@ -48,7 +48,8 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public List<Item> generateOrderedProducts(List<OrderedProduct> orderedProductList) {
+    public List<Item> generateOrderedProducts(List<OrderedProduct> orderedProductList)
+            throws OrderedProductsNotFoundException {
 
         if(orderedProductList == null) throw new OrderedProductsNotFoundException();
         if(orderedProductList.size() == 0) throw new OrderedProductsNotFoundException();
@@ -75,7 +76,8 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public ShippingAddress generateShippingAddress(User user) {
+    public ShippingAddress generateShippingAddress(User user)
+            throws AddressNotFoundException {
 
         Address address = user.getAddress();
 

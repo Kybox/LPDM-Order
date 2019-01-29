@@ -46,7 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaypalPayUrl paypalPaymentProcess(int orderId,
                                              RedirectUrls redirectUrls,
-                                             String id, String secret) throws IOException {
+                                             String id, String secret) throws Exception {
 
         Order order = orderService.findOrderById(orderId);
 
