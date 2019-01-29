@@ -8,6 +8,7 @@ import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.User;
+import com.lpdm.msorder.service.DeliveryService;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
 import org.apache.logging.log4j.LogManager;
@@ -42,14 +43,16 @@ public class OrderController {
     private final InvoiceService invoiceService;
     private final OrderService orderService;
     private final FormatJson formatJson;
+    private final DeliveryService deliveryService;
 
     @Autowired
     public OrderController(InvoiceService invoiceService,
-                           OrderService orderService, FormatJson formatJson) {
+                           OrderService orderService, FormatJson formatJson, DeliveryService deliveryService) {
 
         this.invoiceService = invoiceService;
         this.orderService = orderService;
         this.formatJson = formatJson;
+        this.deliveryService = deliveryService;
     }
 
     /**
@@ -253,5 +256,15 @@ public class OrderController {
         }
 
         return invoiceService.generatePdf(optInvoice.get(), response);
+    }
+
+    /**
+     * Find all delivery methods
+     * @return The {@link List<Delivery>} object
+     */
+    @GetMapping(value = "/delivery/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Delivery> getAllDeliveryMethods(){
+
+        return deliveryService.findAllDeliveryMethods();
     }
 }

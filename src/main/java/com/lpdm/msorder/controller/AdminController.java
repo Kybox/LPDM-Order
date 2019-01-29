@@ -1,24 +1,18 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.DeleteEntityException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
-import com.lpdm.msorder.model.user.OrderStats;
 import com.lpdm.msorder.model.user.SearchDates;
-import com.lpdm.msorder.service.InvoiceService;
-import com.lpdm.msorder.service.OrderService;
-import com.lpdm.msorder.service.PaymentService;
-import com.lpdm.msorder.service.StatisticsService;
+import com.lpdm.msorder.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -27,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Stream;
+
+import static com.lpdm.msorder.utils.ValueType.EMAIL;
+import static com.lpdm.msorder.utils.ValueType.NAME;
 
 /**
  * @author Kybox
@@ -44,22 +41,19 @@ public class AdminController {
 
     private final InvoiceService invoiceService;
     private final OrderService orderService;
-    private final FormatJson formatJson;
-    private final StatisticsService statisticsService;
     private final PaymentService paymentService;
+    private final DeliveryService deliveryService;
 
     @Autowired
-    public AdminController(FormatJson formatJson,
-                           OrderService orderService,
+    public AdminController(OrderService orderService,
                            InvoiceService invoiceService,
-                           StatisticsService statisticsService,
-                           PaymentService paymentService) {
+                           PaymentService paymentService,
+                           DeliveryService deliveryService) {
 
-        this.formatJson = formatJson;
         this.orderService = orderService;
         this.invoiceService = invoiceService;
-        this.statisticsService = statisticsService;
         this.paymentService = paymentService;
+        this.deliveryService = deliveryService;
     }
 
     /**
@@ -144,10 +138,8 @@ public class AdminController {
         }
 
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE), sortDate);
-        Page<Order> orderPage = orderService.findAllOrdersPageable(pageRequest);
-        List<Order> orderList = orderPage.getContent();
-        orderList.forEach(formatJson::formatOrder);
-        return orderList;
+
+        return orderService.findAllOrdersPageable(pageRequest);
     }
 
     /**
@@ -183,9 +175,7 @@ public class AdminController {
     public List<Order> findAllByPaymentId(@PathVariable int id){
 
         Payment payment = paymentService.findPaymentById(id);
-        List<Order> orderList = orderService.findAllOrdersByPayment(payment);
-        orderList.forEach(formatJson::formatOrder);
-        return orderList;
+        return orderService.findAllOrdersByPayment(payment);
     }
 
     /**
@@ -196,7 +186,9 @@ public class AdminController {
      * @return A {@link List<Order>} object containing orders found
      */
     @ApiOperation(
-            value = "Find all orders "
+            value = "Find all orders based on the status id",
+            notes = "The result of the query can be consequent, " +
+                    "so you can set optionals pagination data"
     )
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @GetMapping(value = "/orders/all/status/{id}",
@@ -208,17 +200,20 @@ public class AdminController {
         Optional<Status> status = Stream.of(Status.values()).filter(s -> s.getId() == id).findFirst();
         if(status.isPresent()){
             PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(Integer.MAX_VALUE));
-            List<Order> orderList = orderService.findAllOrdersByStatusPageable(status.get(), pageRequest);
-
-            if(!orderList.isEmpty()){
-                orderList.forEach(formatJson::formatOrder);
-                return orderList;
-            }
-            else throw new OrderNotFoundException();
+            return orderService.findAllOrdersByStatusPageable(status.get(), pageRequest);
         }
         else throw new OrderNotFoundException();
     }
 
+    /**
+     * Find an {@link Order} based on its {@link Invoice} reference
+     * @param ref The {@link Invoice} reference
+     * @return The {@link Order} found
+     */
+    @ApiOperation(
+            value = "Find an order based on its invoice reference",
+            notes = "Be careful, an order does not always have an invoice"
+    )
     @GetMapping(value = "orders/invoice/{ref}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order findByInvoiceRef(@PathVariable String ref){
@@ -233,69 +228,36 @@ public class AdminController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByEmail(@PathVariable String email){
 
-        List<Order> orderList = orderService.findAllOrdersByCustomerEmail(email);
-        if(!orderList.isEmpty()) orderList.forEach(formatJson::formatOrder);
-        else throw new OrderNotFoundException();
-        return orderList;
+        return orderService.findAllOrdersByCustomer(EMAIL, email);
     }
 
     @GetMapping(value = "orders/all/customer/name/{name}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByName(@PathVariable String name){
 
-        List<Order> orderList = orderService.findAllOrdersByCustomerLastName(name);
-        if(orderList.isEmpty()) throw new OrderNotFoundException();
-        return orderList;
+        return orderService.findAllOrdersByCustomer(NAME, name);
     }
 
     @PostMapping(value = "/orders/dates/between",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByDateBetween(@Valid @RequestBody SearchDates searchDates){
 
-        List<Order> orderList = orderService.findAllOrdersBetweenTwoDates(searchDates);
-        for(Order order : orderList) log.info("Order : " + order);
-        orderList.forEach(formatJson::formatOrder);
-        return orderList;
+        return orderService.findAllOrdersBetweenTwoDates(searchDates);
     }
 
-    @GetMapping(value = "/orders/stats/year/{year}",
+    @PostMapping(value = "delivery/add",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public OrderStats getOrderStatsByYear(@PathVariable Integer year){
+    public Delivery addNewDeliveryMethod(@Valid @RequestBody Delivery delivery){
 
-        if(year == null) throw new BadRequestException();
-        OrderStats orderStats = statisticsService.getOrderStatsByYear(year);
-        if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
-        return orderStats;
+        return deliveryService.addNewDeliveryMethod(delivery);
     }
 
-    @GetMapping(value = "/orders/stats/year/{year}/month/{month}",
+    @DeleteMapping(value = "delivery/delete",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public OrderStats getOrderStatsByYearAndMonth(@PathVariable Integer year,
-                                                  @PathVariable Integer month){
+    public boolean deleteDeliveryMethod(@Valid @RequestBody Delivery delivery){
 
-        if(year == null || month == null) throw new BadRequestException();
-        OrderStats orderStats = statisticsService.getOrderStatsByYearAndMonth(year, month);
-        if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
-        return orderStats;
-    }
-
-    @GetMapping(value = "/orderedproducts/stats/year/{year}",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public OrderStats getOrderedProductsByYear(@PathVariable Integer year){
-
-        if(year == null) throw new BadRequestException();
-        OrderStats orderStats = statisticsService.getOrderedProductsStatsByYear(year);
-        if(orderStats.getDataStats().isEmpty()) throw new OrderNotFoundException();
-        return orderStats;
-    }
-
-    @GetMapping(value = "/orderedproducts/stats/year/{year}/category",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public OrderStats getOrderedProductsByYearAndCategories(@PathVariable Integer year){
-
-        if(year == null) throw new BadRequestException();
-        OrderStats orderStats = statisticsService.getOrderedProductsStatsByYearAndCategory(year);
-        if(orderStats.getDataStats().isEmpty()) throw new OrderNotFoundException();
-        return orderStats;
+        return deliveryService.deleteDeliveryMethod(delivery);
     }
 }

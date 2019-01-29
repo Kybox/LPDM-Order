@@ -55,7 +55,7 @@ public class Order {
     private Delivery delivery;
 
     @Column(name = "shipping_cost")
-    double shippingCost;
+    private double shippingCost;
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "order")
     private List<OrderedProduct> orderedProducts;

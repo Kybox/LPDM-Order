@@ -21,10 +21,9 @@ public interface OrderService {
     List<Order> findAllOrdersByCustomerId(int id);
     List<Order> findAllOrdersByPayment(Payment payment);
 
-    List<Order> findAllOrdersByCustomerEmail(String email);
-    List<Order> findAllOrdersByCustomerLastName(String lastName);
+    List<Order> findAllOrdersByCustomer(String findBy, String keyword);
 
-    Page<Order> findAllOrdersPageable(PageRequest pageRequest);
+    List<Order> findAllOrdersPageable(PageRequest pageRequest);
 
     List<Order> findAllOrdersByCustomerIdAndStatus(int id, Status status);
     List<Order> findAllOrdersBetweenTwoDates(SearchDates searchDates);

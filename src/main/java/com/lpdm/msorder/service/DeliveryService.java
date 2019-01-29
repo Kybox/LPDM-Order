@@ -26,4 +26,18 @@ public interface DeliveryService {
      * @throws DeliveryNotFoundException Thrown if the ID was not found
      */
     Delivery findDeliveryMethodById(int id) throws DeliveryNotFoundException;
+
+    /**
+     * Persist a new {@link Delivery} object
+     * @param delivery The {@link Delivery} object to persist
+     * @return the {@link Delivery} object that has been persisted
+     */
+    Delivery addNewDeliveryMethod(Delivery delivery);
+
+    /**
+     * Delete the {@link Delivery} object in the database
+     * @param delivery The {@link Delivery} object to delete
+     * @return True if the {@link Delivery} object was deleted, otherwise false
+     */
+    boolean deleteDeliveryMethod(Delivery delivery);
 }

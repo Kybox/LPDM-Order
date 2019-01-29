@@ -1,22 +1,13 @@
 package com.lpdm.msorder.service.impl;
 
 import com.lpdm.msorder.controller.json.FormatJson;
-import com.lpdm.msorder.exception.DeliveryNotFoundException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
-import com.lpdm.msorder.model.product.Category;
-import com.lpdm.msorder.model.product.Product;
-import com.lpdm.msorder.model.user.OrderStats;
 import com.lpdm.msorder.model.user.SearchDates;
-import com.lpdm.msorder.model.user.User;
-import com.lpdm.msorder.repository.DeliveryRepository;
 import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
-import com.lpdm.msorder.repository.PaymentRepository;
-import com.lpdm.msorder.service.DeliveryService;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.ProxyService;
-import com.lpdm.msorder.service.StatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.lpdm.msorder.utils.ValueType.BY_EMAIL;
-import static com.lpdm.msorder.utils.ValueType.BY_NAME;
+import static com.lpdm.msorder.utils.ValueType.EMAIL;
+import static com.lpdm.msorder.utils.ValueType.NAME;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -81,40 +71,80 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAllOrdersByCustomerEmail(String email) {
-        return orderRepository.findAllByCustomerId(proxyService.findUserByEmail(email).getId());
-    }
-
-    @Override
     public List<Order> findAllOrdersByPayment(Payment payment) {
-        return orderRepository.findAllByPayment(payment);
+
+        List<Order> orderList = orderRepository.findAllByPayment(payment);
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+
+        orderList.forEach(formatJson::formatOrder);
+        return orderList;
     }
 
     @Override
-    public Page<Order> findAllOrdersPageable(PageRequest pageRequest) {
-        return orderRepository.findAll(pageRequest);
+    public List<Order> findAllOrdersPageable(PageRequest pageRequest) {
+
+        Page<Order> orderPage = orderRepository.findAll(pageRequest);
+        List<Order> orderList = orderPage.getContent();
+
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+
+        orderList.forEach(formatJson::formatOrder);
+        return orderList;
     }
 
     @Override
-    public List<Order> findAllOrdersByCustomerLastName(String lastName) {
-        return orderRepository.findAllByCustomerId(proxyService.findUserByLastName(lastName).getId());
+    public List<Order> findAllOrdersByCustomer(String findBy, String keyword) {
+
+        List<Order> orderList;
+
+        switch (findBy){
+
+            case EMAIL:
+                orderList = orderRepository.findAllByCustomerId(
+                        proxyService.findUserByEmail(keyword).getId());
+                break;
+
+            case NAME:
+                orderList = orderRepository.findAllByCustomerId(
+                        proxyService.findUserByLastName(keyword).getId());
+                break;
+
+                default:
+                    throw new IllegalArgumentException();
+        }
+
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+        orderList.forEach(formatJson::formatOrder);
+        return orderList;
     }
 
     @Override
     public List<Order> findAllOrdersByCustomerIdAndStatus(int id, Status status) {
+
         return orderRepository.findAllByCustomerIdAndStatus(id, status);
     }
 
     @Override
     public List<Order> findAllOrdersBetweenTwoDates(SearchDates searchDates) {
+
         LocalDateTime dateTime1 = searchDates.getDate1().atStartOfDay();
         LocalDateTime dateTime2 = searchDates.getDate2().atStartOfDay();
-        return orderRepository.findAllByOrderDateBetween(dateTime1, dateTime2);
+
+        List<Order> orderList = orderRepository.findAllByOrderDateBetween(dateTime1, dateTime2);
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+
+        orderList.forEach(formatJson::formatOrder);
+        return orderList;
     }
 
     @Override
     public List<Order> findAllOrdersByStatusPageable(Status status, PageRequest pageRequest) {
-        return orderRepository.findAllByStatus(status, pageRequest);
+
+        List<Order> orderList = orderRepository.findAllByStatus(status, pageRequest);
+        if(orderList.isEmpty()) throw new OrderNotFoundException();
+
+        orderList.forEach(formatJson::formatOrder);
+        return orderList;
     }
 
     @Override

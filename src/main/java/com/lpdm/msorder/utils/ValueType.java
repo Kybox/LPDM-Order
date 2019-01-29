@@ -6,8 +6,8 @@ public class ValueType {
     public final static String SPACE = " ";
 
     // Orders
-    public final static String BY_EMAIL = "byEmail";
-    public final static String BY_NAME = "byName";
+    public final static String EMAIL = "email";
+    public final static String NAME = "name";
 
     // Statistics
     public final static String FIRST_DATE_OF_YEAR = "firstDateOfYear";

@@ -22,6 +22,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Autowired
     public DeliveryServiceImpl(DeliveryRepository deliveryRepository) {
+
         this.deliveryRepository = deliveryRepository;
     }
 
@@ -31,6 +32,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     @Override
     public List<Delivery> findAllDeliveryMethods() {
+
         return deliveryRepository.findAll();
     }
 
@@ -44,5 +46,28 @@ public class DeliveryServiceImpl implements DeliveryService {
     public Delivery findDeliveryMethodById(int id) throws DeliveryNotFoundException {
 
         return deliveryRepository.findById(id).orElseThrow(DeliveryNotFoundException::new);
+    }
+
+    /**
+     * Persist a new {@link Delivery} object
+     * @param delivery The {@link Delivery} object to persist
+     * @return the {@link Delivery} object that has been persisted
+     */
+    @Override
+    public Delivery addNewDeliveryMethod(Delivery delivery) {
+
+        return deliveryRepository.save(delivery);
+    }
+
+    /**
+     * Delete the {@link Delivery} object in the database
+     * @param delivery The {@link Delivery} object to delete
+     * @return True if the {@link Delivery} object was deleted, otherwise false
+     */
+    @Override
+    public boolean deleteDeliveryMethod(Delivery delivery) {
+
+        deliveryRepository.delete(delivery);
+        return !deliveryRepository.findById(delivery.getId()).isPresent();
     }
 }
