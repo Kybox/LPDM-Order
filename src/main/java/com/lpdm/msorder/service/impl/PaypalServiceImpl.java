@@ -216,6 +216,9 @@ public class PaypalServiceImpl implements PaypalService {
         String client = env.getProperty("paypalClientId");
         String secret = env.getProperty("paypalSecret");
 
+        log.info("client id = " + client);
+        log.info("secret = " + secret);
+
         return new APIContext(client, secret, mode);
     }
 
