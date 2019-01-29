@@ -1,6 +1,7 @@
 package com.lpdm.msorder.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lpdm.msorder.exception.AddressNotFoundException;
 import com.lpdm.msorder.exception.OrderedProductsNotFoundException;
 import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.order.OrderedProduct;
@@ -77,9 +78,14 @@ public class PaypalServiceImpl implements PaypalService {
     public ShippingAddress generateShippingAddress(User user) {
 
         Address address = user.getAddress();
+
+        if(address == null || address.getId() == 0)
+            throw new AddressNotFoundException();
+
         ShippingAddress shippingAddress = new ShippingAddress();
 
         String recipientName = user.getFirstName() + SPACE + user.getName();
+
         String addressline1 = address.getStreetNumber() + SPACE + address.getStreetName() + SPACE;
 
         shippingAddress.setRecipientName(recipientName);
