@@ -48,6 +48,9 @@ public class PaypalServiceImpl implements PaypalService {
     @Override
     public List<Item> generateOrderedProducts(List<OrderedProduct> orderedProductList) {
 
+        if(orderedProductList == null) log.info("OrderedProducts List = null");
+        else log.info("There are " + orderedProductList.size() + " ordered products");
+
         List<Item> itemList = new ArrayList<>();
 
         for(OrderedProduct orderedProduct : orderedProductList){
