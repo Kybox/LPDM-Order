@@ -1,5 +1,6 @@
 package com.lpdm.msorder.service.impl;
 
+import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.paypal.PaypalPayUrl;
@@ -31,6 +32,9 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaypalService paypalService;
 
     @Autowired
+    private FormatJson formatJson;
+
+    @Autowired
     public PaymentServiceImpl(PaypalService paypalService,
                               OrderService orderService) {
 
@@ -45,6 +49,7 @@ public class PaymentServiceImpl implements PaymentService {
         Optional<Order> optOrder = orderService.findOrderById(orderId);
         if(!optOrder.isPresent()) throw new OrderNotFoundException();
         Order order = optOrder.get();
+        order = formatJson.formatOrder(order);
 
         PaypalToken paypalToken = paypalService.generatePaypalToken();
 
