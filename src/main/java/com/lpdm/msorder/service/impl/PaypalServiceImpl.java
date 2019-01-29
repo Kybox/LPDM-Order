@@ -159,7 +159,7 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public String paymentProcess(int orderId, ItemList itemList, RedirectUrls redirectUrls) {
+    public String paymentProcess(int orderId, ItemList itemList, RedirectUrls redirectUrls, String id, String secret) {
 
         Details details = getPaypalDetails(itemList);
         Amount amount = getPaypalAmount(details);
@@ -189,7 +189,8 @@ public class PaypalServiceImpl implements PaypalService {
 
         try{
 
-            Payment createdPayment = payment.create(getPaypalApiContext(SANDBOX));
+            APIContext apiContext = new APIContext(id, secret, SANDBOX);
+            Payment createdPayment = payment.create(apiContext);
             payment.setId(createdPayment.getId());
 
             log.info("ObjectDetails : " + createdPayment.toString());

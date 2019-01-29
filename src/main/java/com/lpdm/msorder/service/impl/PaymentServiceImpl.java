@@ -44,7 +44,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaypalPayUrl paypalPaymentProcess(int orderId,
-                                             RedirectUrls redirectUrls) throws IOException {
+                                             RedirectUrls redirectUrls,
+                                             String id, String secret) throws IOException {
 
         Optional<Order> optOrder = orderService.findOrderById(orderId);
         if(!optOrder.isPresent()) throw new OrderNotFoundException();
@@ -57,7 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
         ShippingAddress shippingAddress = paypalService.generateShippingAddress(order.getCustomer());
         ItemList itemList = paypalService.generateItemList(items, order.getCustomer().getTel(), shippingAddress);
 
-        String redirectUrl = paypalService.paymentProcess(orderId, itemList, redirectUrls);
+        String redirectUrl = paypalService.paymentProcess(orderId, itemList, redirectUrls, id, secret);
 
         Map<String, String> mapHeaders = new HashMap<>();
         mapHeaders.put(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE);

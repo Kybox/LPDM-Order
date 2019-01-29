@@ -22,10 +22,10 @@ public class PaymentController {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Value("${paypal.clientid}")
-    private String paypalClientId;
+    private String clientId;
 
     @Value(("${paypal.secret}"))
-    private String paypalSecret;
+    private String secret;
 
     private final PaymentService paymentService;
 
@@ -47,7 +47,7 @@ public class PaymentController {
         log.info("URL return = " + redirectUrls.getReturnUrl());
         log.info("URL cancel = " + redirectUrls.getCancelUrl());
 
-        return paymentService.paypalPaymentProcess(id, redirectUrls);
+        return paymentService.paypalPaymentProcess(id, redirectUrls, clientId, secret);
 
     }
 
@@ -93,7 +93,7 @@ public class PaymentController {
 
         log.info("Return Object = " + paypalReturn);
 
-        paypalService.getTransactionDetails(paypalReturn, paypalClientId, paypalSecret);
+        paypalService.getTransactionDetails(paypalReturn, clientId, secret);
 
 
         return "PAYMENT SUCESSUL";

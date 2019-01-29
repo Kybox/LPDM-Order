@@ -17,7 +17,7 @@ public interface PaypalService {
     List<Item> generateOrderedProducts(List<OrderedProduct> orderedProductList);
     ShippingAddress generateShippingAddress(User user);
     ItemList generateItemList(List<Item> items, String phoneNumber, ShippingAddress shippingAddress);
-    String paymentProcess(int orderId, ItemList itemList, RedirectUrls redirectUrls);
+    String paymentProcess(int orderId, ItemList itemList, RedirectUrls redirectUrls, String id, String secret);
     PaypalToken generatePaypalToken() throws IOException;
 
     /*

@@ -9,5 +9,5 @@ import java.io.IOException;
 public interface PaymentService {
 
     PaypalPayUrl paypalPaymentProcess(int OrderId,
-                                      RedirectUrls redirectUrls) throws IOException;
+                                      RedirectUrls redirectUrls, String id, String secret) throws IOException;
 }
