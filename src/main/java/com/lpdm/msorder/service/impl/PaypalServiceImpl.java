@@ -62,6 +62,8 @@ public class PaypalServiceImpl implements PaypalService {
 
         for(OrderedProduct orderedProduct : orderedProductList){
 
+            log.info("Product : " + orderedProduct.getProduct());
+
             Item item = new Item();
             item.setCurrency(CURRENCY_EURO);
             item.setName(orderedProduct.getProduct().getName());
