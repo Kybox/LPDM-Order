@@ -26,8 +26,8 @@ public interface ProxyService {
      * @return An {@link Optional<User>} object
      */
     Optional<User> findUserById(int id);
-    Optional<User> findUserByLastName(String lastName);
-    Optional<User> findUserByEmail(String email);
+    User findUserByLastName(String name);
+    User findUserByEmail(String email);
 
     /**
      * Call the store microservice to find a {@link Store} by its id

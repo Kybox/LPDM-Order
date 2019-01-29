@@ -6,9 +6,7 @@ import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.order.Payment;
 import com.lpdm.msorder.model.order.Status;
 import com.lpdm.msorder.model.product.Product;
-import com.lpdm.msorder.service.InvoiceService;
-import com.lpdm.msorder.service.OrderService;
-import com.lpdm.msorder.service.ProxyService;
+import com.lpdm.msorder.service.*;
 import com.lpdm.msorder.utils.ObjToJson;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +45,12 @@ public class AdminControllerTests {
 
     @MockBean
     private ProxyService proxyService;
+
+    @MockBean
+    private PaymentService paymentService;
+
+    @MockBean
+    private StatisticsService statisticsService;
 
     @MockBean
     private FormatJson formatJson;
@@ -88,7 +92,7 @@ public class AdminControllerTests {
     @Test
     public void addNewPayment() throws Exception {
 
-        Mockito.when(orderService.savePayment(Mockito.any(Payment.class))).thenReturn(payment);
+        Mockito.when(paymentService.savePayment(Mockito.any(Payment.class))).thenReturn(payment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/admin/payment/add")
@@ -107,7 +111,7 @@ public class AdminControllerTests {
     public void deletePayment() throws Exception {
 
         Optional<Payment> optionalPayment = Optional.empty();
-        Mockito.when(orderService.findPaymentById(Mockito.anyInt())).thenReturn(optionalPayment);
+        Mockito.when(paymentService.findPaymentById(Mockito.anyInt())).thenReturn(payment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/admin/payment/delete")
@@ -125,7 +129,7 @@ public class AdminControllerTests {
     public void deleteOrder() throws Exception {
 
         Optional<Order> optionalOrder = Optional.empty();
-        Mockito.when(orderService.findOrderById(Mockito.anyInt())).thenReturn(optionalOrder);
+        Mockito.when(orderService.findOrderById(Mockito.anyInt())).thenReturn(order);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/admin/order/delete")
@@ -178,7 +182,7 @@ public class AdminControllerTests {
                 .thenReturn(orderedProductList);
 
         Optional<Order> optionalOrder = Optional.ofNullable(order);
-        Mockito.when(orderService.findOrderById(Mockito.anyInt())).thenReturn(optionalOrder);
+        Mockito.when(orderService.findOrderById(Mockito.anyInt())).thenReturn(order);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/admin/orders/all/product/" + randomId);
@@ -193,7 +197,7 @@ public class AdminControllerTests {
     public void findAllByPaymentId() throws Exception {
 
         Optional<Payment> optionalPayment = Optional.ofNullable(payment);
-        Mockito.when(orderService.findPaymentById(Mockito.anyInt())).thenReturn(optionalPayment);
+        Mockito.when(paymentService.findPaymentById(Mockito.anyInt())).thenReturn(payment);
         Mockito.when(orderService.findAllOrdersByPayment(Mockito.any(Payment.class))).thenReturn(orderList);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders

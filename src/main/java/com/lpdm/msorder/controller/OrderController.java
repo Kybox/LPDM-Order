@@ -53,16 +53,14 @@ public class OrderController {
     }
 
     /**
-     * Call this method to get an {@link Optional< Order >} by its id
+     * Call this method to get an {@link Order} by its id
      * @param id The {@link Order} id
-     * @return An {@link Optional<Order>} json object
+     * @return An {@link Order} json object
      */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Optional<Order> getOrderById(@PathVariable int id){
+    public Order getOrderById(@PathVariable int id){
 
-        return Optional.of(orderService.findOrderById(id)
-                .map(formatJson::formatOrder)
-                .orElseThrow(OrderNotFoundException::new));
+        return orderService.findOrderById(id);
     }
 
     /**
@@ -95,9 +93,7 @@ public class OrderController {
         order.setCustomerId(order.getCustomer().getId());
 
         log.info("Try to save order : " + order.toString());
-
         orderService.saveOrder(order);
-
         log.info("Order saved : " + order.toString());
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
@@ -108,6 +104,7 @@ public class OrderController {
 
                 orderedProduct.setProductId(orderedProduct.getProduct().getId());
                 orderedProduct.setPrice(orderedProduct.getProduct().getPrice());
+                orderedProduct.setTax(orderedProduct.getProduct().getTax());
                 orderService.saveOrderedProduct(orderedProduct);
             }
             else throw new BadRequestException();
@@ -234,15 +231,6 @@ public class OrderController {
     }
 
     /**
-     * Get all {@link Payment} recorded in the database
-     * @return The {@link List<Payment>}
-     */
-    @GetMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Payment> getPaymentList(){
-        return orderService.findAllPayments();
-    }
-
-    /**
      *  Generate an invoice for a paid order
      * @param id The {@link Order} id
      * @param response The {@link HttpServletResponse} object
@@ -253,13 +241,12 @@ public class OrderController {
                                            HttpServletResponse response)
             throws IOException, DocumentException {
 
-        Optional<Order> optOrder = orderService.findOrderById(id);
-        if(!optOrder.isPresent()) throw new BadRequestException();
+        Order order = orderService.findOrderById(id);
 
-        Optional<Invoice> optInvoice = invoiceService.getByOrderId(optOrder.get().getId());
+        Optional<Invoice> optInvoice = invoiceService.getByOrderId(order.getId());
         if(!optInvoice.isPresent()) {
-            if(optOrder.get().getStatus().getId() >= Status.PAID.getId()) {
-                Invoice invoice = invoiceService.generateNew(optOrder.get());
+            if(order.getStatus().getId() >= Status.PAID.getId()) {
+                Invoice invoice = invoiceService.generateNew(order);
                 return invoiceService.generatePdf(invoice, response);
             }
             else throw new BadRequestException();

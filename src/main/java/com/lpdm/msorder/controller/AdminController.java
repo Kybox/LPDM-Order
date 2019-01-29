@@ -11,6 +11,7 @@ import com.lpdm.msorder.model.user.OrderStats;
 import com.lpdm.msorder.model.user.SearchDates;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
+import com.lpdm.msorder.service.PaymentService;
 import com.lpdm.msorder.service.StatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -46,16 +46,20 @@ public class AdminController {
     private final OrderService orderService;
     private final FormatJson formatJson;
     private final StatisticsService statisticsService;
+    private final PaymentService paymentService;
 
     @Autowired
     public AdminController(FormatJson formatJson,
                            OrderService orderService,
-                           InvoiceService invoiceService, StatisticsService statisticsService) {
+                           InvoiceService invoiceService,
+                           StatisticsService statisticsService,
+                           PaymentService paymentService) {
 
         this.formatJson = formatJson;
         this.orderService = orderService;
         this.invoiceService = invoiceService;
         this.statisticsService = statisticsService;
+        this.paymentService = paymentService;
     }
 
     /**
@@ -70,7 +74,7 @@ public class AdminController {
     @PutMapping(value = "/payment/add", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Payment addNewPayment(@Valid @RequestBody Payment payment) {
 
-        try { payment = orderService.savePayment(payment); }
+        try { payment = paymentService.savePayment(payment); }
         catch (Exception e) { throw new PaymentPersistenceException(); }
         return payment;
     }
@@ -88,9 +92,9 @@ public class AdminController {
     @DeleteMapping(value = "/payment/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deletePayment(@Valid @RequestBody Payment payment) {
 
-        try { orderService.deletePayment(payment); }
+        try { paymentService.deletePayment(payment); }
         catch (Exception e) { throw new DeleteEntityException(); }
-        return !orderService.findPaymentById(payment.getId()).isPresent();
+        return !paymentService.checkIfPaymentExist(payment.getId());
     }
 
     /**
@@ -109,7 +113,7 @@ public class AdminController {
 
         try { orderService.deleteOrder(order); }
         catch (Exception e) { throw new DeleteEntityException(); }
-        return !orderService.findOrderById(order.getId()).isPresent();
+        return !orderService.checkIfOrderExist(order.getId());
     }
 
     /**
@@ -160,14 +164,8 @@ public class AdminController {
     public List<Order> findAllByProductId(@PathVariable int id){
 
         List<OrderedProduct> orderedProductList = orderService.findAllOrderedProductsByProductId(id);
-        List<Optional<Order>> optionalList = new ArrayList<>();
-        orderedProductList.forEach(o -> optionalList.add(orderService.findOrderById(o.getOrder().getId())));
-        List<Order> orderList = optionalList
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-        orderList.forEach(formatJson::formatOrder);
+        List<Order> orderList = new ArrayList<>();
+        orderedProductList.forEach(o -> orderList.add(orderService.findOrderById(o.getOrder().getId())));
         return orderList;
     }
 
@@ -184,12 +182,9 @@ public class AdminController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByPaymentId(@PathVariable int id){
 
-        Optional<Payment> payment = orderService.findPaymentById(id);
-        List<Order> orderList = null;
-        if(payment.isPresent()) {
-            orderList = orderService.findAllOrdersByPayment(payment.get());
-            orderList.forEach(formatJson::formatOrder);
-        }
+        Payment payment = paymentService.findPaymentById(id);
+        List<Order> orderList = orderService.findAllOrdersByPayment(payment);
+        orderList.forEach(formatJson::formatOrder);
         return orderList;
     }
 
@@ -231,13 +226,7 @@ public class AdminController {
         Optional<Invoice> optInvoice = invoiceService.findInvoiceByReference(ref);
         if(!optInvoice.isPresent()) throw new OrderNotFoundException();
 
-        Optional<Order> optOrder = orderService.findOrderById(optInvoice.get().getOrderId());
-        if(!optOrder.isPresent()) throw new OrderNotFoundException();
-
-        Order order = optOrder.get();
-        order = formatJson.formatOrder(order);
-
-        return order;
+        return orderService.findOrderById(optInvoice.get().getOrderId());
     }
 
     @GetMapping(value = "orders/all/customer/email/{email}",

@@ -2,9 +2,12 @@ package com.lpdm.msorder.service.impl;
 
 import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.exception.PaymentNotFoundException;
 import com.lpdm.msorder.model.order.Order;
+import com.lpdm.msorder.model.order.Payment;
 import com.lpdm.msorder.model.paypal.PaypalPayUrl;
 import com.lpdm.msorder.model.paypal.PaypalToken;
+import com.lpdm.msorder.repository.PaymentRepository;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.PaymentService;
 import com.lpdm.msorder.service.PaypalService;
@@ -16,12 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -30,16 +31,16 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final OrderService orderService;
     private final PaypalService paypalService;
-
-    @Autowired
-    private FormatJson formatJson;
+    private final PaymentRepository paymentRepository;
 
     @Autowired
     public PaymentServiceImpl(PaypalService paypalService,
-                              OrderService orderService) {
+                              OrderService orderService,
+                              PaymentRepository paymentRepository) {
 
         this.paypalService = paypalService;
         this.orderService = orderService;
+        this.paymentRepository = paymentRepository;
     }
 
     @Override
@@ -47,10 +48,7 @@ public class PaymentServiceImpl implements PaymentService {
                                              RedirectUrls redirectUrls,
                                              String id, String secret) throws IOException {
 
-        Optional<Order> optOrder = orderService.findOrderById(orderId);
-        if(!optOrder.isPresent()) throw new OrderNotFoundException();
-        Order order = optOrder.get();
-        order = formatJson.formatOrder(order);
+        Order order = orderService.findOrderById(orderId);
 
         PaypalToken paypalToken = paypalService.generatePaypalToken();
 
@@ -69,5 +67,31 @@ public class PaymentServiceImpl implements PaymentService {
         paypalPayUrl.setHeaders(mapHeaders);
 
         return paypalPayUrl;
+    }
+
+    @Override
+    public List<Payment> findAllPayments() {
+        return paymentRepository.findAll();
+    }
+
+    @Override
+    public Payment findPaymentById(int id) {
+
+        return paymentRepository.findById(id).orElseThrow(PaymentNotFoundException::new);
+    }
+
+    @Override
+    public Payment savePayment(Payment payment) {
+        return paymentRepository.save(payment);
+    }
+
+    @Override
+    public void deletePayment(Payment payment) {
+        paymentRepository.delete(payment);
+    }
+
+    @Override
+    public boolean checkIfPaymentExist(int id) {
+        return paymentRepository.findById(id).isPresent();
     }
 }

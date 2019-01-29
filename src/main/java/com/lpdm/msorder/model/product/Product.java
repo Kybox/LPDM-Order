@@ -16,7 +16,7 @@ public class Product {
 
     @NotNull
     private double price;
-    private double tva;
+    private double tax;
     private boolean deactivate;
     private User producer;
     private String picture;
@@ -78,12 +78,12 @@ public class Product {
         this.price = price;
     }
 
-    public double getTva() {
-        return tva;
+    public double getTax() {
+        return tax;
     }
 
-    public void setTva(double tva) {
-        this.tva = tva;
+    public void setTax(double tax) {
+        this.tax = tax;
     }
 
     public boolean isDeactivate() {
@@ -134,7 +134,7 @@ public class Product {
                 ", category=" + category +
                 ", label='" + label + '\'' +
                 ", price=" + price +
-                ", tva=" + tva +
+                ", tax=" + tax +
                 ", deactivate=" + deactivate +
                 ", producer=" + producer +
                 ", picture='" + picture + '\'' +

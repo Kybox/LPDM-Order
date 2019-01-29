@@ -1,5 +1,6 @@
 package com.lpdm.msorder.service.impl;
 
+import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.DeliveryNotFoundException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
@@ -27,26 +28,28 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.lpdm.msorder.utils.ValueType.BY_EMAIL;
+import static com.lpdm.msorder.utils.ValueType.BY_NAME;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private final FormatJson formatJson;
     private final ProxyService proxyService;
     private final OrderRepository orderRepository;
-    private final PaymentRepository paymentRepository;
     private final OrderedProductRepository orderedProductRepository;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
-                            PaymentRepository paymentRepository,
                             OrderedProductRepository orderedProductRepository,
-                            ProxyService proxyService) {
+                            ProxyService proxyService, FormatJson formatJson) {
 
         this.orderRepository = orderRepository;
-        this.paymentRepository = paymentRepository;
         this.orderedProductRepository = orderedProductRepository;
         this.proxyService = proxyService;
+        this.formatJson = formatJson;
     }
 
     @Override
@@ -60,8 +63,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<Order> findOrderById(int id) {
-        return orderRepository.findById(id);
+    public Order findOrderById(int id) throws OrderNotFoundException {
+
+        return formatJson.formatOrder(orderRepository
+                .findById(id)
+                .orElseThrow(OrderNotFoundException::new));
+    }
+
+    @Override
+    public boolean checkIfOrderExist(int id) {
+        return orderRepository.findById(id).isPresent();
     }
 
     @Override
@@ -71,11 +82,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllOrdersByCustomerEmail(String email) {
-
-        Optional<User> optUser = proxyService.findUserByEmail(email);
-        log.info("USER = " + optUser.get());
-        if(!optUser.isPresent()) throw new OrderNotFoundException();
-        return orderRepository.findAllByCustomerId(optUser.get().getId());
+        return orderRepository.findAllByCustomerId(proxyService.findUserByEmail(email).getId());
     }
 
     @Override
@@ -90,10 +97,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllOrdersByCustomerLastName(String lastName) {
-
-        Optional<User> optUser = proxyService.findUserByLastName(lastName);
-        if(!optUser.isPresent()) throw new OrderNotFoundException();
-        return orderRepository.findAllByCustomerId(optUser.get().getId());
+        return orderRepository.findAllByCustomerId(proxyService.findUserByLastName(lastName).getId());
     }
 
     @Override
@@ -153,23 +157,5 @@ public class OrderServiceImpl implements OrderService {
         return orderedProductRepository.findAllByOrder(order);
     }
 
-    @Override
-    public List<Payment> findAllPayments() {
-        return paymentRepository.findAll();
-    }
 
-    @Override
-    public Optional<Payment> findPaymentById(int id) {
-        return paymentRepository.findById(id);
-    }
-
-    @Override
-    public Payment savePayment(Payment payment) {
-        return paymentRepository.save(payment);
-    }
-
-    @Override
-    public void deletePayment(Payment payment) {
-        paymentRepository.delete(payment);
-    }
 }

@@ -82,9 +82,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public PdfDocument generatePdf(Invoice invoice, HttpServletResponse servletResponse) throws IOException, DocumentException {
-        Optional<Order> optOrder = orderService.findOrderById(invoice.getOrderId());
-        if(!optOrder.isPresent()) throw new OrderNotFoundException();
-        Order order = optOrder.get();
+
+        Order order = orderService.findOrderById(invoice.getOrderId());
 
 
         PdfReader pdfReader = new PdfReader(PDF_TEMPLATE);

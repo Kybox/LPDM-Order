@@ -54,12 +54,12 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     @Override
-    public Optional<User> findUserByLastName(String lastName) {
-        return authProxy.findByLastName(lastName);
+    public User findUserByLastName(String name) {
+        return authProxy.findByLastName(name);
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return authProxy.findByEmail(email);
     }
 

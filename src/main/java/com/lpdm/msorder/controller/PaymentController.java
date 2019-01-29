@@ -1,5 +1,6 @@
 package com.lpdm.msorder.controller;
 
+import com.lpdm.msorder.model.order.Payment;
 import com.lpdm.msorder.model.paypal.PaypalPayUrl;
 import com.lpdm.msorder.model.paypal.PaypalReturn;
 import com.lpdm.msorder.service.PaymentService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class PaymentController {
@@ -62,5 +64,14 @@ public class PaymentController {
     public String returnPayment(@ModelAttribute PaypalReturn paypalReturn) throws PayPalRESTException {
 
         return paypalService.getTransactionDetails(paypalReturn, clientId, secret);
+    }
+
+    /**
+     * Get all {@link Payment} recorded in the database
+     * @return The {@link List <Payment>}
+     */
+    @GetMapping(value = "orders/payments", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Payment> getPaymentList(){
+        return paymentService.findAllPayments();
     }
 }

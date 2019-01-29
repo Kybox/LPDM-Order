@@ -40,7 +40,7 @@ public class OrderControllerTest {
         order.setId(1);
         order.setTotal(22.87);
 
-        Mockito.when(orderController.getOrderById(1)).thenReturn(Optional.ofNullable(order));
+        Mockito.when(orderController.getOrderById(1)).thenReturn(order);
 
         mockMvc.perform(get("/orders/1"))
                 .andExpect(status().isOk())
