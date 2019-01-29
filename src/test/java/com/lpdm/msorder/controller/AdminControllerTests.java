@@ -1,6 +1,5 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.order.Payment;
@@ -15,7 +14,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,7 +23,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,16 +41,10 @@ public class AdminControllerTests {
     private InvoiceService invoiceService;
 
     @MockBean
-    private ProxyService proxyService;
-
-    @MockBean
     private PaymentService paymentService;
 
     @MockBean
-    private StatisticsService statisticsService;
-
-    @MockBean
-    private FormatJson formatJson;
+    private DeliveryService deliveryService;
 
     private int randomId;
     private Order order;
@@ -110,7 +101,6 @@ public class AdminControllerTests {
     @Test
     public void deletePayment() throws Exception {
 
-        Optional<Payment> optionalPayment = Optional.empty();
         Mockito.when(paymentService.findPaymentById(Mockito.anyInt())).thenReturn(payment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -128,7 +118,6 @@ public class AdminControllerTests {
     @Test
     public void deleteOrder() throws Exception {
 
-        Optional<Order> optionalOrder = Optional.empty();
         Mockito.when(orderService.findOrderById(Mockito.anyInt())).thenReturn(order);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -146,8 +135,7 @@ public class AdminControllerTests {
     @Test
     public void findAllSortedByDate() throws Exception {
 
-        PageImpl<Order> page = new PageImpl<>(orderList);
-        Mockito.when(orderService.findAllOrdersPageable(Mockito.any(PageRequest.class))).thenReturn(page);
+        Mockito.when(orderService.findAllOrdersPageable(Mockito.any(PageRequest.class))).thenReturn(orderList);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/admin/orders/all/date/asc");
@@ -181,7 +169,6 @@ public class AdminControllerTests {
         Mockito.when(orderService.findAllOrderedProductsByProductId(Mockito.anyInt()))
                 .thenReturn(orderedProductList);
 
-        Optional<Order> optionalOrder = Optional.ofNullable(order);
         Mockito.when(orderService.findOrderById(Mockito.anyInt())).thenReturn(order);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -196,7 +183,6 @@ public class AdminControllerTests {
     @Test
     public void findAllByPaymentId() throws Exception {
 
-        Optional<Payment> optionalPayment = Optional.ofNullable(payment);
         Mockito.when(paymentService.findPaymentById(Mockito.anyInt())).thenReturn(payment);
         Mockito.when(orderService.findAllOrdersByPayment(Mockito.any(Payment.class))).thenReturn(orderList);
 
