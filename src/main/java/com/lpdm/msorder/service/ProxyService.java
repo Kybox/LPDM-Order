@@ -1,5 +1,6 @@
 package com.lpdm.msorder.service;
 
+import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.product.Category;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.store.Store;
@@ -34,4 +35,11 @@ public interface ProxyService {
      * @return An {@link Optional<Store>} object
      */
     Optional<Store> findStoreById(int id);
+
+    /**
+     * Call the location microservice to find an {@link Address} by its id
+     * @param id The {@link Address} id
+     * @return
+     */
+    Address findAddressById(int id) throws Exception;
 }

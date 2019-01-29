@@ -8,6 +8,7 @@ import com.paypal.api.payments.Item;
 import com.paypal.api.payments.ItemList;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.ShippingAddress;
+import com.paypal.base.rest.PayPalRESTException;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,9 +21,6 @@ public interface PaypalService {
     String paymentProcess(int orderId, ItemList itemList, RedirectUrls redirectUrls, String id, String secret);
     PaypalToken generatePaypalToken() throws IOException;
 
-    /*
-    String paypalPayment();
-    */
 
-    void getTransactionDetails(PaypalReturn paypalReturn, String cliendId, String secret);
+    String getTransactionDetails(PaypalReturn paypalReturn, String cliendId, String secret) throws PayPalRESTException;
 }

@@ -3,7 +3,6 @@ package com.lpdm.msorder.model.location;
 public class City {
 
     private int id;
-    private String departmentCode;
     private String inseeCode;
     private String zipCode;
     private String name;
@@ -21,14 +20,6 @@ public class City {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getDepartmentCode() {
-        return departmentCode;
-    }
-
-    public void setDepartmentCode(String departmentCode) {
-        this.departmentCode = departmentCode;
     }
 
     public String getInseeCode() {
@@ -91,7 +82,6 @@ public class City {
     public String toString() {
         return "City{" +
                 "id=" + id +
-                ", departmentCode='" + departmentCode + '\'' +
                 ", inseeCode='" + inseeCode + '\'' +
                 ", zipCode='" + zipCode + '\'' +
                 ", name='" + name + '\'' +

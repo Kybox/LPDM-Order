@@ -11,6 +11,7 @@ import com.lpdm.msorder.model.user.OrderStats;
 import com.lpdm.msorder.model.user.SearchDates;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
+import com.lpdm.msorder.service.StatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
@@ -44,15 +45,17 @@ public class AdminController {
     private final InvoiceService invoiceService;
     private final OrderService orderService;
     private final FormatJson formatJson;
+    private final StatisticsService statisticsService;
 
     @Autowired
     public AdminController(FormatJson formatJson,
                            OrderService orderService,
-                           InvoiceService invoiceService) {
+                           InvoiceService invoiceService, StatisticsService statisticsService) {
 
         this.formatJson = formatJson;
         this.orderService = orderService;
         this.invoiceService = invoiceService;
+        this.statisticsService = statisticsService;
     }
 
     /**
@@ -271,7 +274,7 @@ public class AdminController {
     public OrderStats getOrderStatsByYear(@PathVariable Integer year){
 
         if(year == null) throw new BadRequestException();
-        OrderStats orderStats = orderService.getOrderStatsByYear(year);
+        OrderStats orderStats = statisticsService.getOrderStatsByYear(year);
         if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
         return orderStats;
     }
@@ -282,7 +285,7 @@ public class AdminController {
                                                   @PathVariable Integer month){
 
         if(year == null || month == null) throw new BadRequestException();
-        OrderStats orderStats = orderService.getOrderStatsByYearAndMonth(year, month);
+        OrderStats orderStats = statisticsService.getOrderStatsByYearAndMonth(year, month);
         if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
         return orderStats;
     }
@@ -292,7 +295,7 @@ public class AdminController {
     public OrderStats getOrderedProductsByYear(@PathVariable Integer year){
 
         if(year == null) throw new BadRequestException();
-        OrderStats orderStats = orderService.getOrderedProductsStatsByYear(year);
+        OrderStats orderStats = statisticsService.getOrderedProductsStatsByYear(year);
         if(orderStats.getDataStats().isEmpty()) throw new OrderNotFoundException();
         return orderStats;
     }
@@ -302,7 +305,7 @@ public class AdminController {
     public OrderStats getOrderedProductsByYearAndCategories(@PathVariable Integer year){
 
         if(year == null) throw new BadRequestException();
-        OrderStats orderStats = orderService.getOrderedProductsStatsByYearAndCategory(year);
+        OrderStats orderStats = statisticsService.getOrderedProductsStatsByYearAndCategory(year);
         if(orderStats.getDataStats().isEmpty()) throw new OrderNotFoundException();
         return orderStats;
     }

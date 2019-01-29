@@ -49,14 +49,8 @@ public class PaypalServiceImpl implements PaypalService {
     @Override
     public List<Item> generateOrderedProducts(List<OrderedProduct> orderedProductList) {
 
-        if(orderedProductList == null) {
-            log.info("OrderedProducts List = null");
-            throw new OrderedProductsNotFoundException();
-        }
-        if(orderedProductList.size() == 0){
-            log.info("There are " + orderedProductList.size() + " ordered products");
-            throw new OrderedProductsNotFoundException();
-        }
+        if(orderedProductList == null) throw new OrderedProductsNotFoundException();
+        if(orderedProductList.size() == 0) throw new OrderedProductsNotFoundException();
 
         List<Item> itemList = new ArrayList<>();
 
@@ -86,17 +80,16 @@ public class PaypalServiceImpl implements PaypalService {
         ShippingAddress shippingAddress = new ShippingAddress();
 
         String recipientName = user.getFirstName() + SPACE + user.getName();
-        //String addressline1 = address.getStreetNumber() + SPACE + address.getStreetName() + SPACE;
+        String addressline1 = address.getStreetNumber() + SPACE + address.getStreetName() + SPACE;
 
         shippingAddress.setRecipientName(recipientName);
-        //shippingAddress.setLine1(addressline1);
-        shippingAddress.setLine1("une adresse");
-        //shippingAddress.setLine2(address.getComplement());
-        shippingAddress.setLine2("une adresse 2");
-        //shippingAddress.setPostalCode(address.getCity().getZipCode());
-        shippingAddress.setPostalCode("75000");
-        //shippingAddress.setCity(address.getCity().getName());
-        shippingAddress.setCity("Paris");
+        shippingAddress.setLine1(addressline1);
+
+        if(address.getComplement() != null) shippingAddress.setLine2(address.getComplement());
+        else shippingAddress.setLine2("");
+
+        shippingAddress.setPostalCode(address.getCity().getZipCode());
+        shippingAddress.setCity(address.getCity().getName());
         shippingAddress.setCountryCode("FR");
 
         return shippingAddress;
@@ -187,7 +180,7 @@ public class PaypalServiceImpl implements PaypalService {
         payment.setTransactions(transactionList);
         payment.setRedirectUrls(redirectUrls);
 
-        try{
+        try {
 
             APIContext apiContext = new APIContext(id, secret, SANDBOX);
             Payment createdPayment = payment.create(apiContext);
@@ -197,30 +190,39 @@ public class PaypalServiceImpl implements PaypalService {
 
             Iterator links = createdPayment.getLinks().iterator();
 
-            while (links.hasNext()){
+            while (links.hasNext()) {
                 Links link = (Links) links.next();
-                if(link.getRel().equalsIgnoreCase("approval_url")){
+                if (link.getRel().equalsIgnoreCase("approval_url")) {
                     // Redirect the customer to link.getHref()
                     return link.getHref();
                 }
             }
-        }
-        catch (PayPalRESTException e) {
+        } catch (PayPalRESTException e) {
             log.error(String.valueOf(e.getDetails()));
         }
 
         return null;
     }
 
-    private APIContext getPaypalApiContext(String mode){
+    @Override
+    public String getTransactionDetails(PaypalReturn paypalReturn,
+                                        String cliendId,
+                                        String secret) throws PayPalRESTException {
 
-        String client = env.getProperty("paypalClientId");
-        String secret = env.getProperty("paypalSecret");
+        APIContext apiContext = new APIContext(cliendId, secret, SANDBOX);
 
-        log.info("client id = " + client);
-        log.info("secret = " + secret);
+        PaymentExecution paymentExecution = new PaymentExecution();
+        paymentExecution.setPayerId(paypalReturn.getPayerID());
 
-        return new APIContext(client, secret, mode);
+        Payment payment = new Payment();
+        payment.setId(paypalReturn.getPaymentId());
+
+        Payment executedPayment = payment.execute(apiContext, paymentExecution);
+
+        log.info("Payment execution : ");
+        log.info(executedPayment.toJSON());
+
+        return executedPayment.toJSON();
     }
 
     private Details getPaypalDetails(ItemList itemList){
@@ -258,156 +260,4 @@ public class PaypalServiceImpl implements PaypalService {
 
         return amount;
     }
-
-
-    /*
-    @Override
-    public String paypalPayment() {
-
-        // Set payer details
-        Payer payer = new Payer();
-        payer.setPaymentMethod("paypal");
-
-        RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("https://order.lpdm.kybox.fr/paypal/cancel");
-        redirectUrls.setReturnUrl("https://order.lpdm.kybox.fr/paypal/return");
-
-
-        Item item1 = new Item();
-        item1.setCurrency("EUR");
-        item1.setDescription("Certifié label BIO");
-        item1.setName("Tomates marmandaise");
-        item1.setCategory("PHYSICAL");
-        item1.setPrice("4.80");
-        item1.setQuantity("2");
-
-        Item item2 = new Item();
-        item2.setCurrency("EUR");
-        item2.setDescription("Botte de 5 carottes");
-        item2.setName("Carottes");
-        item2.setCategory("PHYSICAL");
-        item2.setPrice("3.60");
-        item2.setQuantity("1");
-
-        List<Item> list = new ArrayList<>();
-        list.add(item1);
-        list.add(item2);
-
-
-        ShippingAddress shippingAddress = new ShippingAddress();
-        shippingAddress.setRecipientName("Gilbert Montagné");
-        shippingAddress.setLine1("10 rue des Tropiques");
-        shippingAddress.setPostalCode("33000");
-        shippingAddress.setCity("Bordeaux");
-        shippingAddress.setCountryCode("FR");
-
-
-        ItemList itemList = new ItemList();
-        itemList.setItems(list);
-        itemList.setShippingAddress(shippingAddress);
-        itemList.setShippingMethod("Méthode d'envoi du colis");
-        itemList.setShippingPhoneNumber("+33 0699990000");
-
-
-
-        // Set payment details
-        Details details = new Details();
-        details.setSubtotal("13.20");
-        details.setTax("0.73");
-        details.setShipping("4.90");
-
-        // Payment amount
-        Amount amount = new Amount();
-        amount.setCurrency("EUR");
-        amount.setTotal("18.83");
-        amount.setDetails(details);
-
-        // Transaction information
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        transaction.setDescription("Commande n°1365");
-        transaction.setItemList(itemList);
-
-        // Add transaction to a list
-        List<Transaction> transactionList = new ArrayList<>();
-        transactionList.add(transaction);
-
-        // Add payment details
-        Payment payment = new Payment();
-        //payment.setIntent("authorize");
-        payment.setIntent("sale");
-        payment.setPayer(payer);
-        payment.setTransactions(transactionList);
-        payment.setRedirectUrls(redirectUrls);
-
-        try{
-            Payment createdPayment = payment.create(getPaypalApiContext(SANDBOX));
-
-            log.info("ObjectDetails : " + createdPayment.toString());
-
-            // Identifier of the payment resource created
-            payment.setId(createdPayment.getId());
-
-            PaymentExecution paymentExecution = new PaymentExecution();
-
-            // Set your PayerID. The ID of the Payer, passed in the return_url by PayPal.
-            //paymentExecution.setPayerId("UNRL6DY5RWTZJ");
-
-            // This call will fail as user has to access Payment on UI. Programmatically
-            // there is no way you can get Payer's consent.
-            //Payment createdAuthPayment = payment.execute(apiContext, paymentExecution);
-
-            // Transactional details including the amount and item details.
-            //Authorization authorization = createdAuthPayment.getTransactions()
-            //        .get(0).getRelatedResources().get(0).getAuthorization();
-
-            //log.info("Here is your Authorization ID : " + authorization.getId());
-
-
-            Iterator links = createdPayment.getLinks().iterator();
-
-            while (links.hasNext()){
-                Links link = (Links) links.next();
-                if(link.getRel().equalsIgnoreCase("approval_url")){
-                    // Redirect the customer to link.getHref()
-                    return link.getHref();
-                }
-            }
-
-            log.info(createdPayment.toString());
-
-
-        } catch (PayPalRESTException e) {
-            log.error(String.valueOf(e.getDetails()));
-        }
-
-
-        return null;
-    }
-    */
-
-    @Override
-    public void getTransactionDetails(PaypalReturn paypalReturn, String cliendId, String secret) {
-
-        APIContext apiContext = new APIContext(cliendId, secret, "sandbox");
-
-        PaymentExecution paymentExecution = new PaymentExecution();
-        paymentExecution.setPayerId(paypalReturn.getPayerID());
-
-        Payment payment = new Payment();
-        payment.setId(paypalReturn.getPaymentId());
-
-        try {
-            Payment executedPayment = payment.execute(apiContext, paymentExecution);
-
-            log.info("Payment execution : ");
-            log.info(executedPayment.toJSON());
-
-        } catch (PayPalRESTException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
 }

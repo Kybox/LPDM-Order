@@ -50,6 +50,13 @@ public class Order {
     @JoinColumn(name = "coupon")
     private Coupon coupon;
 
+    @ManyToOne
+    @JoinColumn(name = "delivery")
+    private Delivery delivery;
+
+    @Column(name = "shipping_cost")
+    double shippingCost;
+
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "order")
     private List<OrderedProduct> orderedProducts;
 
@@ -136,6 +143,22 @@ public class Order {
         this.coupon = coupon;
     }
 
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    public double getShippingCost() {
+        return shippingCost;
+    }
+
+    public void setShippingCost(double shippingCost) {
+        this.shippingCost = shippingCost;
+    }
+
     public List<OrderedProduct> getOrderedProducts() {
         return orderedProducts;
     }
@@ -157,6 +180,8 @@ public class Order {
                 ", customerId=" + customerId +
                 ", customer=" + customer +
                 ", coupon=" + coupon +
+                ", delivery=" + delivery +
+                ", shippingCost=" + shippingCost +
                 ", orderedProducts=" + orderedProducts +
                 '}';
     }

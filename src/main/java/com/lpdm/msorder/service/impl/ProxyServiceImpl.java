@@ -1,10 +1,12 @@
 package com.lpdm.msorder.service.impl;
 
+import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.product.Category;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.store.Store;
 import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.proxy.AuthProxy;
+import com.lpdm.msorder.proxy.LocationProxy;
 import com.lpdm.msorder.proxy.ProductProxy;
 import com.lpdm.msorder.proxy.StoreProxy;
 import com.lpdm.msorder.service.ProxyService;
@@ -18,15 +20,21 @@ import java.util.Optional;
 @Service
 public class ProxyServiceImpl implements ProxyService {
 
+    private final LocationProxy locationProxy;
     private final ProductProxy productProxy;
-    private final AuthProxy authProxy;
     private final StoreProxy storeProxy;
+    private final AuthProxy authProxy;
 
     @Autowired
-    public ProxyServiceImpl(ProductProxy productProxy, AuthProxy authProxy, StoreProxy storeProxy) {
+    public ProxyServiceImpl(LocationProxy locationProxy,
+                            ProductProxy productProxy,
+                            StoreProxy storeProxy,
+                            AuthProxy authProxy) {
+
+        this.locationProxy = locationProxy;
         this.productProxy = productProxy;
-        this.authProxy = authProxy;
         this.storeProxy = storeProxy;
+        this.authProxy = authProxy;
     }
 
     @Override
@@ -59,5 +67,10 @@ public class ProxyServiceImpl implements ProxyService {
     public Optional<Store> findStoreById(int id) {
         if(id == 0) return Optional.empty();
         return storeProxy.findById(id);
+    }
+
+    @Override
+    public Address findAddressById(int id) throws Exception {
+        return locationProxy.findAddressById(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.lpdm.msorder.model.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lpdm.msorder.model.location.Address;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ public class User {
     private String firstName;
     private String name;
     private Address address;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int addressId;
     private String email;
     private String tel;

@@ -19,6 +19,10 @@ public class Coupon {
     @Column
     private double amount;
 
+    @NotNull
+    @Column(length = 10)
+    private String code;
+
     public Coupon() {
     }
 
@@ -30,11 +34,11 @@ public class Coupon {
         this.id = id;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -46,12 +50,21 @@ public class Coupon {
         this.amount = amount;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "Coupon{" +
                 "id=" + id +
                 ", active=" + active +
                 ", amount=" + amount +
+                ", code='" + code + '\'' +
                 '}';
     }
 }

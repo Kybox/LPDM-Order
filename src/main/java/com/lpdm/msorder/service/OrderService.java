@@ -1,14 +1,13 @@
 package com.lpdm.msorder.service;
 
-import com.lpdm.msorder.model.order.Order;
-import com.lpdm.msorder.model.order.OrderedProduct;
-import com.lpdm.msorder.model.order.Payment;
-import com.lpdm.msorder.model.order.Status;
+import com.lpdm.msorder.exception.DeliveryNotFoundException;
+import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.user.OrderStats;
 import com.lpdm.msorder.model.user.SearchDates;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +30,9 @@ public interface OrderService {
     List<Order> findAllOrdersByCustomerIdOrderByOrderDateAsc(int id, PageRequest pageRequest);
     List<Order> findAllOrdersByCustomerIdOrderByOrderDateDesc(int id, PageRequest pageRequest);
 
+    long countAllByOrderDateBetween(LocalDateTime date1, LocalDateTime date2);
+    List<Order> findAllOrdersByDateBetween(LocalDateTime date1, LocalDateTime date2);
+
     /**
      * OrderedProduct
      */
@@ -46,12 +48,4 @@ public interface OrderService {
     Optional<Payment> findPaymentById(int id);
     Payment savePayment(Payment payment);
     void deletePayment(Payment payment);
-
-    /**
-     * Stats
-     */
-    OrderStats getOrderStatsByYear(int year);
-    OrderStats getOrderStatsByYearAndMonth(int year, int month);
-    OrderStats getOrderedProductsStatsByYear(int year);
-    OrderStats getOrderedProductsStatsByYearAndCategory(int year);
 }

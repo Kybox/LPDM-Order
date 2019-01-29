@@ -1,5 +1,6 @@
 package com.lpdm.msorder.controller.json;
 
+import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.product.Product;
@@ -37,6 +38,18 @@ public class FormatJson {
 
         Optional<User> optionalUser = proxyService.findUserById(order.getCustomerId());
         order.setCustomer(optionalUser.orElse(new User(order.getCustomerId())));
+
+        Address address;
+        try {
+            address = proxyService.findAddressById(order.getCustomer().getAddressId());
+            order.getCustomer().setAddress(address);
+        }
+        catch (Exception e) {
+            log.warn(e.getMessage());
+            address = new Address();
+            address.setId(order.getCustomer().getAddressId());
+            order.getCustomer().setAddress(address);
+        }
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
             int productId = orderedProduct.getProductId();
