@@ -86,13 +86,17 @@ public class PaypalServiceImpl implements PaypalService {
         ShippingAddress shippingAddress = new ShippingAddress();
 
         String recipientName = user.getFirstName() + SPACE + user.getName();
-        String addressline1 = address.getStreetNumber() + SPACE + address.getStreetName() + SPACE;
+        //String addressline1 = address.getStreetNumber() + SPACE + address.getStreetName() + SPACE;
 
         shippingAddress.setRecipientName(recipientName);
-        shippingAddress.setLine1(addressline1);
-        shippingAddress.setLine2(address.getComplement());
-        shippingAddress.setPostalCode(address.getCity().getZipCode());
-        shippingAddress.setCity(address.getCity().getName());
+        //shippingAddress.setLine1(addressline1);
+        shippingAddress.setLine1("une adresse");
+        //shippingAddress.setLine2(address.getComplement());
+        shippingAddress.setLine2("une adresse 2");
+        //shippingAddress.setPostalCode(address.getCity().getZipCode());
+        shippingAddress.setPostalCode("75000");
+        //shippingAddress.setCity(address.getCity().getName());
+        shippingAddress.setCity("Paris");
         shippingAddress.setCountryCode("FR");
 
         return shippingAddress;
