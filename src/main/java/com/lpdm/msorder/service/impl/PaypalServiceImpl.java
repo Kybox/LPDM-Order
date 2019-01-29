@@ -1,6 +1,7 @@
 package com.lpdm.msorder.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lpdm.msorder.exception.OrderedProductsNotFoundException;
 import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.paypal.PaypalReturn;
@@ -48,8 +49,14 @@ public class PaypalServiceImpl implements PaypalService {
     @Override
     public List<Item> generateOrderedProducts(List<OrderedProduct> orderedProductList) {
 
-        if(orderedProductList == null) log.info("OrderedProducts List = null");
-        else log.info("There are " + orderedProductList.size() + " ordered products");
+        if(orderedProductList == null) {
+            log.info("OrderedProducts List = null");
+            throw new OrderedProductsNotFoundException();
+        }
+        if(orderedProductList.size() == 0){
+            log.info("There are " + orderedProductList.size() + " ordered products");
+            throw new OrderedProductsNotFoundException();
+        }
 
         List<Item> itemList = new ArrayList<>();
 
