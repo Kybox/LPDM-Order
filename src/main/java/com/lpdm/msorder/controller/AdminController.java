@@ -13,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -33,7 +32,7 @@ import static com.lpdm.msorder.utils.ValueType.*;
 
 @RestController
 @RequestMapping(ADMIN_PATH)
-@Api(tags = {"Admin API"})
+@Api(tags = {"Admin Rest API"})
 public class AdminController {
 
     private final Logger log = LogManager.getLogger(this.getClass());

@@ -11,10 +11,11 @@ import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.service.DeliveryService;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +36,9 @@ import static com.lpdm.msorder.utils.ValueType.ORDERS_PATH;
  * @since 01/12/2018
  */
 
-@RefreshScope
 @RestController
 @RequestMapping(ORDERS_PATH)
+@Api(tags = {"Order Rest API"})
 public class OrderController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
@@ -62,7 +63,12 @@ public class OrderController {
      * @param id The {@link Order} id
      * @return An {@link Order} json object
      */
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(
+            value = "Get an order by its id",
+            notes = "Several Microservice are asked to construct the response " +
+                    "with all the attributes nécesssaires")
+    @GetMapping(value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order getOrderById(@PathVariable int id){
 
         return orderService.findOrderById(id);
@@ -74,7 +80,12 @@ public class OrderController {
      * @param order The {@link Order} object to persist
      * @return An {@link Order} object persisted
      */
-    @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(
+            value = "Persist a valid Order object",
+            notes = "Several checks are performed before the order's persistence")
+    @PostMapping(value = "/save",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order saveOrder(@Valid @RequestBody Order order){
 
         if(order.getStore() != null && order.getStore().getId() > 0)
@@ -130,6 +141,9 @@ public class OrderController {
      * @param id The {@link User} {@link Integer} id
      * @return The user ordered {@link List<Order>}
      */
+    @ApiOperation(
+            value = "Find all orders of the customer defined by its id",
+            notes = "This request must be controlled and limited to the customer or an admin")
     @GetMapping(value = "/all/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByUserId(@PathVariable int id){
 
@@ -145,6 +159,9 @@ public class OrderController {
      * @param statusId Ths {@link Status} id
      * @return The {@link List<Order>} found otherwise throw an {@link OrderNotFoundException}
      */
+    @ApiOperation(
+            value = "Find all orders of the customer defined by its id with a defined status",
+            notes = "This request must be controlled and limited to the customer or an admin")
     @GetMapping(value = "/all/customer/{userId}/status/{statusId}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllUserAndStatus(@PathVariable("userId") int userId,
@@ -173,8 +190,14 @@ public class OrderController {
      * @param size Limit the number of {@link Order} objects returned for each pages
      * @return The {@link List<Order>} found otherwise throw an {@link OrderNotFoundException}
      */
+    @ApiOperation(
+            value = "Find all the customer orders defined by its identifier " +
+                    "and whose result is sorted by date",
+            notes = "The sort by date is defined by the keywords 'asc' or 'desc' " +
+                    "and it is possible to obtain a pagination")
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @GetMapping(value = "/all/customer/{id}/date/{ordered}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/all/customer/{id}/date/{ordered}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByUserOrderByDate(@PathVariable("id") int id,
                                              @PathVariable("ordered") String ordered,
                                              @PathVariable(required = false) Optional<Integer> page,
@@ -208,7 +231,11 @@ public class OrderController {
      * @param productId The {@link Product} id
      * @return The {@link List<Order>} found otherwise throw an {@link OrderNotFoundException}
      */
-    @GetMapping(value = "/all/customer/{userId}/product/{productId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(
+            value = "Find all the customer orders defined by its identifier " +
+                    "who ordered a product defined in the request")
+    @GetMapping(value = "/all/customer/{userId}/product/{productId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findByUserAndProduct(@PathVariable("userId") int userId,
                                             @PathVariable("productId") int productId){
 
@@ -241,7 +268,11 @@ public class OrderController {
      * @param response The {@link HttpServletResponse} object
      * @return The PDF Document
      */
-    @GetMapping(value = "/{id}/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
+    @ApiOperation(
+            value = "Get an invoice PDF file referring to an order id",
+            notes = "A PDF file is returned only if the command has a status equal to or greater than PAID")
+    @GetMapping(value = "/{id}/invoice",
+            produces = MediaType.APPLICATION_PDF_VALUE)
     public PdfDocument getInvoiceByOrderId(@PathVariable(name = "id") int id,
                                            HttpServletResponse response)
             throws IOException, DocumentException {
@@ -253,16 +284,17 @@ public class OrderController {
             return invoiceService.generatePdf(invoice, response);
         }
 
-        Invoice optInvoice = invoiceService.getByOrderId(order.getId());
-
-        return invoiceService.generatePdf(optInvoice, response);
+        return invoiceService.generatePdf(invoiceService.getByOrderId(order.getId()), response);
     }
 
     /**
      * Find all delivery methods
      * @return The {@link List<Delivery>} object
      */
-    @GetMapping(value = "/delivery/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(
+            value = "Get all delivery methods available in database")
+    @GetMapping(value = "/delivery/all",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Delivery> getAllDeliveryMethods(){
 
         return deliveryService.findAllDeliveryMethods();
