@@ -56,17 +56,11 @@ public class StatisticsServiceImpl implements StatisticsService {
 
             int month = date.getMonthValue();
 
-            LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
-            LocalDate tempDate = LocalDate.ofYearDay(year, 1);
-            LocalDateTime end = checkLeapYear(tempDate, year, month);
+            Map<String, LocalDateTime> dates = getSearchDates(year, month, date);
 
             long totalOrders = orderService
-                    .countAllByOrderDateBetween(
-                            getSearchDates(year, month).get(START_DATE),
-                            getSearchDates(year, month).get(END_DATE));
+                    .countAllByOrderDateBetween(dates.get(START_DATE), dates.get(END_DATE));
 
-            log.info("Stats " + year + " : Month " + month + " : " + totalOrders + " order(s)");
-            log.info("Between " + start + " and " + end);
             orderStats.getDataStats().put(month, totalOrders);
         }
 
@@ -110,10 +104,11 @@ public class StatisticsServiceImpl implements StatisticsService {
 
             int month = date.getMonthValue();
 
+            Map<String, LocalDateTime> dates = getSearchDates(year, month, date);
+
             List<Order> orderList = orderService
-                    .findAllOrdersByDateBetween(
-                            getSearchDates(year, month).get(START_DATE),
-                            getSearchDates(year, month).get(END_DATE));
+                    .findAllOrdersByDateBetween(dates.get(START_DATE), dates.get(END_DATE));
+
 
             int totalOrderedProducts = 0;
             for(Order order : orderList) totalOrderedProducts += order.getOrderedProducts().size();
@@ -169,23 +164,23 @@ public class StatisticsServiceImpl implements StatisticsService {
         throw new DateNotFoundException();
     }
 
-    private LocalDateTime checkLeapYear(LocalDate date, int year, int month){
+    private LocalDateTime checkLeapYear(LocalDate tempDate, int year, int month, LocalDateTime date){
 
         LocalDateTime checkedDate;
 
-        if(!date.isLeapYear() && date.getMonthValue() == 2)
+        if(!tempDate.isLeapYear() && date.getMonthValue() == 2)
             checkedDate = LocalDateTime.of(year, month, date.getMonth().maxLength() - 1, 23, 59);
         else checkedDate = LocalDateTime.of(year, month, date.getMonth().maxLength(), 23, 59);
 
         return checkedDate;
     }
 
-    private Map<String, LocalDateTime> getSearchDates(int year, int month){
+    private Map<String, LocalDateTime> getSearchDates(int year, int month, LocalDateTime date){
 
         Map<String, LocalDateTime> dateResult = new HashMap<>();
         dateResult.put(START_DATE, LocalDateTime.of(year, month, 1, 0, 0));
         LocalDate tempDate = LocalDate.ofYearDay(year, 1);
-        dateResult.put(END_DATE, checkLeapYear(tempDate, year, month));
+        dateResult.put(END_DATE, checkLeapYear(tempDate, year, month, date));
 
         return dateResult;
     }
