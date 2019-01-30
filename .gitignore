@@ -37,3 +37,5 @@ target/classes/log4j2.xml
 target/classes/ms-order.properties
 target/generated-sources/
 target/generated-test-sources/
+/.idea/statistic.xml
+/.idea/uiDesigner.xml

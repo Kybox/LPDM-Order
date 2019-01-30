@@ -223,7 +223,6 @@ public class AdminController {
         return orderService.findOrderById(invoice.getOrderId());
     }
 
-
     /**
      * Find all the customer's order by his e-mail address
      * @param email The {@link User} email address
