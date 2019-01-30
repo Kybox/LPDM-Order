@@ -31,7 +31,6 @@ import static com.lpdm.msorder.utils.ValueType.*;
  * @since 01/12/2018
  */
 
-@RefreshScope
 @RestController
 @RequestMapping(ADMIN_PATH)
 @Api(tags = {"Admin API"})
