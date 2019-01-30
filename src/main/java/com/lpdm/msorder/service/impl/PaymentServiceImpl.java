@@ -1,7 +1,5 @@
 package com.lpdm.msorder.service.impl;
 
-import com.lpdm.msorder.controller.json.FormatJson;
-import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.exception.PaymentNotFoundException;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.Payment;
@@ -19,12 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
 
 @Service
 public class PaymentServiceImpl implements PaymentService {

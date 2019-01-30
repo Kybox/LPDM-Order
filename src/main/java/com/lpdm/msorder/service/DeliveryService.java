@@ -15,7 +15,7 @@ public interface DeliveryService {
 
     /**
      * Find all delivery methods
-     * @return A {@link List<Delivery>} with all delivery methods
+     * @return A {@link Delivery} list with all delivery methods
      */
     List<Delivery> findAllDeliveryMethods();
 

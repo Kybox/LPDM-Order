@@ -2,17 +2,27 @@ package com.lpdm.msorder.controller;
 
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
-import com.lpdm.msorder.model.user.OrderStats;
+import com.lpdm.msorder.model.order.OrderStats;
 import com.lpdm.msorder.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.lpdm.msorder.utils.ValueType.ADMIN_PATH;
+
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
+@RefreshScope
 @RestController
-@RequestMapping("/admin")
+@RequestMapping(ADMIN_PATH)
 public class StatisticsController {
 
     private final StatisticsService statisticsService;

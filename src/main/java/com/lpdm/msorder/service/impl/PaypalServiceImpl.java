@@ -35,6 +35,12 @@ import static com.lpdm.msorder.utils.ValueType.*;
 import static com.paypal.base.Constants.*;
 import static org.springframework.http.HttpHeaders.*;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 @Service
 public class PaypalServiceImpl implements PaypalService {
 

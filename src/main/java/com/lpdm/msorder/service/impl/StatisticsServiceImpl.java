@@ -5,7 +5,7 @@ import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.product.Category;
 import com.lpdm.msorder.model.product.Product;
-import com.lpdm.msorder.model.user.OrderStats;
+import com.lpdm.msorder.model.order.OrderStats;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.ProxyService;
 import com.lpdm.msorder.service.StatisticsService;

@@ -1,9 +1,19 @@
 package com.lpdm.msorder.utils;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class ValueType {
 
     // Various
     public final static String SPACE = " ";
+
+    // Paths
+    public final static String ADMIN_PATH = "/admin";
+    public final static String ORDERS_PATH = "/orders";
 
     // Orders
     public final static String EMAIL = "email";

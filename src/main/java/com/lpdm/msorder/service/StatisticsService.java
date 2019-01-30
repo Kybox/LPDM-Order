@@ -1,6 +1,12 @@
 package com.lpdm.msorder.service;
 
-import com.lpdm.msorder.model.user.OrderStats;
+import com.lpdm.msorder.model.order.OrderStats;
+
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
 
 public interface StatisticsService {
 

@@ -9,6 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     List<Order> findAllByCustomerId(int id);

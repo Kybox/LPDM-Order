@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.lpdm.msorder.utils.ValueType.ORDERS_PATH;
+
 /**
  * @author Kybox
  * @version 1.0
@@ -35,7 +37,7 @@ import java.util.stream.Stream;
 
 @RefreshScope
 @RestController
-@RequestMapping("/orders")
+@RequestMapping(ORDERS_PATH)
 public class OrderController {
 
     private final Logger log = LogManager.getLogger(this.getClass());
@@ -234,7 +236,7 @@ public class OrderController {
     }
 
     /**
-     *  Generate an invoice for a paid order
+     * Generate an invoice for a paid order
      * @param id The {@link Order} id
      * @param response The {@link HttpServletResponse} object
      * @return The PDF Document
@@ -246,16 +248,14 @@ public class OrderController {
 
         Order order = orderService.findOrderById(id);
 
-        Optional<Invoice> optInvoice = invoiceService.getByOrderId(order.getId());
-        if(!optInvoice.isPresent()) {
-            if(order.getStatus().getId() >= Status.PAID.getId()) {
-                Invoice invoice = invoiceService.generateNew(order);
-                return invoiceService.generatePdf(invoice, response);
-            }
-            else throw new BadRequestException();
+        if(order.getStatus().getId() >= Status.PAID.getId()) {
+            Invoice invoice = invoiceService.generateNew(order);
+            return invoiceService.generatePdf(invoice, response);
         }
 
-        return invoiceService.generatePdf(optInvoice.get(), response);
+        Invoice optInvoice = invoiceService.getByOrderId(order.getId());
+
+        return invoiceService.generatePdf(optInvoice, response);
     }
 
     /**

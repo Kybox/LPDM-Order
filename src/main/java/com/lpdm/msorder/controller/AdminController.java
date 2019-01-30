@@ -6,13 +6,14 @@ import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.exception.PaymentPersistenceException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
-import com.lpdm.msorder.model.user.SearchDates;
+import com.lpdm.msorder.model.user.*;
 import com.lpdm.msorder.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -22,8 +23,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.lpdm.msorder.utils.ValueType.EMAIL;
-import static com.lpdm.msorder.utils.ValueType.NAME;
+import static com.lpdm.msorder.utils.ValueType.*;
 
 /**
  * @author Kybox
@@ -31,9 +31,9 @@ import static com.lpdm.msorder.utils.ValueType.NAME;
  * @since 01/12/2018
  */
 
-
+@RefreshScope
 @RestController
-@RequestMapping("/admin")
+@RequestMapping(ADMIN_PATH)
 @Api(tags = {"Admin API"})
 public class AdminController {
 
@@ -218,12 +218,22 @@ public class AdminController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order findByInvoiceRef(@PathVariable String ref){
 
-        Optional<Invoice> optInvoice = invoiceService.findInvoiceByReference(ref);
-        if(!optInvoice.isPresent()) throw new OrderNotFoundException();
+        Invoice invoice = invoiceService.findInvoiceByReference(ref);
 
-        return orderService.findOrderById(optInvoice.get().getOrderId());
+        return orderService.findOrderById(invoice.getOrderId());
     }
 
+
+    /**
+     * Find all the customer's order by his e-mail address
+     * @param email The {@link User} email address
+     * @return The {@link List<Order>} object which contains the orders found
+     */
+    @ApiOperation(
+            value = "Find all the customer's order by his e-mail address",
+            notes = "The result of the query can be consequent, " +
+                    "it would be necessary to add a pagination option on the result."
+    )
     @GetMapping(value = "orders/all/customer/email/{email}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByEmail(@PathVariable String email){
@@ -231,6 +241,16 @@ public class AdminController {
         return orderService.findAllOrdersByCustomer(EMAIL, email);
     }
 
+    /**
+     * Find all the customer's order by his name
+     * @param name The {@link User} name
+     * @return The {@link List<Order>} object which contains the orders found
+     */
+    @ApiOperation(
+            value = "Find all the customer's order by his name",
+            notes = "The result of the query can be consequent, " +
+                    "it would be necessary to add a pagination option on the result."
+    )
     @GetMapping(value = "orders/all/customer/name/{name}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByName(@PathVariable String name){

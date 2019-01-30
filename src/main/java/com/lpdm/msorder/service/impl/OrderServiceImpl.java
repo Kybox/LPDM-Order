@@ -3,7 +3,7 @@ package com.lpdm.msorder.service.impl;
 import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
-import com.lpdm.msorder.model.user.SearchDates;
+import com.lpdm.msorder.model.order.SearchDates;
 import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
 import com.lpdm.msorder.service.OrderService;
@@ -20,6 +20,12 @@ import java.util.*;
 
 import static com.lpdm.msorder.utils.ValueType.EMAIL;
 import static com.lpdm.msorder.utils.ValueType.NAME;
+
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
 
 @Service
 public class OrderServiceImpl implements OrderService {

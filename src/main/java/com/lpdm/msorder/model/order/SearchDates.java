@@ -1,4 +1,4 @@
-package com.lpdm.msorder.model.user;
+package com.lpdm.msorder.model.order;
 
 import java.time.LocalDate;
 

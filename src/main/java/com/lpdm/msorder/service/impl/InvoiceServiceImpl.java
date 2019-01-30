@@ -2,7 +2,7 @@ package com.lpdm.msorder.service.impl;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.exception.InvoiceNotFoundException;
 import com.lpdm.msorder.model.order.Invoice;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
@@ -24,6 +24,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -52,6 +58,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.proxyService = proxyService;
     }
 
+    /**
+     * Generate and persist an new {@link Invoice} object from the {@link Order}
+     * @param order The {@link Order} that is referenced in the invoice
+     * @return The {@link Invoice} saved
+     */
     @Override
     public Invoice generateNew(Order order) {
 
@@ -64,24 +75,52 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.save(invoice);
     }
 
+    /**
+     * Get an {@link Invoice} object from the {@link Order} id
+     * @param orderId The {@link Order} id
+     * @return The {@link Invoice} object
+     * @throws InvoiceNotFoundException Thrown if no {@link Invoice} was found
+     */
     @Override
-    public Optional<Invoice> getByOrderId(int orderId) {
-        return invoiceRepository.findByOrderId(orderId);
+    public Invoice getByOrderId(int orderId) throws InvoiceNotFoundException {
+
+        return invoiceRepository.findByOrderId(orderId).orElseThrow(InvoiceNotFoundException::new);
     }
 
+    /**
+     * Check if there is an {@link Invoice} linked to an {@link Order} ID
+     * @param orderId The {@link Order} id
+     * @return True if there is an invoice for this order, otherwise false
+     */
     @Override
     public boolean isThereAnInvoice(int orderId) {
 
         return invoiceRepository.findByOrderId(orderId).isPresent();
     }
 
+    /**
+     * Find an {@link Invoice} by its reference
+     * @param reference The {@link Invoice} reference
+     * @return An {@link Invoice} object
+     * @throws InvoiceNotFoundException Thrown if no {@link Invoice} was found
+     */
     @Override
-    public Optional<Invoice> findInvoiceByReference(String reference) {
-        return invoiceRepository.findByReference(reference);
+    public Invoice findInvoiceByReference(String reference) throws InvoiceNotFoundException {
+
+        return invoiceRepository.findByReference(reference).orElseThrow(InvoiceNotFoundException::new);
     }
 
+    /**
+     * Generate a PDF file from the {@link Invoice} object
+     * @param invoice The {@link Invoice} object
+     * @param servletResponse The {@link HttpServletResponse} where generate the PDF file
+     * @return A {@link PdfDocument} that will generate the PDF file
+     * @throws IOException Thrown if the PDF template file is not found
+     * @throws DocumentException Thrown if the {@link PdfStamper} not recognize the servlet output stream
+     */
     @Override
-    public PdfDocument generatePdf(Invoice invoice, HttpServletResponse servletResponse) throws IOException, DocumentException {
+    public PdfDocument generatePdf(Invoice invoice, HttpServletResponse servletResponse)
+            throws IOException, DocumentException {
 
         Order order = orderService.findOrderById(invoice.getOrderId());
 

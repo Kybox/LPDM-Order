@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 @Component
 @FeignClient(name = "${lpdm.zuul.name}", url = "${lpdm.zuul.uri}")
 @RibbonClient(name = "${lpdm.product.name}")

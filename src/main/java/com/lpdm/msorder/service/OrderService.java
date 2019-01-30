@@ -2,12 +2,17 @@ package com.lpdm.msorder.service;
 
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
-import com.lpdm.msorder.model.user.SearchDates;
-import org.springframework.data.domain.Page;
+import com.lpdm.msorder.model.order.SearchDates;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
 
 public interface OrderService {
 

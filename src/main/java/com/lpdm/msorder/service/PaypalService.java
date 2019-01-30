@@ -15,6 +15,12 @@ import com.paypal.base.rest.PayPalRESTException;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public interface PaypalService {
 
     /**
