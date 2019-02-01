@@ -79,4 +79,11 @@ public class GlobalExceptionHandler {
     public String invoiceNotFoundHandler(InvoiceNotFoundException e){
         return e.getMessage();
     }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(CouponNotFoundException.class)
+    public String couponNotFoundHandler(CouponNotFoundException e){
+        return e.getMessage();
+    }
 }

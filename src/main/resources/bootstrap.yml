@@ -1,6 +1,7 @@
 #----------------------------------------------------
 # THIS FILE IS LOADED BEFORE APPLICATION.PROPERTIES #
 #----------------------------------------------------
+
 spring:
   application:
     name: ms-order
@@ -10,9 +11,11 @@ spring:
       uri: https://config.lpdm.kybox.fr
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
   main:
     allow-bean-definition-overriding: true
+
+# ACTUATOR
 management:
   endpoints:
     web:

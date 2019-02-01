@@ -4,10 +4,12 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.BadRequestException;
+import com.lpdm.msorder.exception.CouponNotFoundException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.User;
+import com.lpdm.msorder.service.CouponService;
 import com.lpdm.msorder.service.DeliveryService;
 import com.lpdm.msorder.service.InvoiceService;
 import com.lpdm.msorder.service.OrderService;
@@ -47,15 +49,18 @@ public class OrderController {
     private final OrderService orderService;
     private final FormatJson formatJson;
     private final DeliveryService deliveryService;
+    private final CouponService couponService;
 
     @Autowired
     public OrderController(InvoiceService invoiceService,
-                           OrderService orderService, FormatJson formatJson, DeliveryService deliveryService) {
+                           OrderService orderService, FormatJson formatJson,
+                           DeliveryService deliveryService, CouponService couponService) {
 
         this.invoiceService = invoiceService;
         this.orderService = orderService;
         this.formatJson = formatJson;
         this.deliveryService = deliveryService;
+        this.couponService = couponService;
     }
 
     /**
@@ -298,5 +303,17 @@ public class OrderController {
     public List<Delivery> getAllDeliveryMethods(){
 
         return deliveryService.findAllDeliveryMethods();
+    }
+
+    /**
+     * Check if the {@link Coupon} code is valid
+     * @param code The {@link Coupon} code to check
+     * @return The {@link Coupon} object if the code is valid
+     * @throws CouponNotFoundException Thrown if the {@link Coupon} code is not valid
+     */
+    @GetMapping(value = "/coupon/check")
+    public Coupon checkCouponCode(@RequestParam String code) throws CouponNotFoundException{
+
+        return couponService.checkCouponCode(code);
     }
 }

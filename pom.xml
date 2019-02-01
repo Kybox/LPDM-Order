@@ -26,6 +26,7 @@
 		<log4j2.version>2.11.1</log4j2.version>
 		<itext.version>5.5.13</itext.version>
 		<swagger.version>2.9.2</swagger.version>
+		<crypto.version>5.1.2.RELEASE</crypto.version>
 	</properties>
 
 	<dependencies>
@@ -39,54 +40,71 @@
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j2.version}</version>
 		</dependency>
+
+		<!-- SPRING DATA JPA STARTER -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<!-- SPRING WEB STARTER -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!-- SPRING OPENFEIGN STARTER -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
+
+		<!-- SPRING CLOUD CONFIG STARTER -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
+
+		<!-- SPRING EUREKA CLIENT STARTER -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+
+		<!-- SPRING ACTUATOR STARTER -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
+		<!-- JASYPT SPRING BOOT STARTER -->
 		<dependency>
 			<groupId>com.github.ulisesbocchio</groupId>
 			<artifactId>jasypt-spring-boot-starter</artifactId>
 			<version>2.1.0</version>
 		</dependency>
 
+		<!-- POSTGRESQL DRIVER -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- SPRING TOMCAT STARTER -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 		</dependency>
 
-		<!-- [ ITEXT ] -->
+		<!-- ITEXT API -->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>${itext.version}</version>
 		</dependency>
 
-		<!-- PAYPAL -->
+		<!-- PAYPAL SDK -->
 		<dependency>
 			<groupId>com.paypal.sdk</groupId>
 			<artifactId>rest-api-sdk</artifactId>
@@ -94,24 +112,33 @@
 		</dependency>
 
 
-		<!-- [ TESTS ] -->
+		<!-- SRPING TEST STARTER -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- [SWAGGER ] -->
+		<!-- SWAGGER 2 -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>${swagger.version}</version>
 		</dependency>
+
+		<!-- SWAGGER UI -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${swagger.version}</version>
 		</dependency>
+
+		<!-- SRPING SECURITY CRYPTO -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+            <version>${crypto.version}</version>
+        </dependency>
 
 	</dependencies>
 

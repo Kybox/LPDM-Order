@@ -1,5 +1,7 @@
 package com.lpdm.msorder.model.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -20,8 +22,12 @@ public class Coupon {
     private double amount;
 
     @NotNull
-    @Column(length = 10)
+    @Column
+    @JsonIgnore
     private String code;
+
+    @Column
+    private String description;
 
     public Coupon() {
     }
@@ -58,6 +64,14 @@ public class Coupon {
         this.code = code;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Coupon{" +
@@ -65,6 +79,7 @@ public class Coupon {
                 ", active=" + active +
                 ", amount=" + amount +
                 ", code='" + code + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

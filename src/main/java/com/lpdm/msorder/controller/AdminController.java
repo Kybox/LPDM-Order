@@ -1,9 +1,6 @@
 package com.lpdm.msorder.controller;
 
-import com.lpdm.msorder.exception.BadRequestException;
-import com.lpdm.msorder.exception.DeleteEntityException;
-import com.lpdm.msorder.exception.OrderNotFoundException;
-import com.lpdm.msorder.exception.PaymentPersistenceException;
+import com.lpdm.msorder.exception.*;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.*;
@@ -11,7 +8,8 @@ import com.lpdm.msorder.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,23 +33,26 @@ import static com.lpdm.msorder.utils.ValueType.*;
 @Api(tags = {"Admin Rest API"})
 public class AdminController {
 
-    private final Logger log = LogManager.getLogger(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final InvoiceService invoiceService;
     private final OrderService orderService;
     private final PaymentService paymentService;
     private final DeliveryService deliveryService;
+    private final CouponService couponService;
 
     @Autowired
     public AdminController(OrderService orderService,
                            InvoiceService invoiceService,
                            PaymentService paymentService,
-                           DeliveryService deliveryService) {
+                           DeliveryService deliveryService,
+                           CouponService couponService) {
 
         this.orderService = orderService;
         this.invoiceService = invoiceService;
         this.paymentService = paymentService;
         this.deliveryService = deliveryService;
+        this.couponService = couponService;
     }
 
     /**
@@ -212,7 +213,7 @@ public class AdminController {
             value = "Find an order based on its invoice reference",
             notes = "Be careful, an order does not always have an invoice"
     )
-    @GetMapping(value = "orders/invoice/{ref}",
+    @GetMapping(value = "/orders/invoice/{ref}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order findByInvoiceRef(@PathVariable String ref){
 
@@ -231,7 +232,7 @@ public class AdminController {
             notes = "The result of the query can be consequent, " +
                     "it would be necessary to add a pagination option on the result."
     )
-    @GetMapping(value = "orders/all/customer/email/{email}",
+    @GetMapping(value = "/orders/all/customer/email/{email}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByEmail(@PathVariable String email){
 
@@ -262,7 +263,7 @@ public class AdminController {
         return orderService.findAllOrdersBetweenTwoDates(searchDates);
     }
 
-    @PostMapping(value = "delivery/add",
+    @PostMapping(value = "/delivery/add",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Delivery addNewDeliveryMethod(@Valid @RequestBody Delivery delivery){
@@ -270,11 +271,51 @@ public class AdminController {
         return deliveryService.addNewDeliveryMethod(delivery);
     }
 
-    @DeleteMapping(value = "delivery/delete",
+    @DeleteMapping(value = "/delivery/delete",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deleteDeliveryMethod(@Valid @RequestBody Delivery delivery){
 
         return deliveryService.deleteDeliveryMethod(delivery);
+    }
+
+    /**
+     * Find all {@link Coupon} codes in the database
+     * @return A {@link Coupon} {@link List}
+     * @throws CouponNotFoundException Thrown if no coupon was found
+     */
+    @ApiOperation(value = "Find all coupon codes in the database")
+    @GetMapping(value = "/coupon/all",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Coupon> getCouponList() throws CouponNotFoundException {
+
+        return couponService.findAllCoupons();
+    }
+
+    /**
+     * Adding a new {@link Coupon}
+     * @param coupon The new {@link Coupon} object to add
+     * @return The added {@link Coupon}
+     */
+    @ApiOperation(value = "Adding a new coupon")
+    @PostMapping(value = "coupon/add",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Coupon addNewCoupon(@Valid @RequestBody Coupon coupon){
+
+        return couponService.addNewCoupon(coupon);
+    }
+
+    /**
+     * Delete a {@link Coupon}
+     * @param coupon The {@link Coupon} object to be deleted
+     * @return True if the {@link Coupon} has been deleted, otherwise false
+     */
+    @ApiOperation(value = "Delete a coupon")
+    @DeleteMapping(value = "coupon/delete",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public boolean deleteCoupon(@Valid @RequestBody Coupon coupon){
+
+        return couponService.deleteCoupon(coupon);
     }
 }
