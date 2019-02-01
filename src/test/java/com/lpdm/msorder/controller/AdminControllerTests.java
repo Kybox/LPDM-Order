@@ -46,6 +46,9 @@ public class AdminControllerTests {
     @MockBean
     private DeliveryService deliveryService;
 
+    @MockBean
+    private CouponService couponService;
+
     private int randomId;
     private Order order;
     private Payment payment;

@@ -27,6 +27,7 @@
 		<itext.version>5.5.13</itext.version>
 		<swagger.version>2.9.2</swagger.version>
 		<crypto.version>5.1.2.RELEASE</crypto.version>
+		<paypal.version>1.14.0</paypal.version>
 	</properties>
 
 	<dependencies>
@@ -104,11 +105,11 @@
 			<version>${itext.version}</version>
 		</dependency>
 
-		<!-- PAYPAL SDK -->
+		<!-- PAYPAL REST API -->
 		<dependency>
 			<groupId>com.paypal.sdk</groupId>
 			<artifactId>rest-api-sdk</artifactId>
-			<version>LATEST</version>
+			<version>${paypal.version}</version>
 		</dependency>
 
 
