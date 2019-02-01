@@ -315,7 +315,7 @@ public class AdminController {
      * @return The added {@link Coupon}
      */
     @ApiOperation(value = "Adding a new coupon")
-    @PostMapping(value = "coupon/add",
+    @PostMapping(value = "/coupon/add",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Coupon addNewCoupon(@Valid @RequestBody Coupon coupon){
@@ -329,10 +329,24 @@ public class AdminController {
      * @return True if the {@link Coupon} has been deleted, otherwise false
      */
     @ApiOperation(value = "Delete a coupon")
-    @DeleteMapping(value = "coupon/delete",
+    @DeleteMapping(value = "/coupon/delete",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public boolean deleteCoupon(@Valid @RequestBody Coupon coupon){
 
         return couponService.deleteCoupon(coupon);
+    }
+
+    /**
+     * Update an existing {@link Coupon} object
+     * @param coupon The {@link Coupon} object to update
+     * @return The {@link Coupon} object updated
+     * @throws CouponNotFoundException Thrown if no {@link Coupon} was found in the database
+     */
+    @PutMapping(value = "/coupon/update",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Coupon updateCoupon(@Valid @RequestBody Coupon coupon) throws CouponNotFoundException {
+
+        return couponService.updateCoupon(coupon);
     }
 }

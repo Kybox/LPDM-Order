@@ -35,4 +35,12 @@ public interface CouponService {
      * @throws CouponNotFoundException Thrown if the {@link Coupon} code is not valid
      */
     Coupon checkCouponCode(String code) throws CouponNotFoundException;
+
+    /**
+     * Update an existing {@link Coupon} object
+     * @param coupon The {@link Coupon} object to update
+     * @return The {@link Coupon} object updated
+     * @throws CouponNotFoundException Thrown if no {@link Coupon} was found in the database
+     */
+    Coupon updateCoupon(Coupon coupon) throws CouponNotFoundException;
 }

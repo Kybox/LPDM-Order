@@ -80,4 +80,21 @@ public class CouponServiceImpl implements CouponService {
 
         throw new CouponNotFoundException();
     }
+
+    /**
+     * Update an existing {@link Coupon} object
+     * @param coupon The {@link Coupon} object to update
+     * @return The {@link Coupon} object updated
+     * @throws CouponNotFoundException Thrown if no {@link Coupon} was found in the database
+     */
+    @Override
+    public Coupon updateCoupon(Coupon coupon) throws CouponNotFoundException{
+
+        Optional<Coupon> optCoupon = couponRepository.findById(coupon.getId());
+        if(!optCoupon.isPresent()) throw new CouponNotFoundException();
+
+        coupon.setCode(optCoupon.get().getCode());
+
+        return couponRepository.save(coupon);
+    }
 }
