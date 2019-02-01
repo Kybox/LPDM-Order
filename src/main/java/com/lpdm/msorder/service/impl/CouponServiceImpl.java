@@ -4,6 +4,8 @@ import com.lpdm.msorder.exception.CouponNotFoundException;
 import com.lpdm.msorder.model.order.Coupon;
 import com.lpdm.msorder.repository.CouponRepository;
 import com.lpdm.msorder.service.CouponService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +16,8 @@ import java.util.Optional;
 
 @Service
 public class CouponServiceImpl implements CouponService {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final CouponRepository couponRepository;
 
@@ -56,6 +60,8 @@ public class CouponServiceImpl implements CouponService {
      */
     @Override
     public boolean deleteCoupon(Coupon coupon) throws CouponNotFoundException {
+
+        log.info("Delete coupon : " + coupon);
 
         Optional<Coupon> optCoupon = couponRepository.findById(coupon.getId());
         if(!optCoupon.isPresent()) throw new CouponNotFoundException();
