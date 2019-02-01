@@ -25,8 +25,9 @@ public interface CouponService {
      * Delete a {@link Coupon}
      * @param coupon The {@link Coupon} object to be deleted
      * @return True if the {@link Coupon} has been deleted, otherwise false
+     * @throws CouponNotFoundException Thrown if no {@link Coupon} was found in the database
      */
-    boolean deleteCoupon(Coupon coupon);
+    boolean deleteCoupon(Coupon coupon) throws CouponNotFoundException;
 
     /**
      * Check if the {@link Coupon} code is valid
