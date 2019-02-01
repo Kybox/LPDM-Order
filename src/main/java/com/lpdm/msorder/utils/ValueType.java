@@ -10,6 +10,8 @@ public class ValueType {
 
     // Various
     public final static String SPACE = " ";
+    public final static String SORTED_BY_ASC = "asc";
+    public final static String SORTED_BY_DESC = "desc";
 
     // Paths
     public final static String ADMIN_PATH = "/admin";

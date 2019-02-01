@@ -11,7 +11,7 @@ spring:
       uri: https://config.lpdm.kybox.fr
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   main:
     allow-bean-definition-overriding: true
 

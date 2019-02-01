@@ -7,7 +7,6 @@ import com.lpdm.msorder.model.user.*;
 import com.lpdm.msorder.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,10 +125,10 @@ public class AdminController {
                                            @RequestParam Optional<Integer> page){
         Sort sortDate;
         switch (sort.toLowerCase()){
-            case "asc":
+            case SORTED_BY_ASC:
                 sortDate = new Sort(Sort.Direction.ASC, "orderDate");
                 break;
-            case "desc":
+            case SORTED_BY_DESC:
                 sortDate = new Sort(Sort.Direction.DESC, "orderDate");
                 break;
             default:
@@ -256,6 +255,12 @@ public class AdminController {
         return orderService.findAllOrdersByCustomer(NAME, name);
     }
 
+    /**
+     * Find all {@link Order} objects between 2 dates
+     * @param searchDates The {@link SearchDates} object that contains 2 dates
+     * @return The {@link Order} {@link List} found
+     */
+    @ApiOperation(value = "Find all orders between 2 dates")
     @PostMapping(value = "/orders/dates/between",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByDateBetween(@Valid @RequestBody SearchDates searchDates){
@@ -263,6 +268,12 @@ public class AdminController {
         return orderService.findAllOrdersBetweenTwoDates(searchDates);
     }
 
+    /**
+     * Persist a new {@link Delivery} object
+     * @param delivery The {@link Delivery} object to persist
+     * @return the {@link Delivery} object that has been persisted
+     */
+    @ApiOperation(value = "Persist a new delivery object")
     @PostMapping(value = "/delivery/add",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -271,6 +282,12 @@ public class AdminController {
         return deliveryService.addNewDeliveryMethod(delivery);
     }
 
+    /**
+     * Delete the {@link Delivery} object in the database
+     * @param delivery The {@link Delivery} object to delete
+     * @return True if the {@link Delivery} object was deleted, otherwise false
+     */
+    @ApiOperation(value = "Delete the delivery object in the database")
     @DeleteMapping(value = "/delivery/delete",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

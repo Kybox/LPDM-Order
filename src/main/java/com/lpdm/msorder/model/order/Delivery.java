@@ -15,6 +15,10 @@ public class Delivery {
     @Column(length = 30)
     private String method;
 
+    @NotNull
+    @Column
+    private double amount;
+
     public Delivery() {
     }
 
@@ -34,11 +38,20 @@ public class Delivery {
         this.method = method;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
     @Override
     public String toString() {
         return "Delivery{" +
                 "id=" + id +
                 ", method='" + method + '\'' +
+                ", amount=" + amount +
                 '}';
     }
 }
