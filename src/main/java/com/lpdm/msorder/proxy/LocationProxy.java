@@ -24,5 +24,5 @@ public interface LocationProxy {
 
     @RequestMapping(path = "${lpdm.location.name}/address/{id}",
             method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    Address findAddressById(@PathVariable(value = "id") int id) throws Exception;
+    Address findAddressById(@PathVariable(value = "id") int id);
 }

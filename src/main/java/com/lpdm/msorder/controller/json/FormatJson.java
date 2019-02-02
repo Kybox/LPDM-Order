@@ -36,20 +36,8 @@ public class FormatJson {
         Optional<Store> optionalStore = proxyService.findStoreById(order.getStoreId());
         order.setStore(optionalStore.orElse(new Store(order.getStoreId())));
 
-        Optional<User> optionalUser = proxyService.findUserById(order.getCustomerId());
-        order.setCustomer(optionalUser.orElse(new User(order.getCustomerId())));
-
-        Address address;
-        try {
-            address = proxyService.findAddressById(order.getCustomer().getAddressId());
-            order.getCustomer().setAddress(address);
-        }
-        catch (Exception e) {
-            log.warn(e.getMessage());
-            address = new Address();
-            address.setId(order.getCustomer().getAddressId());
-            order.getCustomer().setAddress(address);
-        }
+        User user = proxyService.findUserById(order.getCustomerId());
+        order.setCustomer(user);
 
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
             int productId = orderedProduct.getProductId();

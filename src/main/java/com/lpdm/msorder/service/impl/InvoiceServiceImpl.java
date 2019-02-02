@@ -3,6 +3,8 @@ package com.lpdm.msorder.service.impl;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.lpdm.msorder.exception.InvoiceNotFoundException;
+import com.lpdm.msorder.exception.UserMalFormedException;
+import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.order.Invoice;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
@@ -137,16 +139,31 @@ public class InvoiceServiceImpl implements InvoiceService {
         addReference(invoice.getReference(), content);
         addOrderDate(order.getOrderDate(), content);
 
-        Optional<User> optUser = proxyService.findUserById(order.getCustomerId());
-        if(optUser.isPresent()){
-            User user = optUser.get();
-            if(user.getFirstName() == null) user.setFirstName("FIRSTNAME NULL");
-            if(user.getName() == null) user.setName("LASTNAME NULL");
-            //if(user.getAddress() == null) user.setAddress("ADDRESS NULL");
-            if(user.getTel() == null) user.setTel("TEL NULL");
-            if(user.getEmail() == null) user.setEmail("EMAIL NULL");
-            addCustomer(user, content);
-        }
+        User user = proxyService.findUserById(order.getCustomerId());
+
+        // Check user data
+        if(user.getFirstName() == null)
+            throw new UserMalFormedException("User first name is null");
+        if(user.getName() == null)
+            throw new UserMalFormedException("User name is null");
+        if(user.getTel() == null)
+            throw new UserMalFormedException("User tel is null");
+        if(user.getEmail() == null)
+            throw new UserMalFormedException("User email is null");
+
+        // Check user address data
+        if(user.getAddress() == null)
+            throw new UserMalFormedException("User address is null");
+        if(user.getAddress().getStreetNumber() == null)
+            throw new UserMalFormedException("The user's address have no street number");
+        if(user.getAddress().getStreetName() == null)
+            throw new UserMalFormedException("The user's address have no street name");
+        if(user.getAddress().getCity().getName() == null)
+            throw new UserMalFormedException("The user's address have no city name");
+        if(user.getAddress().getCity().getZipCode() == null)
+            throw new UserMalFormedException("The user's address have no zip code");
+
+        addCustomer(user, content);
 
         List<OrderedProduct> productList = orderService.getOrderedProductsByOrder(order);
 

@@ -11,6 +11,8 @@ import com.lpdm.msorder.proxy.ProductProxy;
 import com.lpdm.msorder.proxy.StoreProxy;
 import com.lpdm.msorder.service.ProxyService;
 import feign.FeignException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.Optional;
 
 @Service
 public class ProxyServiceImpl implements ProxyService {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final LocationProxy locationProxy;
     private final ProductProxy productProxy;
@@ -54,9 +58,18 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     @Override
-    public Optional<User> findUserById(int id) {
-        if(id == 0) return Optional.empty();
-        return authProxy.findById(id);
+    public User findUserById(int id) {
+
+        User user;
+
+        try{ user = authProxy.findById(id); }
+
+        catch (FeignException e){
+            log.warn(e.getMessage());
+            user = new User(id);
+        }
+
+        return user;
     }
 
     @Override
@@ -76,7 +89,17 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     @Override
-    public Address findAddressById(int id) throws Exception {
-        return locationProxy.findAddressById(id);
+    public Address findAddressById(int id) {
+
+        Address address;
+
+        try { address = locationProxy.findAddressById(id); }
+
+        catch (FeignException e){
+            log.warn(e.getMessage());
+            address = new Address(id);
+        }
+
+        return address;
     }
 }

@@ -86,4 +86,11 @@ public class GlobalExceptionHandler {
     public String couponNotFoundHandler(CouponNotFoundException e){
         return e.getMessage();
     }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserMalFormedException.class)
+    public String userMalFormedHandler(UserMalFormedException e){
+        return e.getMessage();
+    }
 }

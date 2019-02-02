@@ -31,7 +31,7 @@ public interface ProxyService {
      * @param id The {@link User} id
      * @return An {@link Optional<User>} object
      */
-    Optional<User> findUserById(int id);
+    User findUserById(int id);
     User findUserByLastName(String name);
     User findUserByEmail(String email);
 
@@ -47,5 +47,5 @@ public interface ProxyService {
      * @param id The {@link Address} id
      * @return
      */
-    Address findAddressById(int id) throws Exception;
+    Address findAddressById(int id);
 }
