@@ -359,6 +359,7 @@ public class AdminController {
      * @return The {@link Coupon} object updated
      * @throws CouponNotFoundException Thrown if no {@link Coupon} was found in the database
      */
+    @ApiOperation(value = "Update a coupon")
     @PutMapping(value = "/coupon/update",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

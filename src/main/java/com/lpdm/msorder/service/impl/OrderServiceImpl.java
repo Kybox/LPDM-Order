@@ -4,6 +4,7 @@ import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.order.SearchDates;
+import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
 import com.lpdm.msorder.service.OrderService;
@@ -48,16 +49,31 @@ public class OrderServiceImpl implements OrderService {
         this.formatJson = formatJson;
     }
 
+    /**
+     * Persist an {@link Order} object
+     * @param order The {@link Order} object to persist
+     * @return The {@link Order} object persisted
+     */
     @Override
     public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }
 
+    /**
+     * Delete an {@link Order} object
+     * @param order The {@link Order} object to delete
+     */
     @Override
     public void deleteOrder(Order order) {
         orderRepository.delete(order);
     }
 
+    /**
+     * Find an {@link Order} object by its id
+     * @param id The {@link Order} id
+     * @return The {@link Order} object found
+     * @throws OrderNotFoundException Thrown if no {@link Order} was found
+     */
     @Override
     public Order findOrderById(int id) throws OrderNotFoundException {
 
@@ -66,16 +82,31 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(OrderNotFoundException::new));
     }
 
+    /**
+     * Check if an {@link Order} object exist in the database
+     * @param id The {@link Order} id
+     * @return True if the {@link Order} exist, otherwise false
+     */
     @Override
     public boolean checkIfOrderExist(int id) {
         return orderRepository.findById(id).isPresent();
     }
 
+    /**
+     * Find all {@link Order} objects of a {@link User} by its id
+     * @param id The {@link User} id
+     * @return The {@link List} of {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByCustomerId(int id) {
         return orderRepository.findAllByCustomerId(id);
     }
 
+    /**
+     * Find all {@link Order} object with the defined {@link Payment}
+     * @param payment The {@link Payment} object in the {@link Order}
+     * @return The {@link List} of {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByPayment(Payment payment) {
 
@@ -86,6 +117,11 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
+    /**
+     * Find all {@link Order} objects with a pagination
+     * @param pageRequest The pagination defined
+     * @return The {@link List} of {@link Order} objects found with the pagination limit
+     */
     @Override
     public List<Order> findAllOrdersPageable(PageRequest pageRequest) {
 
@@ -98,6 +134,12 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
+    /***
+     * Find all {@link Order} objects by a {@link User} name or email
+     * @param findBy Choose between email or name
+     * @param keyword The defined name or email
+     * @return The {@link List} of {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByCustomer(String findBy, String keyword) {
 
@@ -124,12 +166,23 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
+    /**
+     * Find all {@link Order} by a {@link User} id and the {@link Order} status
+     * @param id The {@link User} id
+     * @param status The {@link Order} status
+     * @return The {@link List} if {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByCustomerIdAndStatus(int id, Status status) {
 
         return orderRepository.findAllByCustomerIdAndStatus(id, status);
     }
 
+    /**
+     * Find all {@link Order} by the order date between two dates
+     * @param searchDates The searchDates object which contains two {@link LocalDateTime} objects
+     * @return The {@link List} of {@link Order} found
+     */
     @Override
     public List<Order> findAllOrdersBetweenTwoDates(SearchDates searchDates) {
 
@@ -143,6 +196,12 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
+    /**
+     * Find all {@link Order} objects by their status with a pagination
+     * @param status The {@link Order} status
+     * @param pageRequest The pagination data
+     * @return The {@link List} of {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByStatusPageable(Status status, PageRequest pageRequest) {
 
@@ -153,25 +212,56 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
+    /**
+     * Find all {@link Order} objects by the {@link User} id
+     * and sorted by the order date ascending and with a pagination
+     * @param id The {@link Order} id
+     * @param pageRequest The pagination data
+     * @return The {@link List} of {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByCustomerIdOrderByOrderDateAsc(int id, PageRequest pageRequest) {
+
         return orderRepository.findAllByCustomerIdOrderByOrderDateAsc(id, pageRequest);
     }
 
+    /**
+     * Find all {@link Order} objects by the {@link User} id
+     * and sorted by the order date descending and with a pagination
+     * @param id The {@link Order} id
+     * @param pageRequest The pagination data
+     * @return The {@link List} of {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByCustomerIdOrderByOrderDateDesc(int id, PageRequest pageRequest) {
+
         return orderRepository.findAllByCustomerIdOrderByOrderDateDesc(id, pageRequest);
     }
 
+    /**
+     * Count all {@link Order} objects from the database between two dates
+     * @param date1 The first {@link LocalDateTime} object
+     * @param date2 The second {@link LocalDateTime} object
+     * @return The total number of {@link Order} object between this two {@link LocalDateTime}
+     */
     @Override
     public long countAllByOrderDateBetween(LocalDateTime date1, LocalDateTime date2) {
+
         return orderRepository.countAllByOrderDateBetween(date1, date2);
     }
 
+    /**
+     * Find all {@link Order} objects between two {@link LocalDateTime} objects
+     * @param date1 The first {@link LocalDateTime} object
+     * @param date2 The second {@link LocalDateTime} object
+     * @return The {@link List} of {@link Order} objects found
+     */
     @Override
     public List<Order> findAllOrdersByDateBetween(LocalDateTime date1, LocalDateTime date2) {
+
         return orderRepository.findAllByOrderDateBetween(date1, date2);
     }
+
 
     @Override
     public OrderedProduct saveOrderedProduct(OrderedProduct orderedProduct) {
@@ -192,6 +282,4 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderedProduct> findAllOrderedProductsByOrder(Order order) {
         return orderedProductRepository.findAllByOrder(order);
     }
-
-
 }

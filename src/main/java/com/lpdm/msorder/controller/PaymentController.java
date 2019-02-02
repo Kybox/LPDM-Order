@@ -8,6 +8,7 @@ import com.lpdm.msorder.service.PaypalService;
 import com.paypal.api.payments.Order;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.base.rest.PayPalRESTException;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +52,13 @@ public class PaymentController {
     }
 
     /**
-     * Pay for the order with Paypal
+     * Pay the order with Paypal
      * @param id The {@link Order} id
      * @param redirectUrls The redirection urls required by Paypal
      * @return {@link PaypalPayUrl} object
      * @throws IOException Exception thrown by the paypal service if it encounters an error
      */
+    @ApiOperation(value = "Pay the order with Paypal")
     @PostMapping(value = "/{id}/pay",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -71,6 +73,13 @@ public class PaymentController {
         return paymentService.paypalPaymentProcess(id, redirectUrls, clientId, secret);
     }
 
+    /**
+     * Get a Paypal transation details
+     * @param paypalReturn The transation result data
+     * @return A json object with the transaction details
+     * @throws PayPalRESTException Thrown from the Paypal API
+     */
+    @ApiOperation(value = "Get a Paypal transation details")
     @GetMapping(value = "/transaction/details")
     public String returnPayment(@ModelAttribute PaypalReturn paypalReturn) throws PayPalRESTException {
 
@@ -78,9 +87,10 @@ public class PaymentController {
     }
 
     /**
-     * Get all {@link Payment} recorded in the database
+     * Get all {@link Payment} objects recorded in the database
      * @return The {@link List <Payment>}
      */
+    @ApiOperation(value = "Get all payment methods")
     @GetMapping(value = "/payments", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Payment> getPaymentList(){
 
