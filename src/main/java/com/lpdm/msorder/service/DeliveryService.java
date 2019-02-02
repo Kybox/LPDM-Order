@@ -38,8 +38,9 @@ public interface DeliveryService {
      * Delete the {@link Delivery} object in the database
      * @param delivery The {@link Delivery} object to delete
      * @return True if the {@link Delivery} object was deleted, otherwise false
+     * @throws DeliveryNotFoundException Thrown if the {@link Delivery} object was found in the database
      */
-    boolean deleteDeliveryMethod(Delivery delivery);
+    boolean deleteDeliveryMethod(Delivery delivery) throws DeliveryNotFoundException;
 
     /**
      * Update a {@link Delivery} object in the datebase

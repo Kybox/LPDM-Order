@@ -61,8 +61,6 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public boolean deleteCoupon(Coupon coupon) throws CouponNotFoundException {
 
-        log.info("Delete coupon : " + coupon);
-
         Optional<Coupon> optCoupon = couponRepository.findById(coupon.getId());
         if(!optCoupon.isPresent()) throw new CouponNotFoundException();
 

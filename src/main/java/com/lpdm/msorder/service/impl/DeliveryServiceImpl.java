@@ -64,12 +64,17 @@ public class DeliveryServiceImpl implements DeliveryService {
      * Delete the {@link Delivery} object in the database
      * @param delivery The {@link Delivery} object to delete
      * @return True if the {@link Delivery} object was deleted, otherwise false
+     * @throws DeliveryNotFoundException Thrown if the {@link Delivery} object was found in the database
      */
     @Override
-    public boolean deleteDeliveryMethod(Delivery delivery) {
+    public boolean deleteDeliveryMethod(Delivery delivery) throws DeliveryNotFoundException {
 
-        deliveryRepository.delete(delivery);
-        return !deliveryRepository.findById(delivery.getId()).isPresent();
+        Optional<Delivery> optDelivery = deliveryRepository.findById(delivery.getId());
+        if(!optDelivery.isPresent()) throw new DeliveryNotFoundException();
+
+        deliveryRepository.delete(optDelivery.get());
+
+        return !deliveryRepository.findById(optDelivery.get().getId()).isPresent();
     }
 
     /**

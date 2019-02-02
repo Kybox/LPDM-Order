@@ -282,6 +282,13 @@ public class AdminController {
         return deliveryService.addNewDeliveryMethod(delivery);
     }
 
+    /**
+     * Update a {@link Delivery} object in the datebase
+     * @param delivery The {@link Delivery} object to update
+     * @return The {@link Delivery} object updated
+     * @throws DeliveryNotFoundException Thrown if no {@link Delivery} object was found
+     */
+    @ApiOperation(value = "Update an existing delivery object")
     @PutMapping(value = "/delivery/update",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -295,12 +302,13 @@ public class AdminController {
      * Delete the {@link Delivery} object in the database
      * @param delivery The {@link Delivery} object to delete
      * @return True if the {@link Delivery} object was deleted, otherwise false
+     * @throws DeliveryNotFoundException Thrown if the {@link Delivery} object was found in the database
      */
     @ApiOperation(value = "Delete the delivery object in the database")
     @DeleteMapping(value = "/delivery/delete",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public boolean deleteDeliveryMethod(@Valid @RequestBody Delivery delivery){
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public boolean deleteDeliveryMethod(@Valid @RequestBody Delivery delivery)
+            throws DeliveryNotFoundException{
 
         return deliveryService.deleteDeliveryMethod(delivery);
     }
