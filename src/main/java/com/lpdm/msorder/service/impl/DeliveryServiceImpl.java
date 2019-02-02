@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Kybox
@@ -69,5 +70,20 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         deliveryRepository.delete(delivery);
         return !deliveryRepository.findById(delivery.getId()).isPresent();
+    }
+
+    /**
+     * Update a {@link Delivery} object in the datebase
+     * @param delivery The {@link Delivery} object to update
+     * @return The {@link Delivery} object updated
+     * @throws DeliveryNotFoundException Thrown if no {@link Delivery} object was found
+     */
+    @Override
+    public Delivery updateDeliveryMethod(Delivery delivery) throws DeliveryNotFoundException {
+
+        Optional<Delivery> optDelivery = deliveryRepository.findById(delivery.getId());
+        if(!optDelivery.isPresent()) throw new DeliveryNotFoundException();
+
+        return deliveryRepository.save(delivery);
     }
 }

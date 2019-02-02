@@ -282,6 +282,15 @@ public class AdminController {
         return deliveryService.addNewDeliveryMethod(delivery);
     }
 
+    @PutMapping(value = "/delivery/update",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Delivery updateDelivery(@Valid @RequestBody Delivery delivery)
+            throws DeliveryNotFoundException {
+
+        return deliveryService.updateDeliveryMethod(delivery);
+    }
+
     /**
      * Delete the {@link Delivery} object in the database
      * @param delivery The {@link Delivery} object to delete
