@@ -60,7 +60,7 @@ public interface OrderService {
      */
     List<Order> findAllOrdersByPayment(Payment payment);
 
-    /***
+    /**
      * Find all {@link Order} objects by a {@link User} name or email
      * @param findBy Choose between email or name
      * @param keyword The defined name or email
@@ -131,12 +131,4 @@ public interface OrderService {
      * @return The {@link List} of {@link Order} objects found
      */
     List<Order> findAllOrdersByDateBetween(LocalDateTime date1, LocalDateTime date2);
-
-    /**
-     * OrderedProduct
-     */
-    OrderedProduct saveOrderedProduct(OrderedProduct orderedProduct);
-    List<OrderedProduct> getOrderedProductsByOrder(Order order);
-    List<OrderedProduct> findAllOrderedProductsByProductId(int id);
-    List<OrderedProduct> findAllOrderedProductsByOrder(Order order);
 }

@@ -39,19 +39,22 @@ public class AdminController {
     private final PaymentService paymentService;
     private final DeliveryService deliveryService;
     private final CouponService couponService;
+    private final OrderedProductService orderedProductService;
 
     @Autowired
     public AdminController(OrderService orderService,
                            InvoiceService invoiceService,
                            PaymentService paymentService,
                            DeliveryService deliveryService,
-                           CouponService couponService) {
+                           CouponService couponService,
+                           OrderedProductService orderedProductService) {
 
         this.orderService = orderService;
         this.invoiceService = invoiceService;
         this.paymentService = paymentService;
         this.deliveryService = deliveryService;
         this.couponService = couponService;
+        this.orderedProductService = orderedProductService;
     }
 
     /**
@@ -153,7 +156,7 @@ public class AdminController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByProductId(@PathVariable int id){
 
-        List<OrderedProduct> orderedProductList = orderService.findAllOrderedProductsByProductId(id);
+        List<OrderedProduct> orderedProductList = orderedProductService.findAllOrderedProductsByProductId(id);
         List<Order> orderList = new ArrayList<>();
         orderedProductList.forEach(o -> orderList.add(orderService.findOrderById(o.getOrder().getId())));
         return orderList;
@@ -262,6 +265,7 @@ public class AdminController {
      */
     @ApiOperation(value = "Find all orders between 2 dates")
     @PostMapping(value = "/orders/dates/between",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Order> findAllByDateBetween(@Valid @RequestBody SearchDates searchDates){
 
@@ -335,7 +339,7 @@ public class AdminController {
     @PostMapping(value = "/coupon/add",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Coupon addNewCoupon(@Valid @RequestBody Coupon coupon){
+    public Coupon addNewCoupon(@RequestBody Coupon coupon){
 
         return couponService.addNewCoupon(coupon);
     }
@@ -348,7 +352,7 @@ public class AdminController {
     @ApiOperation(value = "Delete a coupon")
     @DeleteMapping(value = "/coupon/delete",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public boolean deleteCoupon(@Valid @RequestBody Coupon coupon){
+    public boolean deleteCoupon(@RequestBody Coupon coupon){
 
         return couponService.deleteCoupon(coupon);
     }
@@ -363,7 +367,7 @@ public class AdminController {
     @PutMapping(value = "/coupon/update",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Coupon updateCoupon(@Valid @RequestBody Coupon coupon) throws CouponNotFoundException {
+    public Coupon updateCoupon(@RequestBody Coupon coupon) throws CouponNotFoundException {
 
         return couponService.updateCoupon(coupon);
     }

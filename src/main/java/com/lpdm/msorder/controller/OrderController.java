@@ -9,10 +9,7 @@ import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.User;
-import com.lpdm.msorder.service.CouponService;
-import com.lpdm.msorder.service.DeliveryService;
-import com.lpdm.msorder.service.InvoiceService;
-import com.lpdm.msorder.service.OrderService;
+import com.lpdm.msorder.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
@@ -50,17 +47,21 @@ public class OrderController {
     private final FormatJson formatJson;
     private final DeliveryService deliveryService;
     private final CouponService couponService;
+    private final OrderedProductService orderedProductService;
 
     @Autowired
     public OrderController(InvoiceService invoiceService,
                            OrderService orderService, FormatJson formatJson,
-                           DeliveryService deliveryService, CouponService couponService) {
+                           DeliveryService deliveryService,
+                           CouponService couponService,
+                           OrderedProductService orderedProductService) {
 
         this.invoiceService = invoiceService;
         this.orderService = orderService;
         this.formatJson = formatJson;
         this.deliveryService = deliveryService;
         this.couponService = couponService;
+        this.orderedProductService = orderedProductService;
     }
 
     /**
@@ -126,7 +127,7 @@ public class OrderController {
                 orderedProduct.setProductId(orderedProduct.getProduct().getId());
                 orderedProduct.setPrice(orderedProduct.getProduct().getPrice());
                 orderedProduct.setTax(orderedProduct.getProduct().getTax());
-                orderService.saveOrderedProduct(orderedProduct);
+                orderedProductService.saveOrderedProduct(orderedProduct);
             }
             else throw new BadRequestException();
         }
@@ -253,7 +254,7 @@ public class OrderController {
         List<Order> orderList = new ArrayList<>();
         for(Order order : mainOrderList){
 
-            List<OrderedProduct> productList = orderService.findAllOrderedProductsByOrder(order);
+            List<OrderedProduct> productList = orderedProductService.findAllOrderedProductsByOrder(order);
             for(OrderedProduct orderedProduct : productList){
                 if(orderedProduct.getProductId() == productId){
                     orderList.add(order);

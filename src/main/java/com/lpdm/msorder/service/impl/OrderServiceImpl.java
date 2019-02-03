@@ -134,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
         return orderList;
     }
 
-    /***
+    /**
      * Find all {@link Order} objects by a {@link User} name or email
      * @param findBy Choose between email or name
      * @param keyword The defined name or email
@@ -260,26 +260,5 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findAllOrdersByDateBetween(LocalDateTime date1, LocalDateTime date2) {
 
         return orderRepository.findAllByOrderDateBetween(date1, date2);
-    }
-
-
-    @Override
-    public OrderedProduct saveOrderedProduct(OrderedProduct orderedProduct) {
-        return orderedProductRepository.save(orderedProduct);
-    }
-
-    @Override
-    public List<OrderedProduct> getOrderedProductsByOrder(Order order) {
-        return orderedProductRepository.findAllByOrder(order);
-    }
-
-    @Override
-    public List<OrderedProduct> findAllOrderedProductsByProductId(int id) {
-        return orderedProductRepository.findAllByProductId(id);
-    }
-
-    @Override
-    public List<OrderedProduct> findAllOrderedProductsByOrder(Order order) {
-        return orderedProductRepository.findAllByOrder(order);
     }
 }

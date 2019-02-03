@@ -4,7 +4,6 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.lpdm.msorder.exception.InvoiceNotFoundException;
 import com.lpdm.msorder.exception.UserMalFormedException;
-import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.order.Invoice;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
@@ -25,7 +24,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Kybox
@@ -49,15 +47,18 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final OrderService orderService;
     private final InvoiceRepository invoiceRepository;
     private final ProxyService proxyService;
+    private final OrderedProductService orderedProductService;
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                               OrderService orderService,
-                              ProxyService proxyService) {
+                              ProxyService proxyService,
+                              OrderedProductService orderedProductService) {
 
         this.invoiceRepository = invoiceRepository;
         this.orderService = orderService;
         this.proxyService = proxyService;
+        this.orderedProductService = orderedProductService;
     }
 
     /**
@@ -165,7 +166,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         addCustomer(user, content);
 
-        List<OrderedProduct> productList = orderService.getOrderedProductsByOrder(order);
+        List<OrderedProduct> productList = orderedProductService.findAllOrderedProductsByOrder(order);
 
         double totalAmount = addProducts(productList, content);
 
