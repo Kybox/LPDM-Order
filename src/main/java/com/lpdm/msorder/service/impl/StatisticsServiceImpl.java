@@ -44,6 +44,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         this.proxyService = proxyService;
     }
 
+    /**
+     * Get orders statistics by year
+     * @param year The year param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     @Override
     public OrderStats getOrderStatsByYear(int year) {
 
@@ -67,6 +72,12 @@ public class StatisticsServiceImpl implements StatisticsService {
         return orderStats;
     }
 
+    /**
+     * Get orders statistics by month and year
+     * @param year The year param for the statistics
+     * @param month The month param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     @Override
     public OrderStats getOrderStatsByYearAndMonth(int year, int month) {
 
@@ -92,6 +103,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         return orderStats;
     }
 
+    /**
+     * Get ordered products statistics by year
+     * @param year The year param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     @Override
     public OrderStats getOrderedProductsStatsByYear(int year) {
 
@@ -119,6 +135,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         return orderStats;
     }
 
+    /**
+     * Get ordered products statistics by year and category
+     * @param year The year param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     @Override
     public OrderStats getOrderedProductsStatsByYearAndCategory(int year) {
 
@@ -164,6 +185,14 @@ public class StatisticsServiceImpl implements StatisticsService {
         throw new DateNotFoundException();
     }
 
+    /**
+     * Check if the current data is in a leap year
+     * @param tempDate The temp date of the current date
+     * @param year The year of date
+     * @param month The month of date
+     * @param date The date object
+     * @return A {@link LocalDateTime} object formatted if it's a leap year
+     */
     private LocalDateTime checkLeapYear(LocalDate tempDate, int year, int month, LocalDateTime date){
 
         LocalDateTime checkedDate;
@@ -175,6 +204,13 @@ public class StatisticsServiceImpl implements StatisticsService {
         return checkedDate;
     }
 
+    /**
+     * Set a start {@link LocalDateTime} and a end {@link LocalDateTime}
+     * @param year The year of the dates
+     * @param month The start month
+     * @param date The {@link LocalDateTime} of reference
+     * @return A {@link Map} with two dates, one for the start and on for the end
+     */
     private Map<String, LocalDateTime> getSearchDates(int year, int month, LocalDateTime date){
 
         Map<String, LocalDateTime> dateResult = new HashMap<>();

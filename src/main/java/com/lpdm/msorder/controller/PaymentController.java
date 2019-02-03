@@ -8,6 +8,7 @@ import com.lpdm.msorder.service.PaypalService;
 import com.paypal.api.payments.Order;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.base.rest.PayPalRESTException;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import static com.lpdm.msorder.utils.ValueType.ORDERS_PATH;
 
 @RestController
 @RequestMapping(ORDERS_PATH)
+@Api(tags = {"Order Rest API"})
 public class PaymentController {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());

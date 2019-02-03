@@ -10,8 +10,32 @@ import com.lpdm.msorder.model.order.OrderStats;
 
 public interface StatisticsService {
 
+    /**
+     * Get orders statistics by year
+     * @param year The year param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     OrderStats getOrderStatsByYear(int year);
+
+    /**
+     * Get orders statistics by month and year
+     * @param year The year param for the statistics
+     * @param month The month param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     OrderStats getOrderStatsByYearAndMonth(int year, int month);
+
+    /**
+     * Get ordered products statistics by year
+     * @param year The year param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     OrderStats getOrderedProductsStatsByYear(int year);
+
+    /**
+     * Get ordered products statistics by year and category
+     * @param year The year param for the statistics
+     * @return An {@link OrderStats} object with the statistics data
+     */
     OrderStats getOrderedProductsStatsByYearAndCategory(int year);
 }
