@@ -22,6 +22,10 @@ public class Payment {
         this.label = label;
     }
 
+    public Payment(int id){
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

@@ -63,6 +63,10 @@ public class Order {
     public Order() {
     }
 
+    public Order(int id){
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

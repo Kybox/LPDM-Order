@@ -13,6 +13,7 @@ import com.paypal.api.payments.Item;
 import com.paypal.api.payments.ItemList;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.ShippingAddress;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -46,6 +48,15 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
+    /**
+     * Process to the order payment
+     * @param orderId The {@link Order} id to pay
+     * @param redirectUrls The {@link RedirectUrls} for the redirection
+     * @param id The client id for the Paypal API
+     * @param secret The secret for the Paypal API
+     * @return A {@link PaypalPayUrl} object with the header and the url redirection
+     * @throws Exception Thrown if something goes wrong
+     */
     @Override
     public PaypalPayUrl paypalPaymentProcess(int orderId,
                                              RedirectUrls redirectUrls,
@@ -72,29 +83,59 @@ public class PaymentServiceImpl implements PaymentService {
         return paypalPayUrl;
     }
 
+    /**
+     * Find all payment methods
+     * @return The {@link List} of {@link Payment} objects
+     */
     @Override
     public List<Payment> findAllPayments() {
+
         return paymentRepository.findAll();
     }
 
+    /**
+     * Find a {@link Payment} object by its id
+     * @param id The {@link Payment} id
+     * @return The {@link Payment} object found
+     */
     @Override
     public Payment findPaymentById(int id) {
 
-        return paymentRepository.findById(id).orElseThrow(PaymentNotFoundException::new);
+        Optional<Payment> optPayment = paymentRepository.findById(id);
+        if(!optPayment.isPresent()) throw new PaymentNotFoundException();
+
+        return optPayment.get();
     }
 
+    /**
+     * Persist a new {@link Payment} object in the database
+     * @param payment The {@link Payment} object to persist
+     * @return The {@link Payment} object persisted
+     */
     @Override
     public Payment savePayment(Payment payment) {
+
         return paymentRepository.save(payment);
     }
 
+    /**
+     * Delete a {@link Payment} object in the database
+     * @param payment The {@link Payment} object to delete
+     */
     @Override
     public void deletePayment(Payment payment) {
+
         paymentRepository.delete(payment);
     }
 
+    /**
+     * Check if a {@link Payment} object exist in the database
+     * @param id The {@link Payment} id
+     * @return True if the {@link Payment} exist, otherwise false
+     */
     @Override
     public boolean checkIfPaymentExist(int id) {
+
         return paymentRepository.findById(id).isPresent();
     }
 }
