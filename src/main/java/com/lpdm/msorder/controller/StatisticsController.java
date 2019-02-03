@@ -5,7 +5,6 @@ import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.OrderStats;
 import com.lpdm.msorder.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,6 @@ import static com.lpdm.msorder.utils.ValueType.ADMIN_PATH;
  * @since 01/12/2018
  */
 
-@RefreshScope
 @RestController
 @RequestMapping(ADMIN_PATH)
 public class StatisticsController {
@@ -38,7 +36,7 @@ public class StatisticsController {
 
         if(year == null) throw new BadRequestException();
         OrderStats orderStats = statisticsService.getOrderStatsByYear(year);
-        if(orderStats.getDataStats().isEmpty()) throw  new OrderNotFoundException();
+        if(orderStats.getDataStats().isEmpty()) throw new OrderNotFoundException();
         return orderStats;
     }
 
