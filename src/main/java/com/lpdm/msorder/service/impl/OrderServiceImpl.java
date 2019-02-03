@@ -56,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Order saveOrder(Order order) {
+
         return orderRepository.save(order);
     }
 
@@ -65,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void deleteOrder(Order order) {
+
         orderRepository.delete(order);
     }
 
@@ -89,6 +91,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public boolean checkIfOrderExist(int id) {
+
         return orderRepository.findById(id).isPresent();
     }
 
@@ -99,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> findAllOrdersByCustomerId(int id) {
+
         return orderRepository.findAllByCustomerId(id);
     }
 

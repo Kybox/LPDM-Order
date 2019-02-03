@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ProxyServiceTest {
+public class ProxyServiceTests {
 
     @InjectMocks
     private ProxyServiceImpl proxyService;

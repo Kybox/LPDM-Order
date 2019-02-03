@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class PaymentServiceTest {
+public class PaymentServiceTests {
 
     @InjectMocks
     private PaymentServiceImpl paymentService;
