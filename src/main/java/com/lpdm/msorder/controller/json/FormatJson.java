@@ -1,6 +1,5 @@
 package com.lpdm.msorder.controller.json;
 
-import com.lpdm.msorder.model.location.Address;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.product.Product;

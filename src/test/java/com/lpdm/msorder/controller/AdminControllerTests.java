@@ -32,26 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AdminController.class)
 public class AdminControllerTests {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @MockBean
-    private OrderService orderService;
-
-    @MockBean
-    private OrderedProductService orderedProductService;
-
-    @MockBean
-    private InvoiceService invoiceService;
-
-    @MockBean
-    private PaymentService paymentService;
-
-    @MockBean
-    private DeliveryService deliveryService;
-
-    @MockBean
-    private CouponService couponService;
+    @MockBean private OrderService orderService;
+    @MockBean private OrderedProductService orderedProductService;
+    @MockBean private InvoiceService invoiceService;
+    @MockBean private PaymentService paymentService;
+    @MockBean private DeliveryService deliveryService;
+    @MockBean private CouponService couponService;
 
     private int randomId;
     private Order order;
@@ -66,35 +54,35 @@ public class AdminControllerTests {
     @Before
     public void init(){
 
+        randomId = (int) (Math.random()*123);
+
         order = new Order();
-        order.setId(45);
+        order.setId(randomId);
 
         OrderedProduct orderedProduct = new OrderedProduct();
         orderedProduct.setOrder(order);
         orderedProduct.setPrice(12.69);
-        orderedProduct.setProduct(new Product(1));
+        orderedProduct.setProduct(new Product(randomId));
 
         orderedProductList = new ArrayList<>();
         orderedProductList.add(orderedProduct);
 
         payment = new Payment("AmericanExpress");
-        payment.setId(6);
+        payment.setId(randomId);
 
         order.setOrderedProducts(orderedProductList);
         order.setPayment(payment);
-        order.setCustomerId(2);
+        order.setCustomerId(randomId);
         order.setStatus(Status.CART);
 
         orderList = new ArrayList<>();
         orderList.add(order);
 
-        randomId = (int) (Math.random()*123);
-
         String invoiceRef = "12345";
         invoice = new Invoice();
         invoice.setOrderId(order.getId());
         invoice.setReference(invoiceRef);
-        invoice.setId(50);
+        invoice.setId(randomId);
 
         delivery = new Delivery();
         delivery.setId(randomId);

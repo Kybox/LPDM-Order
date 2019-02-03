@@ -170,8 +170,8 @@ public class OrderController {
             notes = "This request must be controlled and limited to the customer or an admin")
     @GetMapping(value = "/all/customer/{userId}/status/{statusId}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<Order> findAllUserAndStatus(@PathVariable("userId") int userId,
-                                            @PathVariable("statusId") int statusId){
+    public List<Order> findAllByUserAndStatus(@PathVariable("userId") int userId,
+                                              @PathVariable("statusId") int statusId){
 
         if(userId == 0 || statusId == 0)
             throw new BadRequestException();
