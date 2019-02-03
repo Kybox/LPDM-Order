@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,8 @@ public class OrderControllerTest {
         orderedProduct.setPrice(12.69);
         orderedProduct.setProduct(new Product(randomId));
         orderedProduct.setProductId(randomId);
+        orderedProduct.setTax(112);
+        orderedProduct.setQuantity(123);
 
         orderedProductList = new ArrayList<>();
         orderedProductList.add(orderedProduct);
@@ -79,6 +82,7 @@ public class OrderControllerTest {
         order.setCustomerId(randomId);
         order.setStatus(Status.CART);
         order.setCustomer(user);
+        //order.setOrderDate(LocalDateTime.now());
 
         orderList = new ArrayList<>();
         orderList.add(order);
