@@ -32,8 +32,16 @@ public class FormatJson {
      */
     public Order formatOrder(Order order){
 
-        Optional<Store> optionalStore = proxyService.findStoreById(order.getStoreId());
-        order.setStore(optionalStore.orElse(new Store(order.getStoreId())));
+
+        Store store;
+        try {
+            store = proxyService.findStoreById(order.getStoreId());
+            order.setStore(store);
+        }
+        catch (FeignException e){
+            log.warn(e.getMessage());
+            order.setStore(new Store(order.getStoreId()));
+        }
 
         User user = proxyService.findUserById(order.getCustomerId());
         order.setCustomer(user);

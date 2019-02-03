@@ -49,11 +49,13 @@ public class ProxyServiceImpl implements ProxyService {
 
     @Override
     public Product findProductById(int id) throws FeignException {
+
         return productProxy.findById(id);
     }
 
     @Override
     public List<Category> findAllProductCategories() throws FeignException {
+
         return productProxy.findAllCategories();
     }
 
@@ -74,17 +76,19 @@ public class ProxyServiceImpl implements ProxyService {
 
     @Override
     public User findUserByLastName(String name) {
+
         return authProxy.findByLastName(name);
     }
 
     @Override
     public User findUserByEmail(String email) {
+
         return authProxy.findByEmail(email);
     }
 
     @Override
-    public Optional<Store> findStoreById(int id) {
-        if(id == 0) return Optional.empty();
+    public Store findStoreById(int id) {
+
         return storeProxy.findById(id);
     }
 

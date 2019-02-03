@@ -40,7 +40,7 @@ public interface ProxyService {
      * @param id The {@link Store} id
      * @return An {@link Optional<Store>} object
      */
-    Optional<Store> findStoreById(int id);
+    Store findStoreById(int id);
 
     /**
      * Call the location microservice to find an {@link Address} by its id

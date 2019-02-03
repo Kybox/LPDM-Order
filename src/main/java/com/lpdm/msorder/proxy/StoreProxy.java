@@ -24,5 +24,5 @@ public interface StoreProxy {
 
     @RequestMapping(value = "${lpdm.store.name}/stores/{id}",
             method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    Optional<Store> findById(@PathVariable(value = "id") int id);
+    Store findById(@PathVariable(value = "id") int id);
 }
