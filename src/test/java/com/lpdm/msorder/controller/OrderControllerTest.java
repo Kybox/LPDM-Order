@@ -1,6 +1,5 @@
 package com.lpdm.msorder.controller;
 
-import com.itextpdf.text.pdf.PdfDocument;
 import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
@@ -21,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 

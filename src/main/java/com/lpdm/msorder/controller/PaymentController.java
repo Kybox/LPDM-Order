@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,6 @@ import static com.lpdm.msorder.utils.ValueType.ORDERS_PATH;
  * @since 01/12/2018
  */
 
-@RefreshScope
 @RestController
 @RequestMapping(ORDERS_PATH)
 public class PaymentController {
@@ -81,7 +79,8 @@ public class PaymentController {
      */
     @ApiOperation(value = "Get a Paypal transation details")
     @GetMapping(value = "/transaction/details")
-    public String returnPayment(@ModelAttribute PaypalReturn paypalReturn) throws PayPalRESTException {
+    public String returnPayment(@ModelAttribute PaypalReturn paypalReturn)
+            throws PayPalRESTException {
 
         return paypalService.getTransactionDetails(paypalReturn, clientId, secret);
     }
