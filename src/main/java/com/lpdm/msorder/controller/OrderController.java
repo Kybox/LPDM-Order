@@ -10,6 +10,7 @@ import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.service.*;
+import com.lpdm.msorder.utils.OrderUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
@@ -113,6 +114,12 @@ public class OrderController {
         }
 
         order.setCustomerId(order.getCustomer().getId());
+
+        // Set the total amount with tax
+        order.setTotal(OrderUtils.getTotalAmount(order));
+
+        // Set tax amount
+        order.setTaxAmount(OrderUtils.getTaxAmount(order));
 
         log.info("Try to save order : " + order.toString());
         orderService.saveOrder(order);

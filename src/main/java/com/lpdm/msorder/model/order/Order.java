@@ -54,8 +54,8 @@ public class Order {
     @JoinColumn(name = "delivery")
     private Delivery delivery;
 
-    @Column(name = "shipping_cost")
-    private double shippingCost;
+    @Column(name = "tax_amount")
+    private double taxAmount;
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "order")
     private List<OrderedProduct> orderedProducts;
@@ -151,12 +151,12 @@ public class Order {
         this.delivery = delivery;
     }
 
-    public double getShippingCost() {
-        return shippingCost;
+    public double getTaxAmount() {
+        return taxAmount;
     }
 
-    public void setShippingCost(double shippingCost) {
-        this.shippingCost = shippingCost;
+    public void setTaxAmount(double taxAmount) {
+        this.taxAmount = taxAmount;
     }
 
     public List<OrderedProduct> getOrderedProducts() {
@@ -181,7 +181,7 @@ public class Order {
                 ", customer=" + customer +
                 ", coupon=" + coupon +
                 ", delivery=" + delivery +
-                ", shippingCost=" + shippingCost +
+                ", taxAmount=" + taxAmount +
                 ", orderedProducts=" + orderedProducts +
                 '}';
     }
