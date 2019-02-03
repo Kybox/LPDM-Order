@@ -60,10 +60,15 @@ public class OrderControllerTest {
         order = new Order();
         order.setId(randomId);
 
+        Product product = new Product();
+        product.setId(randomId);
+        product.setTax(162);
+        product.setPrice(135);
+
         OrderedProduct orderedProduct = new OrderedProduct();
         orderedProduct.setOrder(order);
         orderedProduct.setPrice(12.69);
-        orderedProduct.setProduct(new Product(randomId));
+        orderedProduct.setProduct(product);
         orderedProduct.setProductId(randomId);
         orderedProduct.setTax(112);
         orderedProduct.setQuantity(123);
