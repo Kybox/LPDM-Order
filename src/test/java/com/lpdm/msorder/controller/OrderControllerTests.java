@@ -197,7 +197,7 @@ public class OrderControllerTests {
                 .thenReturn(order);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/orders/all/customer/" + randomId + "/status/" + 1);
+                .get("/orders/all/customer/" + randomId + "/status/" + order.getStatus().getId());
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
