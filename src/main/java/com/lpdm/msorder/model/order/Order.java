@@ -7,6 +7,7 @@ import com.lpdm.msorder.model.user.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -164,6 +165,10 @@ public class Order {
     }
 
     public List<OrderedProduct> getOrderedProducts() {
+
+        if(orderedProducts == null)
+            orderedProducts = new ArrayList<>();
+
         return orderedProducts;
     }
 

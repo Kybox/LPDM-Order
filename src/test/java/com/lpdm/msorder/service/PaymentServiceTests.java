@@ -1,39 +1,47 @@
 package com.lpdm.msorder.service;
 
-import com.lpdm.msorder.exception.PaymentNotFoundException;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.order.Payment;
 import com.lpdm.msorder.model.paypal.PaypalPayUrl;
+import com.lpdm.msorder.model.paypal.PaypalToken;
+import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.PaymentRepository;
 import com.lpdm.msorder.service.impl.PaymentServiceImpl;
 import com.paypal.api.payments.Item;
+import com.paypal.api.payments.ItemList;
 import com.paypal.api.payments.RedirectUrls;
+import com.paypal.api.payments.ShippingAddress;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PaymentServiceTests {
 
-    @InjectMocks
+    @Autowired
     private PaymentServiceImpl paymentService;
 
-    @Mock private OrderService orderService;
-    @Mock private PaypalService paypalService;
-    @Mock private PaymentRepository paymentRepository;
+    @MockBean
+    private OrderService orderService;
+
+    @MockBean
+    private PaypalService paypalService;
+
+    @MockBean
+    private PaymentRepository paymentRepository;
 
     private int randomId;
     private PaypalPayUrl paypalPayUrl;
@@ -42,11 +50,12 @@ public class PaymentServiceTests {
 
     private Payment payment;
     private List<Payment> paymentList;
+    private List<Item> items;
+    private PaypalToken paypalToken;
+    private ItemList itemList;
 
     @Before
     public void init() {
-
-        MockitoAnnotations.initMocks(this);
 
         randomId = (int) (Math.random()*123);
         paypalPayUrl = new PaypalPayUrl();
@@ -59,15 +68,19 @@ public class PaymentServiceTests {
         payment.setLabel("a payment method");
         paymentList = new ArrayList<>();
         paymentList.add(payment);
+
+        items = new ArrayList<>();
+        paypalToken = new PaypalToken();
+        paypalToken.setAccess_token("test");
+
+        itemList = new ItemList();
+        itemList.setItems(items);
     }
 
     @Test
     public void findAllPayments() {
 
         when(paymentRepository.findAll())
-                .thenReturn(paymentList);
-
-        when(paymentService.findAllPayments())
                 .thenReturn(paymentList);
 
         assertEquals(paymentList, paymentService.findAllPayments());
@@ -79,8 +92,6 @@ public class PaymentServiceTests {
         when(paymentRepository.save(any(Payment.class)))
                 .thenReturn(payment);
 
-        when(paymentService.savePayment(any(Payment.class)))
-                .thenReturn(payment);
 
         assertEquals(payment, paymentService.savePayment(payment));
     }

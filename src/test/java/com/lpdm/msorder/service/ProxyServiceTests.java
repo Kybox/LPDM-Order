@@ -9,13 +9,13 @@ import com.lpdm.msorder.proxy.AuthProxy;
 import com.lpdm.msorder.proxy.LocationProxy;
 import com.lpdm.msorder.proxy.ProductProxy;
 import com.lpdm.msorder.proxy.StoreProxy;
-import com.lpdm.msorder.service.impl.ProxyServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -24,16 +24,24 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ProxyServiceTests {
 
-    @InjectMocks
-    private ProxyServiceImpl proxyService;
+    @Autowired
+    private ProxyService proxyService;
 
-    @Mock private ProductProxy productProxy;
-    @Mock private AuthProxy authProxy;
-    @Mock private StoreProxy storeProxy;
-    @Mock private LocationProxy locationProxy;
+    @MockBean
+    private ProductProxy productProxy;
+
+    @MockBean
+    private AuthProxy authProxy;
+
+    @MockBean
+    private StoreProxy storeProxy;
+
+    @MockBean
+    private LocationProxy locationProxy;
 
     private int randomId;
     private Product product;
@@ -66,9 +74,6 @@ public class ProxyServiceTests {
         when(productProxy.findById(anyInt()))
                 .thenReturn(product);
 
-        when(proxyService.findProductById(anyInt()))
-                .thenReturn(product);
-
         assertEquals(product, proxyService.findProductById(randomId));
     }
 
@@ -76,9 +81,6 @@ public class ProxyServiceTests {
     public void findAllProductCategories() {
 
         when(productProxy.findAllCategories())
-                .thenReturn(categoryList);
-
-        when(proxyService.findAllProductCategories())
                 .thenReturn(categoryList);
 
         assertEquals(categoryList, proxyService.findAllProductCategories());
@@ -89,9 +91,6 @@ public class ProxyServiceTests {
 
         when(authProxy.findById(anyInt())).thenReturn(user);
 
-        when(proxyService.findUserById(anyInt()))
-                .thenReturn(user);
-
         assertEquals(user, proxyService.findUserById(randomId));
     }
 
@@ -99,9 +98,6 @@ public class ProxyServiceTests {
     public void findUserByLastName() {
 
         when(authProxy.findByLastName(anyString()))
-                .thenReturn(user);
-
-        when(proxyService.findUserByLastName(anyString()))
                 .thenReturn(user);
 
         assertEquals(user, proxyService.findUserByLastName("luc"));
@@ -113,9 +109,6 @@ public class ProxyServiceTests {
         when(authProxy.findByEmail(anyString()))
                 .thenReturn(user);
 
-        when(proxyService.findUserByEmail(anyString()))
-                .thenReturn(user);
-
         assertEquals(user, proxyService.findUserByEmail("demo@mail.com"));
     }
 
@@ -125,9 +118,6 @@ public class ProxyServiceTests {
         when(storeProxy.findById(anyInt()))
                 .thenReturn(store);
 
-        when(proxyService.findStoreById(anyInt()))
-                .thenReturn(store);
-
         assertEquals(store, proxyService.findStoreById(randomId));
     }
 
@@ -135,9 +125,6 @@ public class ProxyServiceTests {
     public void findAddressById() {
 
         when(locationProxy.findAddressById(anyInt()))
-                .thenReturn(address);
-
-        when(proxyService.findAddressById(anyInt()))
                 .thenReturn(address);
 
         assertEquals(address, proxyService.findAddressById(randomId));
