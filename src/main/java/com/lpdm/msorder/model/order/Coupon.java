@@ -32,6 +32,10 @@ public class Coupon {
     public Coupon() {
     }
 
+    public Coupon(int id){
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

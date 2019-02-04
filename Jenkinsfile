@@ -12,9 +12,19 @@ pipeline {
                 git 'https://github.com/vyjorg/LPDM-Order'
             }
         }
+        stage('Load Key') {
+            steps {
+                script {
+                    configFileProvider([configFile(fileId: '2bd4e734-a03f-4fce-9015-aca988614b4e', targetLocation: 'lpdm.key')]) {
+                        lpdm_keys = readJSON file: 'lpdm.key'
+                        KEY = lpdm_keys.order
+                    }
+                }
+            }
+        }
         stage('Tests') {
             steps {
-                sh 'mvn clean test'
+                sh "mvn -Djasypt.encryptor.password='$KEY' clean test"
             }
             post {
                 always {
@@ -28,16 +38,6 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 sh 'mvn clean package'
-            }
-        }
-        stage('Load Key') {
-            steps {
-                script {
-                    configFileProvider([configFile(fileId: '2bd4e734-a03f-4fce-9015-aca988614b4e', targetLocation: 'lpdm.key')]) {
-                        lpdm_keys = readJSON file: 'lpdm.key'
-                        KEY = lpdm_keys.order
-                    }
-                }
             }
         }
         stage('Deploy') {
