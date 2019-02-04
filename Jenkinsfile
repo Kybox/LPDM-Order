@@ -25,7 +25,9 @@ pipeline {
         }
         stage('Tests') {
             steps {
-                sh "mvn clean test -Djasypt.encryptor.password=${KEY}"
+                withMaven(mavenOpts: '-Djasypt.encryptor.password=${KEY}', tempBinDir: '') {
+                    sh 'mvn clean test'
+                }
             }
             post {
                 always {
