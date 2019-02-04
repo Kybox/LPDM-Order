@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Tests') {
             steps {
-                sh "mvn clean test -Djasypt.encryptor.password=''${KEY}''"
+                sh "mvn -Djasypt.encryptor.password='\'${KEY}'\' clean test "
             }
             post {
                 always {
