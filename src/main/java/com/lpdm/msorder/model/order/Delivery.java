@@ -22,6 +22,10 @@ public class Delivery {
     public Delivery() {
     }
 
+    public Delivery(int id){
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
