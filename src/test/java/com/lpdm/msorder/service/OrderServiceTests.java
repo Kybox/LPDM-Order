@@ -4,6 +4,7 @@ import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.Payment;
+import com.lpdm.msorder.model.order.SearchDates;
 import com.lpdm.msorder.model.order.Status;
 import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.OrderRepository;
@@ -16,8 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -208,5 +212,98 @@ public class OrderServiceTests {
 
         assertEquals(orderList, orderService
                 .findAllOrdersByCustomerIdAndStatus(randomId, Status.PAID));
+    }
+
+    @Test(expected = OrderNotFoundException.class)
+    public void findAllOrdersBetweenTwoDatesException() {
+
+        SearchDates searchDates = new SearchDates();
+        searchDates.setDate1(LocalDate.now());
+        searchDates.setDate2(LocalDate.now());
+
+        when(orderRepository.findAllByOrderDateBetween(any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(new ArrayList<>());
+
+        orderService.findAllOrdersBetweenTwoDates(searchDates);
+    }
+
+    @Test
+    public void findAllOrdersBetweenTwo() {
+
+        SearchDates searchDates = new SearchDates();
+        searchDates.setDate1(LocalDate.now());
+        searchDates.setDate2(LocalDate.now());
+
+        when(orderRepository.findAllByOrderDateBetween(any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(orderList);
+
+        when(formatJson.formatOrder(any(Order.class)))
+                .thenReturn(order);
+
+        assertEquals(orderList, orderService.findAllOrdersBetweenTwoDates(searchDates));
+    }
+
+    @Test(expected = OrderNotFoundException.class)
+    public void findAllOrdersByStatusPageableException() {
+
+        when(orderRepository.findAllByStatus(any(Status.class), any(Pageable.class)))
+                .thenReturn(new ArrayList<>());
+
+        orderService.findAllOrdersByStatusPageable(Status.PAID, PageRequest.of(randomId, randomId));
+    }
+
+    @Test
+    public void findAllOrdersByStatusPageable() {
+
+        when(orderRepository.findAllByStatus(any(Status.class), any(Pageable.class)))
+                .thenReturn(orderList);
+
+        when(formatJson.formatOrder(any(Order.class)))
+                .thenReturn(order);
+
+        assertEquals(orderList, orderService
+                .findAllOrdersByStatusPageable(Status.PAID, PageRequest.of(randomId, randomId)));
+    }
+
+    @Test
+    public void findAllOrdersByCustomerIdOrderByOrderDateAsc() {
+
+        when(orderRepository.findAllByCustomerIdOrderByOrderDateAsc(anyInt(), any(Pageable.class)))
+                .thenReturn(orderList);
+
+        assertEquals(orderList, orderService
+                .findAllOrdersByCustomerIdOrderByOrderDateAsc(randomId, PageRequest.of(randomId, randomId)));
+    }
+
+    @Test
+    public void findAllOrdersByCustomerIdOrderByOrderDateDesc() {
+
+        when(orderRepository.findAllByCustomerIdOrderByOrderDateDesc(anyInt(), any(Pageable.class)))
+                .thenReturn(orderList);
+
+        assertEquals(orderList, orderService
+                .findAllOrdersByCustomerIdOrderByOrderDateDesc(randomId, PageRequest.of(randomId, randomId)));
+    }
+
+    @Test
+    public void countAllByOrderDateBetween() {
+
+        long total = 5000L;
+
+        when(orderRepository.countAllByOrderDateBetween(any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(total);
+
+        assertEquals(total, orderService
+                .countAllByOrderDateBetween(LocalDateTime.now(), LocalDateTime.now()));
+    }
+
+    @Test
+    public void findAllOrdersByDateBetween() {
+
+        when(orderRepository.findAllByOrderDateBetween(any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(orderList);
+
+        assertEquals(orderList, orderService
+                .findAllOrdersByDateBetween(LocalDateTime.now(), LocalDateTime.now()));
     }
 }
