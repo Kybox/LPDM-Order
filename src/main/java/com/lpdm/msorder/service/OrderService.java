@@ -131,4 +131,13 @@ public interface OrderService {
      * @return The {@link List} of {@link Order} objects found
      */
     List<Order> findAllOrdersByDateBetween(LocalDateTime date1, LocalDateTime date2);
+
+    /**
+     * Find the last {@link Order} of a {@link User} id by a {@link Status} id
+     * @param customer The {@link User} id
+     * @param statusId The {@link Status} id
+     * @return The {@link Order} found
+     * @throws OrderNotFoundException Thrown if no {@link Order} was found
+     */
+    Order findLastOrderByCustomerAndStatus(int customer, int statusId) throws OrderNotFoundException;
 }

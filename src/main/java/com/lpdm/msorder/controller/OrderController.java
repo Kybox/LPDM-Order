@@ -276,6 +276,22 @@ public class OrderController {
     }
 
     /**
+     * Find the last {@link Order} of a {@link User} id by a {@link Status} id
+     * @param customer The {@link User} id
+     * @param status The {@link Status} id
+     * @return The {@link Order} found
+     * @throws OrderNotFoundException Thrown if no {@link Order} was found
+     */
+    @ApiOperation(value = "Find the last order by a status from a customer")
+    @GetMapping(value = "/last/customer/{customer}/status/{status}")
+    public Order getLastOrderByCustomerAndStatus(@PathVariable int customer,
+                                                 @PathVariable int status)
+            throws OrderNotFoundException{
+
+        return orderService.findLastOrderByCustomerAndStatus(customer, status);
+    }
+
+    /**
      * Generate an invoice for a paid order
      * @param id The {@link Order} id
      * @param response The {@link HttpServletResponse} object

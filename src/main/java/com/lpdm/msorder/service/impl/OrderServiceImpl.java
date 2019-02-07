@@ -265,4 +265,27 @@ public class OrderServiceImpl implements OrderService {
 
         return orderRepository.findAllByOrderDateBetween(date1, date2);
     }
+
+    /**
+     * Find the last {@link Order} of a {@link User} id by a {@link Status} id
+     * @param customer The {@link User} id
+     * @param statusId The {@link Status} id
+     * @return The {@link Order} found
+     * @throws OrderNotFoundException Thrown if no {@link Order} was found
+     */
+    @Override
+    public Order findLastOrderByCustomerAndStatus(int customer, int statusId) throws OrderNotFoundException {
+
+        Status status = null;
+        for(Status s : Status.values())
+            if(s.getId() == statusId)
+                status = s;
+
+        Optional<Order> optOrder = orderRepository
+                .findFirstByCustomerIdAndStatusOrderByOrderDateDesc(customer, status);
+
+        if(!optOrder.isPresent()) throw new OrderNotFoundException();
+
+        return formatJson.formatOrder(optOrder.get());
+    }
 }

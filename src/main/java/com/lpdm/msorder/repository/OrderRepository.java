@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Kybox
@@ -25,4 +26,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByCustomerIdOrderByOrderDateDesc(int userId, Pageable pageable);
     long countAllByOrderDateBetween(LocalDateTime start, LocalDateTime end);
     List<Order> findAllByOrderDateBetween(LocalDateTime start, LocalDateTime end);
+    Optional<Order> findFirstByCustomerIdAndStatusOrderByOrderDateDesc(int customer, Status status);
 }

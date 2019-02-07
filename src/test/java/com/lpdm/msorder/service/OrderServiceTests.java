@@ -55,7 +55,7 @@ public class OrderServiceTests {
     @Before
     public void init(){
 
-        randomId = (int) (Math.random()*123);
+        randomId = (int) (Math.random()*123) + 100;
 
         order = new Order(randomId);
 
