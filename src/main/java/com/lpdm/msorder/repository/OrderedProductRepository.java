@@ -17,5 +17,5 @@ public interface OrderedProductRepository extends JpaRepository<OrderedProduct, 
     List<OrderedProduct> findAllByProductId(int id);
     List<OrderedProduct> findAllByOrder(Order order);
     long countAllByOrder(Order order);
-    void deleteAllByOrder_Id(int id);
+    void deleteAllByOrder(Order order);
 }

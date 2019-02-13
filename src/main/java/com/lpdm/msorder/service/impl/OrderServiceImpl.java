@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order saveOrder(Order order) {
 
-        orderedProductRepository.deleteAllByOrder_Id(order.getId());
+        if(order.getId() != 0) orderedProductRepository.deleteAllByOrder(order);
         return orderRepository.save(order);
     }
 
