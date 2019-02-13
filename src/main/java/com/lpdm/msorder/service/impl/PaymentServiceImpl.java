@@ -69,7 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
         ShippingAddress shippingAddress = paypalService.generateShippingAddress(order.getCustomer());
         ItemList itemList = paypalService.generateItemList(items, order.getCustomer().getTel(), shippingAddress);
 
-        String redirectUrl = paypalService.paymentProcess(orderId, itemList, redirectUrls, id, secret);
+        String redirectUrl = paypalService.paymentProcess(orderId, order.getDelivery().getAmount(), itemList, redirectUrls, id, secret);
 
         Map<String, String> mapHeaders = new HashMap<>();
         mapHeaders.put(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE);

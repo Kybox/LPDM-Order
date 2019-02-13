@@ -40,7 +40,7 @@ public interface PaypalService {
     ShippingAddress generateShippingAddress(User user) throws AddressNotFoundException;
 
     ItemList generateItemList(List<Item> items, String phoneNumber, ShippingAddress shippingAddress);
-    String paymentProcess(int orderId, ItemList itemList, RedirectUrls redirectUrls, String id, String secret);
+    String paymentProcess(int orderId, double deliveryAmount, ItemList itemList, RedirectUrls redirectUrls, String id, String secret);
     PaypalToken generatePaypalToken() throws IOException;
 
 

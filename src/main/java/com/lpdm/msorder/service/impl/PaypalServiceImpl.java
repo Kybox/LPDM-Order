@@ -8,6 +8,7 @@ import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.paypal.PaypalReturn;
 import com.lpdm.msorder.model.paypal.PaypalToken;
 import com.lpdm.msorder.model.user.User;
+import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.PaypalService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -49,6 +50,9 @@ public class PaypalServiceImpl implements PaypalService {
     private final Environment env;
 
     @Autowired
+    private OrderService orderService;
+
+    @Autowired
     public PaypalServiceImpl(Environment env) {
         this.env = env;
     }
@@ -73,9 +77,19 @@ public class PaypalServiceImpl implements PaypalService {
             item.setCategory("PHYSICAL");
             item.setQuantity(String.valueOf(orderedProduct.getQuantity()));
             item.setPrice(String.valueOf(orderedProduct.getPrice()));
-            double tax = (Double.parseDouble(item.getPrice()) * orderedProduct.getTax()) / 100;
+
+            double tax = (orderedProduct.getPrice() * orderedProduct.getQuantity()) * (orderedProduct.getTax() / 100);
+            log.info("tax before round = " + tax);
+
+            tax = Math.round(tax * 100D) / 100D;
+            log.info("tax after round = " + tax);
+
             item.setTax(String.valueOf(tax));
             itemList.add(item);
+
+            log.info("Item");
+            log.info("   |_ price = " + item.getPrice());
+            log.info("   |_ tax = " + item.getTax());
         }
 
         return itemList;
@@ -166,9 +180,9 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     @Override
-    public String paymentProcess(int orderId, ItemList itemList, RedirectUrls redirectUrls, String id, String secret) {
+    public String paymentProcess(int orderId, double deliveryAmount, ItemList itemList, RedirectUrls redirectUrls, String id, String secret) {
 
-        Details details = getPaypalDetails(itemList);
+        Details details = getPaypalDetails(itemList, deliveryAmount);
         Amount amount = getPaypalAmount(details);
 
         // Transaction information
@@ -239,7 +253,7 @@ public class PaypalServiceImpl implements PaypalService {
         return executedPayment.toJSON();
     }
 
-    private Details getPaypalDetails(ItemList itemList){
+    private Details getPaypalDetails(ItemList itemList, double deliveryAmount){
 
         Details details = new Details();
         double subTotal = 0;
@@ -255,7 +269,7 @@ public class PaypalServiceImpl implements PaypalService {
 
         details.setSubtotal(String.valueOf(subTotal));
         details.setTax(String.valueOf(tax));
-        details.setShipping("4.90");
+        details.setShipping(String.valueOf(deliveryAmount));
 
         return details;
     }
@@ -267,10 +281,22 @@ public class PaypalServiceImpl implements PaypalService {
         double subTotal = Double.parseDouble(details.getSubtotal());
         double shipping = Double.parseDouble(details.getShipping());
         double tax = Double.parseDouble(details.getTax());
+        double total = subTotal + shipping + tax;
 
-        amount.setTotal(String.valueOf(subTotal + shipping + tax));
+        log.info("total = " + total);
+        total = Math.round(total * 100D) / 100D;
+        log.info("total after = " + total);
+
+        amount.setTotal(String.valueOf(total));
         amount.setDetails(details);
-        amount.setCurrency("EUR");
+        amount.setCurrency(CURRENCY_EURO);
+
+        log.info("Amount");
+        log.info("  |_currency = " + amount.getCurrency());
+        log.info("  |_total = " + amount.getTotal());
+        log.info("  |_subtotal = " + amount.getDetails().getSubtotal());
+        log.info("  |_shipping = " + amount.getDetails().getShipping());
+        log.info("  |_tax = " + amount.getDetails().getTax());
 
         return amount;
     }
