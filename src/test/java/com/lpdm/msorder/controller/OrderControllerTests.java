@@ -134,9 +134,6 @@ public class OrderControllerTests {
         when(orderService.saveOrder(any(Order.class)))
                 .thenReturn(order);
 
-        when(orderedProductService.saveOrderedProduct(any(OrderedProduct.class)))
-                .thenReturn(new OrderedProduct());
-
         when(formatJson.formatOrder(any(Order.class)))
                 .thenReturn(order);
 
@@ -154,9 +151,6 @@ public class OrderControllerTests {
 
         verify(orderService, Mockito.times(1))
                 .saveOrder(any(Order.class));
-
-        verify(orderedProductService, Mockito.times(1))
-                .saveOrderedProduct(any(OrderedProduct.class));
 
         verify(formatJson, Mockito.times(1))
                 .formatOrder(any(Order.class));
