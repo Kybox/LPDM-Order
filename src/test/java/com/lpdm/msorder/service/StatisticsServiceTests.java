@@ -80,7 +80,7 @@ public class StatisticsServiceTests {
         when(orderService.countAllByOrderDateBetween(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(randomLong);
 
-        assertThat(statisticsService.getOrderStatsByYearAndMonth(randomInt, randomInt),
+        assertThat(statisticsService.getOrderStatsByYearAndMonth(randomInt, 5),
                 instanceOf(OrderStats.class));
     }
 
