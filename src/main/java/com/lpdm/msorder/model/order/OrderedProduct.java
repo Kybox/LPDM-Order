@@ -16,9 +16,9 @@ public class OrderedProduct {
     @GeneratedValue
     private int id;
 
-    @NotNull
-    @ManyToOne
     @JsonIgnore
+    @ManyToOne
+    @NotNull
     @JoinColumn(name = "order_id")
     private Order order;
 
@@ -26,7 +26,6 @@ public class OrderedProduct {
     @Column(name = "product_id")
     private int productId;
 
-    @NotNull
     @Transient
     private Product product;
 

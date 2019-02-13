@@ -58,8 +58,8 @@ public class Order {
     @Column(name = "tax_amount")
     private double taxAmount;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "order")
-    private List<OrderedProduct> orderedProducts;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
+    private List<OrderedProduct> orderedProducts = new ArrayList<>();
 
     public Order() {
     }

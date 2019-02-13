@@ -4,6 +4,7 @@ import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.OrderNotFoundException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.order.SearchDates;
+import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
@@ -57,7 +58,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order saveOrder(Order order) {
 
-        if(order.getId() != 0) orderedProductRepository.deleteAllByOrder(order);
+        for(OrderedProduct orderedProduct : order.getOrderedProducts()){
+
+            Product product = proxyService.findProductById(orderedProduct.getProduct().getId());
+
+            orderedProduct.setOrder(order);
+            orderedProduct.setProductId(product.getId());
+            orderedProduct.setPrice(product.getPrice());
+            orderedProduct.setTax(product.getTax());
+        }
+
         return orderRepository.save(order);
     }
 

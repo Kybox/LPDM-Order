@@ -6,6 +6,7 @@ import com.lpdm.msorder.controller.json.FormatJson;
 import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.CouponNotFoundException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.exception.OrderedProductsNotFoundException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.User;
@@ -113,6 +114,12 @@ public class OrderController {
            throw new BadRequestException();
         }
 
+        for(OrderedProduct orderedProduct : order.getOrderedProducts()){
+            if(orderedProduct.getProduct() == null){
+                throw new OrderedProductsNotFoundException();
+            }
+        }
+
         order.setCustomerId(order.getCustomer().getId());
 
         // Set the total amount with tax
@@ -124,21 +131,6 @@ public class OrderController {
         log.info("Try to save order : " + order.toString());
         orderService.saveOrder(order);
         log.info("Order saved : " + order.toString());
-
-
-        for(OrderedProduct orderedProduct : order.getOrderedProducts()){
-
-            orderedProduct.setOrder(order);
-
-            if(orderedProduct.getProduct() != null && orderedProduct.getProduct().getId() > 0){
-
-                orderedProduct.setProductId(orderedProduct.getProduct().getId());
-                orderedProduct.setPrice(orderedProduct.getProduct().getPrice());
-                orderedProduct.setTax(orderedProduct.getProduct().getTax());
-                orderedProductService.saveOrderedProduct(orderedProduct);
-            }
-            else throw new BadRequestException();
-        }
 
         if(order.getStatus().equals(Status.PAID) && !invoiceService.isThereAnInvoice(order.getId()))
             invoiceService.generateNew(order);
