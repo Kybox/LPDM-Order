@@ -27,7 +27,7 @@ public class OrderUtils {
             totalTax += subTotal * (tax / 100);
         }
 
-        return totalTax;
+        return Math.round(totalTax * 100D) / 100D;
     }
 
     public static double getTotalAmount(Order order){
@@ -53,6 +53,6 @@ public class OrderUtils {
 
         totalAmount += taxAmount;
 
-        return totalAmount;
+        return Math.round(totalAmount * 100D) / 100D;
     }
 }
