@@ -125,6 +125,7 @@ public class OrderController {
         orderService.saveOrder(order);
         log.info("Order saved : " + order.toString());
 
+
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
             orderedProduct.setOrder(order);
