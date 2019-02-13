@@ -76,7 +76,7 @@ public class StatisticsControllerTests {
                 .thenReturn(orderStats);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/admin/orders/stats/year/"+ randomId + "/month/" + randomId);
+                .get("/admin/orders/stats/year/"+ randomId + "/month/" + 5);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound())

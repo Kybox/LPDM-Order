@@ -8,6 +8,7 @@ import com.lpdm.msorder.model.order.SearchDates;
 import com.lpdm.msorder.model.order.Status;
 import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.OrderRepository;
+import com.lpdm.msorder.repository.OrderedProductRepository;
 import com.lpdm.msorder.service.impl.OrderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,9 @@ public class OrderServiceTests {
 
     @MockBean
     private OrderRepository orderRepository;
+
+    @MockBean
+    private OrderedProductRepository orderedProductRepository;
 
     @Autowired
     private OrderServiceImpl orderService;
