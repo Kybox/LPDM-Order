@@ -100,6 +100,11 @@ public class OrderServiceImpl implements OrderService {
         order.setTaxAmount(OrderUtils.getTaxAmount(order));
         order.setTotal(OrderUtils.getTotalAmount(order));
 
+        log.info("Tax amount = " + OrderUtils.getTaxAmount(order));
+        log.info("Total amount = " + OrderUtils.getTotalAmount(order));
+
+        log.info("!Order = " + order);
+
         return orderRepository.save(order);
     }
 

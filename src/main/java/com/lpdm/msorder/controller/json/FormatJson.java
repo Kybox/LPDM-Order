@@ -5,6 +5,7 @@ import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.store.Store;
 import com.lpdm.msorder.model.user.User;
+import com.lpdm.msorder.service.DeliveryService;
 import com.lpdm.msorder.service.ProxyService;
 import feign.FeignException;
 import org.slf4j.Logger;
@@ -17,6 +18,9 @@ public class FormatJson {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final ProxyService proxyService;
+
+    @Autowired
+    private DeliveryService deliveryService;
 
     @Autowired
     public FormatJson(ProxyService proxyService) {
@@ -39,6 +43,10 @@ public class FormatJson {
         catch (FeignException e){
             log.warn(e.getMessage());
             order.setStore(new Store(order.getStoreId()));
+        }
+
+        if(order.getDelivery() != null && order.getDelivery().getId() > 0){
+            order.setDelivery(deliveryService.findDeliveryMethodById(order.getDelivery().getId()));
         }
 
         User user = proxyService.findUserById(order.getCustomerId());

@@ -3,8 +3,12 @@ package com.lpdm.msorder.utils;
 import com.lpdm.msorder.model.order.Order;
 import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.product.Product;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OrderUtils {
+
+    private static Logger log = LoggerFactory.getLogger(OrderUtils.class);
 
     /**
      * Get the total amount of taxes for an {@link Order}
@@ -45,8 +49,9 @@ public class OrderUtils {
             totalAmount += (price * quantity);
         }
 
-        if(order.getDelivery() != null)
+        if(order.getDelivery() != null) {
             totalAmount += order.getDelivery().getAmount();
+        }
 
         if(order.getCoupon() != null)
             totalAmount += order.getCoupon().getAmount();
