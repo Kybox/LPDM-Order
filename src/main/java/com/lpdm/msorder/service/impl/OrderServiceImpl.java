@@ -1,7 +1,9 @@
 package com.lpdm.msorder.service.impl;
 
 import com.lpdm.msorder.controller.json.FormatJson;
+import com.lpdm.msorder.exception.BadRequestException;
 import com.lpdm.msorder.exception.OrderNotFoundException;
+import com.lpdm.msorder.exception.OrderedProductsNotFoundException;
 import com.lpdm.msorder.model.order.*;
 import com.lpdm.msorder.model.order.SearchDates;
 import com.lpdm.msorder.model.product.Product;
@@ -10,6 +12,7 @@ import com.lpdm.msorder.repository.OrderRepository;
 import com.lpdm.msorder.repository.OrderedProductRepository;
 import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.ProxyService;
+import com.lpdm.msorder.utils.OrderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,30 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order saveOrder(Order order) {
 
+        if(order.getStore() != null && order.getStore().getId() > 0)
+            order.setStoreId(order.getStore().getId());
+
+        if(order.getStatus() == null) {
+            log.warn("Status object is null");
+            throw new BadRequestException();
+        }
+
+        if(order.getCustomer() == null) {
+            log.warn("Customer object is null");
+            throw new BadRequestException();
+        }
+
+        if(order.getCustomer().getId() == 0){
+            log.warn("Customer id is null or zero");
+            throw new BadRequestException();
+        }
+
+        for(OrderedProduct orderedProduct : order.getOrderedProducts()){
+            if(orderedProduct.getProduct() == null){
+                throw new OrderedProductsNotFoundException();
+            }
+        }
+
         for(OrderedProduct orderedProduct : order.getOrderedProducts()){
 
             Product product = proxyService.findProductById(orderedProduct.getProduct().getId());
@@ -67,6 +94,11 @@ public class OrderServiceImpl implements OrderService {
             orderedProduct.setPrice(product.getPrice());
             orderedProduct.setTax(product.getTax());
         }
+
+        order.setCustomerId(order.getCustomer().getId());
+        order = formatJson.formatOrder(order);
+        order.setTaxAmount(OrderUtils.getTaxAmount(order));
+        order.setTotal(OrderUtils.getTotalAmount(order));
 
         return orderRepository.save(order);
     }

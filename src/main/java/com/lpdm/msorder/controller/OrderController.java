@@ -96,41 +96,7 @@ public class OrderController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Order saveOrder(@Valid @RequestBody Order order){
 
-        if(order.getStore() != null && order.getStore().getId() > 0)
-            order.setStoreId(order.getStore().getId());
-
-        if(order.getStatus() == null) {
-            log.warn("Status object is null");
-            throw new BadRequestException();
-        }
-
-        if(order.getCustomer() == null) {
-           log.warn("Customer object is null");
-           throw new BadRequestException();
-        }
-
-        if(order.getCustomer().getId() == 0){
-           log.warn("Customer id is null or zero");
-           throw new BadRequestException();
-        }
-
-        for(OrderedProduct orderedProduct : order.getOrderedProducts()){
-            if(orderedProduct.getProduct() == null){
-                throw new OrderedProductsNotFoundException();
-            }
-        }
-
-        order.setCustomerId(order.getCustomer().getId());
-
-        // Set the total amount with tax
-        order.setTotal(OrderUtils.getTotalAmount(order));
-
-        // Set tax amount
-        order.setTaxAmount(OrderUtils.getTaxAmount(order));
-
-        log.info("Try to save order : " + order.toString());
         orderService.saveOrder(order);
-        log.info("Order saved : " + order.toString());
 
         if(order.getStatus().equals(Status.PAID) && !invoiceService.isThereAnInvoice(order.getId()))
             invoiceService.generateNew(order);
