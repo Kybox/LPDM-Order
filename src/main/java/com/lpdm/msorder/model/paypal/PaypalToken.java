@@ -2,6 +2,12 @@ package com.lpdm.msorder.model.paypal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class PaypalToken {
 
     @JsonIgnore

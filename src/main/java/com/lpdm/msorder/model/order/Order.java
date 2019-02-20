@@ -10,6 +10,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 @Entity
 @Table(name = "order", schema = "public")
 public class Order {

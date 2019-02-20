@@ -8,7 +8,6 @@ import com.lpdm.msorder.model.order.OrderedProduct;
 import com.lpdm.msorder.model.paypal.PaypalReturn;
 import com.lpdm.msorder.model.paypal.PaypalToken;
 import com.lpdm.msorder.model.user.User;
-import com.lpdm.msorder.service.OrderService;
 import com.lpdm.msorder.service.PaypalService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -33,7 +32,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.lpdm.msorder.utils.ValueType.*;
-import static com.paypal.base.Constants.*;
+import static com.paypal.base.Constants.HTTP_CONFIG_DEFAULT_HTTP_METHOD;
+import static com.paypal.base.Constants.SANDBOX;
 import static org.springframework.http.HttpHeaders.*;
 
 /**
@@ -48,9 +48,6 @@ public class PaypalServiceImpl implements PaypalService {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final Environment env;
-
-    @Autowired
-    private OrderService orderService;
 
     @Autowired
     public PaypalServiceImpl(Environment env) {
@@ -140,7 +137,7 @@ public class PaypalServiceImpl implements PaypalService {
     @Override
     public PaypalToken generatePaypalToken() throws IOException {
 
-        URL url = new URL(PAYPAL_SANDBOX_TOKEN_URL);
+        URL url = new URL(PAYPAL_SANDBOX_URL);
 
         URLConnection urlConnection = url.openConnection();
         HttpURLConnection httpConnection = null;

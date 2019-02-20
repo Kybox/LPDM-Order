@@ -3,6 +3,12 @@ package com.lpdm.msorder.model.order;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class OrderStats {
 
     private Map<Object, Object> dataStats;

@@ -6,6 +6,12 @@ import com.lpdm.msorder.model.product.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class OrderUtils {
 
     private static Logger log = LoggerFactory.getLogger(OrderUtils.class);

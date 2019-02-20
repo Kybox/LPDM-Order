@@ -6,6 +6,12 @@ import com.lpdm.msorder.model.user.User;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class Product {
 
     @NotNull

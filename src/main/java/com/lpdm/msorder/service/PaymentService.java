@@ -5,10 +5,7 @@ import com.lpdm.msorder.model.order.Payment;
 import com.lpdm.msorder.model.paypal.PaypalPayUrl;
 import com.paypal.api.payments.RedirectUrls;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Kybox

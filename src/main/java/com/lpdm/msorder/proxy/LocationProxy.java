@@ -1,8 +1,6 @@
 package com.lpdm.msorder.proxy;
 
 import com.lpdm.msorder.model.location.Address;
-import com.lpdm.msorder.model.product.Product;
-import feign.FeignException;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

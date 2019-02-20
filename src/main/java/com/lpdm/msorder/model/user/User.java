@@ -6,6 +6,12 @@ import com.lpdm.msorder.model.location.Address;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class User {
 
     private int id;

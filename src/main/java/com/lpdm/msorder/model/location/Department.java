@@ -1,5 +1,11 @@
 package com.lpdm.msorder.model.location;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class Department {
 
     private int id;

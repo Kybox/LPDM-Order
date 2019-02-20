@@ -2,6 +2,12 @@ package com.lpdm.msorder.model.store;
 
 import com.lpdm.msorder.model.location.Address;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 public class Store {
 
     private int id;

@@ -3,6 +3,12 @@ package com.lpdm.msorder.model.order;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+/**
+ * @author Kybox
+ * @version 1.0
+ * @since 01/12/2018
+ */
+
 @Entity
 @Table(name = "payment", schema = "public")
 public class Payment {
