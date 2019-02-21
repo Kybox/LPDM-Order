@@ -260,7 +260,7 @@ public class PaypalServiceImpl implements PaypalService {
             double itemPrice = Double.parseDouble(item.getPrice());
             double itemTax = Double.parseDouble(item.getTax());
 
-            subTotal += itemPrice;
+            subTotal += itemPrice * Double.parseDouble(item.getQuantity());
             tax += itemTax;
         }
 
