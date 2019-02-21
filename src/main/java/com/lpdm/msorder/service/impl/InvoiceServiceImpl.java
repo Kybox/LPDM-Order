@@ -11,6 +11,7 @@ import com.lpdm.msorder.model.product.Product;
 import com.lpdm.msorder.model.user.User;
 import com.lpdm.msorder.repository.InvoiceRepository;
 import com.lpdm.msorder.service.*;
+import com.lpdm.msorder.utils.OrderUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,7 +171,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         double totalAmount = addProducts(productList, content);
 
-        addAmountDetails(totalAmount, productList.size(), content);
+        addAmountDetails(OrderUtils.getTotalAmount(order), OrderUtils.getTaxAmount(order), productList.size(), order.getDelivery().getAmount() ,content);
 
         addPaidImage(content);
 
@@ -204,13 +205,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         content.setFontAndSize(baseFont, 9);
 
         content.showTextAligned(PdfContentByte.ALIGN_LEFT,
-                user.getAddress().getStreetName(), 50, 533,0);
+                user.getAddress().getStreetNumber() + " " + user.getAddress().getStreetName(),
+                50, 533,0);
 
         content.showTextAligned(PdfContentByte.ALIGN_LEFT,
-                "Tel : " + user.getTel(), 50, 520,0);
+                user.getAddress().getCity().getZipCode() + " " + user.getAddress().getCity().getName(),
+                50,520,0);
 
         content.showTextAligned(PdfContentByte.ALIGN_LEFT,
-                "Email : " + user.getEmail(), 50, 507,0);
+                "Tel : " + user.getTel(), 50, 507,0);
+
+        content.showTextAligned(PdfContentByte.ALIGN_LEFT,
+                "Email : " + user.getEmail(), 50, 494,0);
     }
 
     private double addProducts(List<OrderedProduct> productList, PdfContentByte content)
@@ -234,8 +240,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             log.info("Product = " + product);
 
-            double price = Math.round(product.getPrice() * 100.0) / 100.0;
-            double total = Math.round((price * quantity) * 100.0) / 100.0;
+            double price = Math.round(product.getPrice() * 100D) / 100D;
+            double total = Math.round((price * quantity) * 100D) / 100D;
             totalAmount += total;
 
             table.addCell(getCell(product.getName(), Element.ALIGN_LEFT, 0));
@@ -249,10 +255,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         return totalAmount;
     }
 
-    private void addAmountDetails(double amount, int nbProducts, PdfContentByte content)
+    private void addAmountDetails(double amount, double tax, int nbProducts, double delivery, PdfContentByte content)
             throws DocumentException {
 
-        double tva = Math.round((amount * 0.055) * 100.0) / 100.0;
+        double amountWithoutTax = amount - tax - delivery;
 
         PdfPTable tableTotal = new PdfPTable(2);
         tableTotal.setTotalWidth(new float[]{79, 88.5f});
@@ -261,13 +267,15 @@ public class InvoiceServiceImpl implements InvoiceService {
         tableTotal.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
 
         tableTotal.addCell(getCell("Total HT", Element.ALIGN_RIGHT, 10));
-        tableTotal.addCell(getCell(PRICE_FORMAT.format(amount), Element.ALIGN_RIGHT, 10));
-        tableTotal.addCell(getCell("T.V.A. 5.5%", Element.ALIGN_RIGHT, 10));
-        tableTotal.addCell(getCell(PRICE_FORMAT.format(tva), Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell(PRICE_FORMAT.format(amountWithoutTax), Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell("T.V.A.", Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell(PRICE_FORMAT.format(tax), Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell("Livraison", Element.ALIGN_RIGHT, 10));
+        tableTotal.addCell(getCell(PRICE_FORMAT.format(delivery), Element.ALIGN_RIGHT, 10));
         tableTotal.addCell(getCell("Total TTC", Element.ALIGN_RIGHT, 10));
-
-        amount = Math.round((amount + tva) * 100.0) / 100.0;
         tableTotal.addCell(getCell(PRICE_FORMAT.format(amount), Element.ALIGN_RIGHT, 10));
+        //amount = Math.round((amount + tax) * 100.0) / 100.0;
+
 
         float posY = 424 - (nbProducts * CELL_HEIGHT);
         tableTotal.writeSelectedRows(0, -1, 400, posY, content);
