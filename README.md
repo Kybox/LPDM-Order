@@ -1,7 +1,7 @@
 ## La place du marché - Microservice Order
 Projet 12 - DA JAVA - Openclassrooms
-
-**Domaine** : https://order.lpdm.kybox.fr
+##### Application e-commerce
+**Accès** : https://shop.lpdm.kybox.fr
 
 **Docker** : [https://hub.docker.com/r/vyjorg/lpdm-order](https://hub.docker.com/r/vyjorg/lpdm-order)
 
